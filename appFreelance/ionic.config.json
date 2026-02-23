@@ -1,0 +1,7 @@
+{
+  "name": "appFreelance",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
