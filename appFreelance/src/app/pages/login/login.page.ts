@@ -16,6 +16,11 @@ export class LoginPage implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  onLogin() {
+
+    console.log('Login button clicked');
+
+  }
   constructor() { }
 
   ngOnInit() {

@@ -1,3 +1,4 @@
+
 $primary:       #977DFF;
 $primary-dark:  #0600AB;
 $primary-light: #0033FF;
@@ -10,7 +11,7 @@ $border:        #e8e8e8;
 $text-dark:     #1a1a2e;
 $text-light:    #8e8e93;
 
-.login-header {
+.register-header {
   ion-toolbar {
     --background: transparent;
     --border-style: none;
@@ -24,21 +25,28 @@ $text-light:    #8e8e93;
   color: $text-dark;
 }
 
-.login-content {
+.back-btn {
+  --color: #{$primary};
+  --icon-font-size: 28px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+.register-content {
   --background: #{$light-bg};
   --padding-top: 0;
   --padding-bottom: env(safe-area-inset-bottom);
 }
 
-.login-container {
+.register-container {
   padding: 16px 20px;
   padding-bottom: calc(24px + env(safe-area-inset-bottom));
   min-height: 100%;
 }
 
-.login-header-section {
+.register-header-section {
   text-align: center;
-  padding: 20px 0 53px;
+  padding: 20px 0 32px;
 }
 
 .logo-container {
@@ -58,23 +66,31 @@ $text-light:    #8e8e93;
   color: $white;
 }
 
-.login-title {
+.register-title {
   font-size: 28px;
   font-weight: 700;
   color: $text-dark;
   margin: 0 0 8px;
 }
 
-.login-subtitle {
+.register-subtitle {
   font-size: 15px;
   color: $text-light;
   margin: 0;
 }
 
-.login-form {
+
+.register-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.form-section {
+  background: $white;
+  border-radius: 16px;
+  padding: 8px 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 }
 
 .form-item {
@@ -111,10 +127,47 @@ $text-light:    #8e8e93;
   color: $text-light;
   padding: 12px;
   margin-right: -8px;
-
+  
   &:active {
     color: $primary;
   }
+}
+
+.form-select {
+  --padding-start: 0;
+  font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.checkbox-item {
+  --background: transparent;
+  --border-style: none;
+  --padding-start: 0;
+  --min-height: 48px;
+  align-items: center;
+
+}
+
+.form-checkbox {
+  --size: 24px;
+  --border-radius: 6px;
+  --border-color: #{$border};
+  --background-checked: #{$primary};
+  --border-color-checked: #{$primary};
+  margin-right: 12px;
+}
+
+.terms-label {
+  font-size: 14px;
+  color: $text-light;
+  line-height: 1.4;
+  white-space: normal;
+}
+
+.terms-link {
+  color: $primary;
+  font-weight: 600;
 }
 
 .submit-button {
@@ -132,42 +185,81 @@ $text-light:    #8e8e93;
   font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.3px;
-  margin: 45px 0;
+  margin: 16px 0;
+
+  &:disabled {
+    --background: #{$border};
+    --box-shadow: none;
+    opacity: 0.7;
+  }
 
   &:active:not(:disabled) {
     transform: scale(0.98);
   }
 }
 
-.register-link-container {
+.button-spinner {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  --color: #ffffff;
+}
+
+// ────────────────────────────────────────────────
+// Switch Type Link
+// ────────────────────────────────────────────────
+.switch-type-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0 8px;
+  border-top: 1px solid $border;
+  margin-top: 8px;
+}
+
+.switch-text {
+  font-size: 14px;
+  color: $text-light;
+}
+
+.switch-link {
+  font-size: 15px;
+  color: #0033FF;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 12px;
+}
+
+// ────────────────────────────────────────────────
+// Login Link - Bottom
+// ────────────────────────────────────────────────
+.login-link-container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 6px;
-  padding: 60px 0 8px;
+  padding: 16px 0 8px;
 }
 
-.register-text {
+.login-text {
   font-size: 15px;
   color: $text-light;
 }
 
-.register-link {
+.login-link {
   font-size: 15px;
   color: $primary;
   font-weight: 600;
   text-decoration: none;
   padding: 8px 4px;
 }
-.back-btn{
-    color: $primary;
-}
 
 // ────────────────────────────────────────────────
 // iOS Safe Area Support
 // ────────────────────────────────────────────────
 @supports (padding-top: env(safe-area-inset-top)) {
-  .login-header {
+  .register-header {
     padding-top: env(safe-area-inset-top);
   }
 }

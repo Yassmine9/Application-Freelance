@@ -1,0 +1,29 @@
+# ─── Python ───────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pdb
+*.egg-info/
+*.egg
+dist/
+build/
+
+# ─── Virtual Environment ─────────────────────────
+venv/
+.venv/
+env/
+
+# ─── Environment variables ───────────────────────
+.env
+.env.*
+
+# ─── IDEs ────────────────────────────────────────
+.vscode/
+.idea/
+
+# ─── OS ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Logs ────────────────────────────────────────
+*.log

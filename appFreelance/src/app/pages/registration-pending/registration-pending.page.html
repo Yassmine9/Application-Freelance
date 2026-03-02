@@ -1,0 +1,73 @@
+<ion-content class="pending-content" [fullscreen]="true">
+  <div class="pending-container">
+
+    <div class="success-animation">
+      <div class="checkmark-circle">
+        <ion-icon name="hourglass-outline" class="pending-icon"></ion-icon>
+      </div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring ring-2"></div>
+    </div>
+
+    <div class="content-section">
+      <h1 class="title">Registration Submitted!</h1>
+      <p class="subtitle">Thank you for joining our freelance community</p>
+    </div>
+
+    <div class="glass-card">
+      <div class="info-icon-container">
+        <ion-icon name="time-outline" class="info-icon"></ion-icon>
+      </div>
+      <h2 class="info-title">Pending Approval</h2>
+      <p class="info-text">
+        Your registration request is currently under review by our Admin.<br>
+      </p>
+    </div>
+
+    <div class="steps-container">
+      <div class="step completed">
+        <div class="step-icon">
+          <ion-icon name="checkmark"></ion-icon>
+        </div>
+        <span class="step-title">Registration</span>
+      </div>
+
+      <div class="step-line"></div>
+
+      <div class="step active">
+        <div class="step-icon pending">
+          <ion-icon name="hourglass-outline"></ion-icon>
+        </div>
+        <span class="step-title">Admin Review</span>
+      </div>
+
+      <div class="step-line inactive"></div>
+
+      <div class="step inactive">
+        <div class="step-icon inactive">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+        </div>
+        <span class="step-title">Activated</span>
+      </div>
+    </div>
+    <div class="notification-card glass-card">
+      <ion-icon name="notifications-outline" class="notification-icon"></ion-icon>
+      <p class="notification-text">
+        You will receive a <strong>notification</strong> once your account is approved.
+      </p>
+    </div>
+
+    <div class="actions">
+      <ion-button expand="block" class="primary-button" (click)="goToLogin()">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        Back to Login
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" class="secondary-button" (click)="goToHome()">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        Go to Home
+      </ion-button>
+    </div>
+
+  </div>
+</ion-content>
