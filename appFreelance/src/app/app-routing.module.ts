@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { FreelancerProfilePage } from './pages/freelancer-profile/freelancer-profile.page';
 
 const routes: Routes = [
   {
@@ -19,6 +20,11 @@ const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full'
   },
+  {
+    path: 'freelancer-profile',
+    component: FreelancerProfilePage
+  },
+
 ];
 
 @NgModule({
