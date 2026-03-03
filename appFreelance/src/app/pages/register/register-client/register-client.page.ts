@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController, LoadingController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-register-client',
@@ -19,45 +20,52 @@ export class RegisterClientPage implements OnInit {
   phoneNumber: string = '';
   password: string = '';
   industry: string = '';
+  otherIndustry: string = '';
 
   showPassword: boolean = false;
   accepted: boolean = false;
   isLoading: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
+  ) {}
 
-  ngOnInit() {
-    console.log('Register Client Page Loaded');
-  }
+  ngOnInit() {}
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
+  async onRegister(): Promise<void> {
+    if (!this.validateForm()) return;
 
-  onRegister(): void {
-    if (this.validateForm()) {
-      this.isLoading = true;
+    const loading = await this.loadingCtrl.create({ message: 'Inscription...' });
+    await loading.present();
 
-      const formData = {
-        companyName: this.companyName,
-        contactName: this.contactName,
-        email: this.email,
-        phoneNumber: this.phoneNumber,
-        password: this.password,
-        industry: this.industry,
-        accepted: this.accepted
-      };
-
-      console.log('Registration Form Data:', formData);
-
-      setTimeout(() => {
-        this.isLoading = false;
+    this.authService.registerClient({
+      email: this.email,
+      password: this.password,
+      name: this.contactName,
+      company_name: this.companyName,
+      phone: this.phoneNumber
+    }).subscribe({
+      next: async () => {
+        await loading.dismiss();
         this.router.navigate(['/registration-pending']);
-      }, 1500);
-
-
-    }
+      },
+      error: async (err) => {
+        await loading.dismiss();
+        const alert = await this.alertCtrl.create({
+          header: 'Erreur',
+          message: err.error?.error || 'Erreur lors de l\'inscription.',
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
+    });
   }
 
 
@@ -89,6 +97,11 @@ export class RegisterClientPage implements OnInit {
 
     if (!this.industry) {
       console.warn('Please select an industry');
+      return false;
+    }
+
+    if (this.industry === 'other' && !this.otherIndustry.trim()) {
+      console.warn('Please describe your industry');
       return false;
     }
 

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController, LoadingController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -19,45 +20,52 @@ export class RegisterPage implements OnInit {
   phoneNumber: string = '';
   password: string = '';
   freelanceType: string = '';
+  otherField: string = '';
 
   showPassword: boolean = false;
   accepted: boolean = false;
   isLoading: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
+  ) {}
 
-  ngOnInit() {
-    console.log('Register Page Loaded');
-  }
+  ngOnInit() {}
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
+  async onRegister(): Promise<void> {
+    if (!this.validateForm()) return;
 
-  onRegister(): void {
-    if (this.validateForm()) {
-      this.isLoading = true;
-      
-      const formData = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        phoneNumber: this.phoneNumber,
-        password: this.password,
-        freelanceType: this.freelanceType,
-        accepted: this.accepted
-      };
+    const loading = await this.loadingCtrl.create({ message: 'Inscription...' });
+    await loading.present();
 
-      console.log('Registration Form Data:', formData);
-
-      setTimeout(() => {
-        this.isLoading = false;
+    this.authService.registerFreelancer({
+      email: this.email,
+      password: this.password,
+      name: `${this.firstName} ${this.lastName}`,
+      skills: this.freelanceType ? [this.freelanceType] : [],
+      phone: this.phoneNumber
+    }).subscribe({
+      next: async () => {
+        await loading.dismiss();
         this.router.navigate(['/registration-pending']);
-      }, 1500);
-      
-
-    }
+      },
+      error: async (err) => {
+        await loading.dismiss();
+        const alert = await this.alertCtrl.create({
+          header: 'Erreur',
+          message: err.error?.error || 'Erreur lors de l\'inscription.',
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
+    });
   }
 
 
@@ -89,6 +97,11 @@ export class RegisterPage implements OnInit {
 
     if (!this.freelanceType) {
       console.warn('Please select a freelance type');
+      return false;
+    }
+
+    if (this.freelanceType === 'other' && !this.otherField.trim()) {
+      console.warn('Please describe your field');
       return false;
     }
 

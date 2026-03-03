@@ -24,6 +24,8 @@
         <ion-input 
           type="email" 
           placeholder="Email Address"
+          [(ngModel)]="email"
+          name="email"
           class="form-input">
         </ion-input>
       </ion-item>
@@ -33,6 +35,8 @@
         <ion-input
           [type]="showPassword ? 'text' : 'password'"
           placeholder="Password"
+          [(ngModel)]="password"
+          name="password"
           class="form-input">
         </ion-input>
         <ion-icon 
