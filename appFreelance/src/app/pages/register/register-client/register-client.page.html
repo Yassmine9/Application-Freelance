@@ -99,6 +99,17 @@
             <ion-select-option value="other">Other</ion-select-option>
           </ion-select>
         </ion-item>
+
+        <ion-item class="form-item other-field" *ngIf="industry === 'other'">
+          <ion-icon name="document-text-outline" slot="start" class="form-icon"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Describe your industry"
+            class="form-input"
+            [(ngModel)]="otherIndustry"
+            name="otherIndustry">
+          </ion-input>
+        </ion-item>
       </div>
 
       <ion-item lines="none" class="checkbox-item">

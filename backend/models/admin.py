@@ -5,8 +5,8 @@ from models.freelancer import Freelancer
 
 
 class Admin(BaseUser):
-    """Modèle Admin – collection 'admins'"""
-    collection = db["admins"] if db is not None else None
+    """Modèle Admin """
+    collection = db["admin"] if db is not None else None
 
     @classmethod
     def create(cls, email, password, name):
@@ -14,7 +14,7 @@ class Admin(BaseUser):
             email, password, name,
             role="admin",
             status="active",
-            permissions=["manage_users", "manage_projects", "manage_proposals", "view_stats"]
+            permissions=["manage_users", "manage_projects", "manage_proposals", "manage_gigs"]
         )
 
     @classmethod
@@ -45,3 +45,10 @@ class Admin(BaseUser):
         for u in pending:
             u.pop("password", None)
         return pending
+    @classmethod
+    def block_user(cls, email):
+        for model in (Client, Freelancer):
+            user = model.find_by_email(email)
+            if user:
+                return model.update(email, is_blocked=True)
+        return None

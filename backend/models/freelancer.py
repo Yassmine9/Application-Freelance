@@ -3,7 +3,10 @@ from models.base_user import BaseUser
 
 
 class Freelancer(BaseUser):
+<<<<<<< HEAD
     """Modèle Freelancer – collection 'freelancer'"""
+=======
+>>>>>>> origin/YassmineA
     collection = db["freelancer"] if db is not None else None
 
     @classmethod
@@ -12,6 +15,7 @@ class Freelancer(BaseUser):
             email, password, name,
             role="freelancer",
             phone=phone,
+<<<<<<< HEAD
             # filled later by freelancer
             title="",
             bio="",
@@ -21,6 +25,9 @@ class Freelancer(BaseUser):
             projects_completed=0,
             avatar_filename="",
             cv_filename="",
+=======
+            is_blocked=False,
+>>>>>>> origin/YassmineA
             portfolio=[],
             # calculated automatically
             client_rating=0.0,
