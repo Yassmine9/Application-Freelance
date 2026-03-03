@@ -775,3 +775,14 @@ ion-content.profile-content {
     }
   }
 }
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  ion-spinner {
+    color: $purple-mid;
+    width: 48px;
+    height: 48px;
+  }
+}

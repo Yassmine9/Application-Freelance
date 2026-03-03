@@ -1,75 +1,124 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
-import { IonicModule ,IonContent} from '@ionic/angular';   // ✅ Must import IonicModule
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonicModule, IonContent } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FreelancerProfileService } from './freelancer-profile.service';
+import { Router } from '@angular/router';
+
 export interface Project {
   title: string;
   description: string;
   link: string;
 }
 
-export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected';
+export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'blocked';
+
 @Component({
   selector: 'app-freelancer-profile',
   templateUrl: './freelancer-profile.page.html',
   styleUrls: ['./freelancer-profile.page.scss'],
+  standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class FreelancerProfilePage implements OnInit {
 
-@ViewChild(IonContent, { static: false }) content!: IonContent;
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
 
   // ---- Profile fields ----
-  bio: string = 'I am a passionate web developer specialized in Angular.';
-  skills: string = 'Angular,Ionic,Node';
+  name: string = 'asma';
+  email: string = '';
+  phone: string = '';
+  title: string = '';
+  bio: string = '';
+  skills: string = '';
   skillList: string[] = [];
-  cvName: string = 'freelancer_cv.pdf';
+  hourlyRate: number = 0;
+  experienceYears: number = 0;
+  projectsCompleted: number = 0;
+  clientRating: number = 0;
+  successRate: number = 0;
+  cvName: string = '';
   cvFile: File | null = null;
-
-  // ---- Portfolio: list of past projects ----
-  projects: Project[] = [
-    {
-      title: 'E-commerce App',
-      description: 'A full-stack shopping app built with Angular and Node.js.',
-      link: 'https://myproject.com'
-    }
-  ];
+  avatarFile: File | null = null;
+  avatarUrl: string = 'assets/avatar.png';
+  projects: Project[] = [];
+  profileStatus: ProfileStatus = 'draft';
 
   // ---- UI state ----
   editMode = false;
   activeTab: string = 'bio';
+  isLoading = true;
 
-  // ---- Profile status: draft → pending → approved / rejected ----
-  profileStatus: ProfileStatus = 'draft';
+  get isTopRated(): boolean {
+    return this.successRate >= 90;
+  }
 
   get statusLabel(): string {
     const labels: Record<ProfileStatus, string> = {
       draft: 'Draft',
       pending: '⏳ Pending',
       approved: '✅ Approved',
-      rejected: '❌ Rejected'
+      rejected: '❌ Rejected',
+      blocked: '🚫 Blocked'
     };
     return labels[this.profileStatus];
   }
 
+  constructor(private profileService: FreelancerProfileService,private router:Router) {}
+   
   ngOnInit() {
-    this.skillList = this.skills.split(',').map(s => s.trim());
+    console.log('PAGE LOADED - name is:', this.name);
+    
+    this.loadProfile();
   }
 
-  // ---- Tab navigation — scrolls to section ----
+  // ---- Load from API ----
+  loadProfile() {
+  this.isLoading = true;
+  this.profileService.getProfile().subscribe({
+    next: (data) => {
+      console.log('DATA FROM API:', data);
+      this.name              = data.user.name;
+      this.email             = data.user.email || '';
+      this.phone             = data.user.phone || '';
+      this.title             = data.user.title || '';
+      this.bio               = data.user.bio || '';
+      this.skillList         = data.user.skills || [];
+      this.skills            = (data.user.skills || []).join(', ');
+      this.hourlyRate        = data.user.hourly_rate || 0;
+      this.experienceYears   = data.user.experience_years || 0;
+      this.projectsCompleted = data.user.projects_completed || 0;
+      this.clientRating      = data.user.client_rating || 0;
+      this.successRate       = data.user.success_rate || 0;
+      this.cvName            = data.user.cv_filename || '';
+      this.projects          = data.user.portfolio || [];
+      this.profileStatus     = data.user.status || 'draft';
+      if (data.avatar_filename) {
+        this.avatarUrl = `http://127.0.0.1:5000/uploads/avatars/${data.avatar_filename}`;
+      }
+      this.isLoading = false;
+      
+    },
+    error: (err) => {
+      console.error('Failed to load profile', err);
+      this.isLoading = false;
+    }
+  });
+}
+  // ---- Tab navigation ----
   async setTab(tab: string) {
     this.activeTab = tab;
     const scrollEl = await this.content.getScrollElement();
     const target = document.getElementById(tab);
     if (target) {
-      const offset = target.offsetTop;
-      scrollEl.scrollTo({ top: offset - 60, behavior: 'smooth' });
+      scrollEl.scrollTo({ top: target.offsetTop - 60, behavior: 'smooth' });
     }
   }
 
   // ---- Edit mode ----
   toggleEdit() {
-    this.editMode = !this.editMode;
+    //this.editMode = !this.editMode;
+     this.router.navigate(['/pages/freelancer-edit']);
   }
 
   // ---- CV ----
@@ -86,7 +135,18 @@ export class FreelancerProfilePage implements OnInit {
     this.cvName = '';
   }
 
-  // ---- Portfolio projects ----
+  // ---- Avatar ----
+  onAvatarSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.avatarFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.avatarUrl = e.target.result;
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // ---- Portfolio ----
   addProject() {
     this.projects.push({ title: '', description: '', link: '' });
   }
@@ -98,23 +158,42 @@ export class FreelancerProfilePage implements OnInit {
   // ---- Save ----
   saveProfile() {
     this.skillList = this.skills.split(',').map(s => s.trim()).filter(s => s);
-    
-    // Remove empty projects
-    this.projects = this.projects.filter(p => p.title.trim() !== '');
-    this.editMode = false;
-    console.log('Profile saved');
-  }
+    this.projects  = this.projects.filter(p => p.title.trim() !== '');
 
- 
+    const payload = {
+      title:              this.title,
+      bio:                this.bio,
+      skills:             this.skillList,
+      hourly_rate:        this.hourlyRate,
+      phone:              this.phone,
+      experience_years:   this.experienceYears,
+      projects_completed: this.projectsCompleted,
+      portfolio:          this.projects
+    };
 
-  // ---- Called by Admin (example) ----
-  approveProfile() {
-    this.profileStatus = 'approved';
-  }
+    this.profileService.updateProfile(payload).subscribe({
+      next: (res) => {
+        this.profileStatus = res.status;
+        this.editMode = false;
+        console.log('Profile saved');
+      },
+      error: (err) => console.error('Failed to save profile', err)
+    });
 
-  rejectProfile() {
-    this.profileStatus = 'rejected';
+    // upload CV if new file selected
+    if (this.cvFile) {
+      this.profileService.uploadCV(this.cvFile).subscribe({
+        next: (res) => this.cvName = res.cv_filename,
+        error: (err) => console.error('CV upload failed', err)
+      });
+    }
+
+    // upload avatar if new file selected
+    if (this.avatarFile) {
+      this.profileService.uploadAvatar(this.avatarFile).subscribe({
+        next: (res) => console.log('Avatar uploaded', res),
+        error: (err) => console.error('Avatar upload failed', err)
+      });
+    }
   }
 }
-
-

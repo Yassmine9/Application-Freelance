@@ -1,3 +1,4 @@
+
 <ion-header class="header">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -14,18 +15,25 @@
 
 <ion-content class="profile-content" #content>
 
+  <div *ngIf="isLoading" style="display:flex; justify-content:center; padding-top:40px;">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+
+   
   <!-- HERO SECTION -->
   <div class="hero-section">
     <div class="hero-bg"></div>
     <div class="hero-inner">
       <div class="avatar-wrapper">
-        <img src="assets/avatar.png" class="avatar-img" />
+        <img [src]="avatarUrl" class="avatar-img" />
         
       </div>
       <div class="hero-info">
-        <h1 class="hero-name">Julian Kovalsky</h1>
-        <p class="hero-role"><span class="code-tag">&lt;/&gt;</span>Full-Stack Senior Developper</p>
-        <p class="hero-badge">⭐ Top Rated Freelancer • 98% Success</p>
+        <h1 class="hero-name">{{name}}</h1>
+        <p class="hero-role"><span class="code-tag">&lt;/&gt;</span>{{ title}}</p>
+        <p class="hero-badge">⭐ Top Rated Freelancer • {{successRate}}% Success</p>
       </div>
     </div>
 
@@ -198,22 +206,22 @@
       <div class="insight-card">
         <ion-icon name="briefcase-outline" class="insight-icon blue"></ion-icon>
         <p class="insight-label">PROJECTS</p>
-        <h3 class="insight-value">154</h3>
+        <h3 class="insight-value">{{projectsCompleted}}</h3>
       </div>
       <div class="insight-card">
         <ion-icon name="star-outline" class="insight-icon purple"></ion-icon>
         <p class="insight-label">CLIENT RATING</p>
-        <h3 class="insight-value">4.9</h3>
+        <h3 class="insight-value">{{clientRating}}</h3>
       </div>
       <div class="insight-card">
         <ion-icon name="ribbon-outline" class="insight-icon blue"></ion-icon>
         <p class="insight-label">EXPERIENCE</p>
-        <h3 class="insight-value">6 Years</h3>
+        <h3 class="insight-value">{{experienceYears}}</h3>
       </div>
       <div class="insight-card">
         <ion-icon name="trending-up-outline" class="insight-icon pink"></ion-icon>
         <p class="insight-label">SUCCESS RATE</p>
-        <h3 class="insight-value">98%</h3>
+        <h3 class="insight-value">{{successRate}}%</h3>
       </div>
     </div>
   </div>
@@ -265,6 +273,16 @@
   </div>
 
   <div style="height: 100px;"></div>
+
+
+    <!-- TAB BUTTONS -->
+    ...
+
+    <!-- ALL OTHER SECTIONS -->
+    ...
+
+  </ng-container>
+
 </ion-content>
 
 <!-- FLOATING BOTTOM NAV -->

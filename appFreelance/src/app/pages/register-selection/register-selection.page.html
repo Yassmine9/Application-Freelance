@@ -1,0 +1,79 @@
+<ion-header class="selection-header">
+  <ion-toolbar class="selection-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" class="back-btn"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">Choose Account Type</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="selection-content" [fullscreen]="true">
+  <div class="selection-container">
+    <!-- Header Section -->
+    <div class="selection-header-section">
+      <div class="logo-container">
+        <ion-icon name="people" class="logo-icon"></ion-icon>
+      </div>
+      <h1 class="selection-title">Join Our Platform</h1>
+      <p class="selection-subtitle">Select the account type that best fits your needs</p>
+    </div>
+
+    <!-- Selection Options -->
+    <div class="options-container">
+      <!-- Freelancer Option -->
+      <div class="option-card freelancer-card" (click)="selectFreelancer()" tabindex="0" role="button" aria-label="Register as Freelancer">
+        <div class="card-header">
+          <div class="card-icon">
+            <ion-icon name="code-slash" class="option-icon"></ion-icon>
+          </div>
+          
+        </div>
+        <div class="card-content">
+          <div class="card-text">
+            <h2 class="card-title">I'm a Freelancer</h2>
+            <p class="card-description">Offer your skills and services to clients worldwide. Create your professional profile and start earning.</p>
+            <ul class="card-features">
+              <li><ion-icon name="checkmark-circle" class="feature-icon"></ion-icon> Showcase your portfolio</li>
+              <li><ion-icon name="checkmark-circle" class="feature-icon"></ion-icon> Find projects that match your skills</li>
+              <li><ion-icon name="checkmark-circle" class="feature-icon"></ion-icon> Get paid securely</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-action">Get Started <ion-icon name="arrow-forward" class="action-icon"></ion-icon></span>
+        </div>
+      </div>
+
+      <!-- Client Option -->
+      <div class="option-card client-card" (click)="selectClient()" tabindex="0" role="button" aria-label="Register as Client">
+        <div class="card-header">
+          <div class="card-icon">
+            <ion-icon name="business" class="option-icon"></ion-icon>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="card-text">
+            <h2 class="card-title">I'm a Client</h2>
+            <p class="card-description">Find and hire talented freelancers for your projects. Post jobs and connect with professionals.</p>
+            <ul class="card-features">
+              <li><ion-icon name="checkmark-circle" class="feature-icon"></ion-icon> Post projects</li>
+              <li><ion-icon name="checkmark-circle" class="feature-icon"></ion-icon> Access to global talent pool</li>
+              <li><ion-icon name="checkmark-circle" class="feature-icon"></ion-icon> Secure payment system</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="card-action">Find Talent <ion-icon name="arrow-forward" class="action-icon"></ion-icon></span>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <!-- Login Link -->
+    <div class="login-link-container">
+      <span class="login-text">Already have an account?</span>
+      <a href="/login" class="login-link">Sign In</a>
+    </div>
+  </div>
+</ion-content>
