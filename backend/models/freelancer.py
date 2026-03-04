@@ -4,7 +4,7 @@ from models.base_user import BaseUser
 
 class Freelancer(BaseUser):
     """Modèle Freelancer – collection 'freelancer_profile'"""
-    collection = db["freelancer_profile"] if db is not None else None
+    collection = db["freelancer"] if db is not None else None
 
     @classmethod
     def create(cls, email, password, name, skills=None, hourly_rate=0, bio="", phone=""):

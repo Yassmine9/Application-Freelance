@@ -6,7 +6,7 @@ from models.freelancer import Freelancer
 
 class Admin(BaseUser):
     """Modèle Admin – collection 'admins'"""
-    collection = db["admins"] if db is not None else None
+    collection = db["admin"] if db is not None else None
 
     @classmethod
     def create(cls, email, password, name):
