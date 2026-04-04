@@ -6,7 +6,8 @@ from routes.auth import auth_routes
 
 app = Flask(__name__)
 
-CORS(app)
+
+CORS(app, origins=["http://localhost:8100", "http://127.0.0.1:5000"])
 
 app.config["JWT_SECRET_KEY"] = Config.JWT_SECRET_KEY
 

@@ -28,6 +28,7 @@ def get_profile():
         return jsonify({"error": "Accès refusé"}), 403
 
     return jsonify({
+        "user": {
         "id":                 user["_id"],
         "name":               user.get("name", ""),
         "email":              user.get("email", ""),
@@ -50,7 +51,7 @@ def get_profile():
         "experience_years":   user.get("experience_years", 0),
         # status
         "status":             user.get("status", "draft"),
-    }), 200
+    }}), 200
 
 
 # ── UPDATE my profile ────────────────────────────────────────

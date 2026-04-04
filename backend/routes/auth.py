@@ -27,7 +27,7 @@ def login():
         return jsonify({"error": "Email et mot de passe requis"}), 400
 
     user = authenticate_user(email, password)
-
+    
     if user:
         token = create_access_token(identity=email)
         return jsonify({
