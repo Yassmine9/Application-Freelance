@@ -1,99 +1,159 @@
 <ion-header>
   <ion-toolbar class="custom-header">
-
-    <!-- LEFT: Menu -->
     <ion-buttons slot="start">
-      <ion-button>
-        <ion-icon name="menu-outline"></ion-icon>
-      </ion-button>
+      <ion-menu-button menu="main-menu" class="icon-button"></ion-menu-button>
     </ion-buttons>
 
-    <!-- CENTER: Logo -->
     <div class="logo-container">
       <img src="assets/logo.png" alt="logo" />
     </div>
 
-    <!-- RIGHT: Notification -->
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button class="icon-button">
         <ion-icon name="notifications-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="home-content"
-  [fullscreen]="true"
-  [forceOverscroll]="false">
-  <div class="hero">
-    <div class="hero-badge">Hello! User </div>
-    <h1 class="hero-title">Let's find best talent for you</h1>
+<ion-content class="home-content" [fullscreen]="true" [forceOverscroll]="false">
+  <div class="page-shell">
+    <section class="hero-card">
+      <div class="hero-badge">Hello, User <span class="hand">👋🏻</span></div>
+      <h1 class="hero-title">Let's find best talent for you </h1>
 
-    <div class="hero-actions">
-      
-      <ion-searchbar
-        class="search-bar"
-        placeholder="Search for freelancers, jobs, or projects"
-        
-      ></ion-searchbar>
-    </div>
-  </div>
-<!-- Service categories  -->
-  <section class="feature-section">
-    <div class="section-heading">
-      <span class="section-kicker">Service category </span>
-      <a href="view-all" class="view-all">View all</a>
-    </div>
 
-    <div class="feature-grid">
-      <article class="feature-card" *ngFor="let feature of features">
-        <div class="feature-icon">
-          <ion-icon [name]="feature.icon"></ion-icon>
+      <div class="hero-actions">
+        <div class="search-shell">
+          <ion-searchbar
+            class="search-bar"
+            name="home-search"
+            [value]="searchTerm"
+            [placeholder]="searchPlaceholder"
+            (ionInput)="onSearchTermChange($event)"
+          ></ion-searchbar>
+
+          <ion-button class="search-filter-button" fill="clear" (click)="openSearchScopePicker()">
+            <ion-icon name="reorder-three-outline"></ion-icon>
+          </ion-button>
         </div>
-        <h3>{{ feature.title }}</h3>
-      </article>
-    </div>
-  </section>
-<!-- Top rated freelancers -->
-  <section class="feature-section">
-    <div class="section-heading">
-      <span class="section-kicker">Top rated freelancers </span>
-    </div>
 
-
-    <div class="feature-grid">
-      <article class="feature-card" *ngFor="let freelancer of freelancers">
-        <div class="freelancer-avatar">
-          <img [src]="freelancer.avatar" alt="{{ freelancer.name }}" />
+        <div class="hero-metrics">
+          <div class="metric-card">
+            <strong>120+</strong>
+            <span>talents</span>
+          </div>
+          <div class="metric-card">
+            <strong>24h</strong>
+            <span>response</span>
+          </div>
+          <div class="metric-card">
+            <strong>4.9</strong>
+            <span>rating</span>
+          </div>
         </div>
-        <h3>{{ freelancer.name }}</h3>
-      </article>
+      </div>
+    </section>
 
-    </div>
-  </section>
-  <!-- Top services -->
-  <section class="sevices-section">
- <div class="services"> 
-    <div class="section-heading">
-      <span class="section-kicker">Top services </span>
-    </div>
-    <div class="services-grid">
-      <article class="service-card" *ngFor="let service of services">
-        <img [src]="service.image" alt="{{ service.title }}" class="service-image" />
-        <h3>{{ service.title }}</h3>
-        <p>{{ service.description }}</p>
-      </article>
-    </div>
+    <section class="feature-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Service category</span>
+
+        </div>
+        <a routerLink="/view-all-services" class="view-all">View all</a>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card" *ngFor="let feature of features; trackBy: trackByIndex">
+          <div class="feature-icon">
+            <ion-icon [name]="feature.icon"></ion-icon>
+          </div>
+          <h3>{{ feature.title }}</h3>
+        </article>
+      </div>
+    </section>
+
+    <section class="feature-section" *ngIf="showFreelancersSection">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Top rated freelancers</span>
+
+        </div>
+        <a routerLink="/view-all-freelancers" class="view-all">View all</a>
+      </div>
+
+      <div class="freelancer-strip">
+        <article
+          class="freelancer-card"
+          *ngFor="let freelancer of filteredFreelancers; trackBy: trackByIndex"
+        >
+          <div class="freelancer-avatar">
+            <img [src]="freelancer.avatarImage" [alt]="freelancer.name" loading="lazy" />
+          </div>
+          <div class="freelancer-copy">
+            <h3>{{ freelancer.name }}</h3>
+            <div class="freelancer-tag">
+              <ion-icon [name]="freelancer.icon"></ion-icon>
+              <span>{{ freelancer.category }}</span>
+            </div>
+            <p>Fast response and a polished portfolio.</p>
+          </div>
+        </article>
+
+        <div class="empty-state" *ngIf="filteredFreelancers.length === 0">
+          No freelancers match your search.
+        </div>
+      </div>
+    </section>
+
+    <section class="service-section" *ngIf="showServicesSection">
+      <div class="section-heading">
+        <div>
+          <h2>Top Services</h2>
+        </div>
+        <a routerLink="/view-all-services" class="view-all">View All</a>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card" *ngFor="let service of filteredServices; trackBy: trackByIndex">
+          <div class="service-cover-wrap">
+            <img [src]="service.coverImage" [alt]="service.title" class="service-cover" loading="lazy" />
+          </div>
+
+          <div class="service-overlay">
+            <div class="service-top">
+              <img [src]="service.avatarImage" [alt]="service.provider" class="service-avatar" loading="lazy" />
+
+              <div class="service-copy">
+                <h3>{{ service.provider }}</h3>
+                <h4>{{ service.profession }}</h4>
+                <p>{{ service.description }}</p>
+              </div>
+            </div>
+
+            <div class="service-bottom">
+              <div class="service-rating">
+                <ion-icon name="star"></ion-icon>
+                <span>{{ service.rating | number: '1.1-1' }}</span>
+              </div>
+
+              <ion-button fill="solid" size="small" class="service-more-btn">More details</ion-button>
+            </div>
+          </div>
+        </article>
+
+        <div class="empty-state" *ngIf="filteredServices.length === 0">
+          No services match your search.
+        </div>
+      </div>
+    </section>
   </div>
-
-  </section>
 
 </ion-content>
 
-<!-- Navbar flottante -->
 <div class="custom-navbar">
-  <ion-icon name="home-outline"></ion-icon>
+  <ion-icon name="home-outline" class="active"></ion-icon>
   <ion-icon name="search-outline"></ion-icon>
 
   <div class="notif">

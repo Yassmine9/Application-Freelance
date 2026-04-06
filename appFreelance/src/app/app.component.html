@@ -1,3 +1,49 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="main-content" menuId="main-menu" side="start" type="overlay">
+    <ion-content class="app-menu">
+      <div class="menu-hero">
+        <div class="menu-brand">Freelance Hub</div>
+
+      </div>
+
+      <ion-list lines="none" class="menu-list">
+        <ion-menu-toggle autoHide="true">
+          <ion-item routerLink="/home" routerDirection="root" detail="false" button>
+            <ion-icon slot="start" name="home-outline"></ion-icon>
+            <ion-label>Home</ion-label>
+          </ion-item>
+          <ion-item routerLink="/view-all-freelancers" routerDirection="forward" detail="false" button>
+            <ion-icon slot="start" name="people-outline"></ion-icon>
+            <ion-label>Freelancers</ion-label>
+          </ion-item>
+          <ion-item routerLink="/view-all-services" routerDirection="forward" detail="false" button>
+            <ion-icon slot="start" name="briefcase-outline"></ion-icon>
+            <ion-label>Services</ion-label>
+          </ion-item>
+
+          <ion-item routerLink="/preferences" routerDirection="forward" detail="false" button>
+            <ion-icon slot="start" name="options-outline"></ion-icon>
+            <ion-label>Preferences</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="!isLoggedIn" routerLink="/login" routerDirection="forward" detail="false" button>
+            <ion-icon slot="start" name="log-in-outline"></ion-icon>
+            <ion-label>Login</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="!isLoggedIn" routerLink="/register" routerDirection="forward" detail="false" button>
+            <ion-icon slot="start" name="person-add-outline"></ion-icon>
+            <ion-label>Register</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="isLoggedIn" detail="false" button (click)="onLogout()">
+            <ion-icon slot="start" name="log-out-outline"></ion-icon>
+            <ion-label>Logout</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet id="main-content"></ion-router-outlet>
 </ion-app>

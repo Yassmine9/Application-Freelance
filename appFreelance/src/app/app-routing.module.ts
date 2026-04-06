@@ -3,6 +3,10 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: 'preferences',
+    loadChildren: () => import('./pages/preferences/preferences.module').then( m => m.PreferencesPageModule)
+  },
+  {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
@@ -27,8 +31,16 @@ const routes: Routes = [
     loadChildren: () => import('./pages/registration-pending/registration-pending.module').then( m => m.RegistrationPendingPageModule)
   },
   {
+    path: 'view-all-freelancers',
+    loadChildren: () => import('./pages/view-all-freelancers/view-all-freelancers.module').then(m => m.ViewAllFreelancersPageModule)
+  },
+  {
+    path: 'view-all-services',
+    loadChildren: () => import('./pages/view-all-services/view-all-services.module').then(m => m.ViewAllServicesPageModule)
+  },
+  {
     path: '',
-      redirectTo: 'home',
+      redirectTo: 'preferences',
     pathMatch: 'full'
   },
 ];
