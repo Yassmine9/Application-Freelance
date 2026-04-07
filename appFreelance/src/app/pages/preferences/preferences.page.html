@@ -1,0 +1,35 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="preferences-toolbar">
+    <ion-title>Choose Your Preferences</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="preferences-content" [fullscreen]="true">
+  <div class="preferences-shell">
+    <section class="hero-block">
+      <h1>What are you looking for?</h1>
+      <p>Select categories you care about and we will personalize your home feed.</p>
+    </section>
+
+    <section class="chips-grid">
+      <button
+        type="button"
+        class="category-chip"
+        *ngFor="let category of categories"
+        [class.active]="selectedCategories.has(category)"
+        (click)="toggleCategory(category)"
+      >
+        <span>{{ category }}</span>
+      </button>
+    </section>
+
+    <ion-button
+      expand="block"
+      class="continue-btn"
+      [disabled]="!canContinue"
+      (click)="continueToHome()"
+    >
+      Continue
+    </ion-button>
+  </div>
+</ion-content>

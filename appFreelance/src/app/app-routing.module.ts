@@ -2,19 +2,45 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-
-  // ── Person A routes (commented out until merge) ───────────────────────────
-  // { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule) },
-  // { path: 'register', loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule) },
-  // { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomePageModule) },
-  // { path: 'freelancer', loadChildren: () => import('./pages/freelancer/freelancer.module').then(m => m.FreelancerPageModule) },
-  // { path: 'client', loadChildren: () => import('./pages/client/client.module').then(m => m.ClientPageModule) },
-  // { path: 'admin', loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminPageModule) },
-
-  // ── Person C routes (your work) ───────────────────────────────────────────
   {
     path: 'dev-login',
     loadComponent: () => import('./dev-login/dev-login.page').then(m => m.DevLoginPage)
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/register-selection/register-selection.module').then(m => m.RegisterSelectionPageModule)
+  },
+  {
+    path: 'register-freelancer',
+    loadChildren: () => import('./pages/register/register-freelancer/register-freelancer.module').then(m => m.RegisterPageModule)
+  },
+  {
+    path: 'register-client',
+    loadChildren: () => import('./pages/register/register-client/register-client.module').then(m => m.RegisterClientPageModule)
+  },
+  {
+    path: 'registration-pending',
+    loadChildren: () => import('./pages/registration-pending/registration-pending.module').then(m => m.RegistrationPendingPageModule)
+  },
+  {
+    path: 'preferences',
+    loadChildren: () => import('./pages/preferences/preferences.module').then(m => m.PreferencesPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+  },
+  {
+    path: 'view-all-freelancers',
+    loadChildren: () => import('./pages/view-all-freelancers/view-all-freelancers.module').then(m => m.ViewAllFreelancersPageModule)
+  },
+  {
+    path: 'view-all-services',
+    loadChildren: () => import('./pages/view-all-services/view-all-services.module').then(m => m.ViewAllServicesPageModule)
   },
   {
     path: 'offers',
@@ -36,10 +62,8 @@ const routes: Routes = [
     path: 'profile/:role/:id',
     loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
   },
-
-  // ── Default ───────────────────────────────────────────────────────────────
-  { path: '', redirectTo: 'dev-login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'dev-login' }
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({

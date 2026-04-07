@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from bson import ObjectId
 from datetime import datetime
-from database import db
+from db.mongo import db
 
 offers_bp = Blueprint("offers", __name__)
 

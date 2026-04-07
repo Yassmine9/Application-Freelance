@@ -10,14 +10,34 @@ import { Injectable } from '@angular/core';
 export class FreelanceAuthHelper {
 
   getToken(): string {
-    return localStorage.getItem('token') || '';
+    return localStorage.getItem('auth_token') || localStorage.getItem('token') || '';
   }
 
   getUserId(): string {
+    const stored = localStorage.getItem('auth_user');
+    if (stored) {
+      try {
+        const user = JSON.parse(stored);
+        return user?._id || user?.id || '';
+      } catch {
+        return '';
+      }
+    }
+
     return localStorage.getItem('userId') || '';
   }
 
   getRole(): string {
+    const stored = localStorage.getItem('auth_user');
+    if (stored) {
+      try {
+        const user = JSON.parse(stored);
+        return user?.role || '';
+      } catch {
+        return '';
+      }
+    }
+
     return localStorage.getItem('role') || '';
   }
 

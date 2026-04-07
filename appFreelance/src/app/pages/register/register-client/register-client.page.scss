@@ -1,0 +1,264 @@
+$primary:       #977DFF;
+$primary-dark:  #0600AB;
+$primary-light: #0033FF;
+$accent:        #0033FF;
+$danger:        #d63031;
+$success:       #00c853;
+$light-bg:      #f8f9fc;
+$white:         #ffffff;
+$border:        #e8e8e8;
+$text-dark:     #1a1a2e;
+$text-light:    #8e8e93;
+
+.register-header {
+  ion-toolbar {
+    --background: transparent;
+    --border-style: none;
+    --min-height: 56px;
+  }
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: $text-dark;
+}
+
+.back-btn {
+  --color: #{$primary};
+  --icon-font-size: 28px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+.register-content {
+  --background: #{$light-bg};
+  --padding-top: 0;
+  --padding-bottom: env(safe-area-inset-bottom);
+}
+
+.register-container {
+  padding: 16px 20px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  min-height: 100%;
+}
+
+.register-header-section {
+  text-align: center;
+  padding: 20px 0 32px;
+}
+
+.logo-container {
+  width: 80px;
+  height: 80px;
+  margin: 30px auto 16px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba($primary, 0.3);
+}
+
+.logo-icon {
+  font-size: 40px;
+  color: $white;
+}
+
+.register-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $text-dark;
+  margin: 0 0 8px;
+}
+
+.register-subtitle {
+  font-size: 15px;
+  color: $text-light;
+  margin: 0;
+}
+
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-section {
+  background: $white;
+  border-radius: 16px;
+  padding: 8px 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.form-item {
+  --background: transparent;
+  --border-style: none;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  --min-height: 56px;
+  border-bottom: 1px solid $border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.form-icon {
+  font-size: 22px;
+  color: $primary;
+  margin-right: 12px;
+}
+
+.form-input {
+  --padding-start: 0;
+  --padding-end: 8px;
+  font-size: 16px;
+  color: $text-dark;
+  --placeholder-color: #{$text-light};
+  --placeholder-opacity: 1;
+}
+
+.password-toggle {
+  font-size: 24px;
+  color: $text-light;
+  padding: 12px;
+  margin-right: -8px;
+
+  &:active {
+    color: $primary;
+  }
+}
+
+.form-select {
+  --padding-start: 0;
+  font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.checkbox-item {
+  --background: transparent;
+  --border-style: none;
+  --padding-start: 0;
+  --min-height: 48px;
+  align-items: center;
+
+}
+
+.form-checkbox {
+  --size: 24px;
+  --border-radius: 6px;
+  --border-color: #{$border};
+  --background-checked: #{$primary};
+  --border-color-checked: #{$primary};
+  margin-right: 12px;
+}
+
+.terms-label {
+  font-size: 14px;
+  color: $text-light;
+  line-height: 1.4;
+  white-space: normal;
+}
+
+.terms-link {
+  color: $primary;
+  font-weight: 600;
+}
+
+.submit-button {
+  --background: #{$primary};
+  --background-activated: #{$primary-dark};
+  --background-focused: #{$primary-dark};
+  --background-hover: #{$primary-dark};
+  --color: #ffffff;
+  --border-radius: 14px;
+
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 56px;
+  min-height: 56px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin: 16px 0;
+
+  &:disabled {
+    --background: #{$border};
+    --box-shadow: none;
+    opacity: 0.7;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+.button-spinner {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  --color: #ffffff;
+}
+
+// ────────────────────────────────────────────────
+// Switch Type Link
+// ────────────────────────────────────────────────
+.switch-type-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 0 8px;
+  border-top: 1px solid $border;
+  margin-top: 8px;
+}
+
+.switch-text {
+  font-size: 14px;
+  color: $text-light;
+}
+
+.switch-link {
+  font-size: 15px;
+  color: #0033FF;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 12px;
+}
+
+// ────────────────────────────────────────────────
+// Login Link - Bottom
+// ────────────────────────────────────────────────
+.login-link-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 0 8px;
+}
+
+.login-text {
+  font-size: 15px;
+  color: $text-light;
+}
+
+.login-link {
+  font-size: 15px;
+  color: $primary;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 4px;
+}
+
+// ────────────────────────────────────────────────
+// iOS Safe Area Support
+// ────────────────────────────────────────────────
+@supports (padding-top: env(safe-area-inset-top)) {
+  .register-header {
+    padding-top: env(safe-area-inset-top);
+  }
+}
