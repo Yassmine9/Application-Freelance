@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/offers"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ role === 'client' ? 'Client' : 'Freelancer' }} Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="center-box" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <div class="profile-container" *ngIf="!isLoading && profile">
+
+    <!-- Avatar + name header -->
+    <div class="profile-hero">
+      <div class="avatar-circle">{{ getInitials(profile.name || profile.username || '') }}</div>
+      <h1 class="profile-name">{{ profile.name || profile.username || 'User #' + userId?.slice(-6) }}</h1>
+      <span class="role-badge">{{ profile.role || role | titlecase }}</span>
+      <p class="profile-bio" *ngIf="profile.bio">{{ profile.bio }}</p>
+    </div>
+
+    <!-- Details card -->
+    <div class="info-card" *ngIf="profile.email || profile.location || profile.skills">
+      <div class="info-row" *ngIf="profile.email">
+        <ion-icon name="mail-outline"></ion-icon>
+        <span>{{ profile.email }}</span>
+      </div>
+      <div class="info-row" *ngIf="profile.phone">
+        <ion-icon name="call-outline"></ion-icon>
+        <span>{{ profile.phone }}</span>
+      </div>
+      <div class="info-row" *ngIf="profile.location">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>{{ profile.location }}</span>
+      </div>
+    </div>
+
+    <!-- Skills (freelancer) -->
+    <div class="skills-card" *ngIf="profile.skills?.length">
+      <h3>Skills</h3>
+      <div class="skills-wrap">
+        <span class="skill-pill" *ngFor="let s of profile.skills">{{ s }}</span>
+      </div>
+    </div>
+
+    <!-- Placeholder when teammate's full profile is not yet merged -->
+    <div class="coming-soon" *ngIf="!profile.email && !profile.skills">
+      <ion-icon name="person-outline"></ion-icon>
+      <p>Full profile coming soon</p>
+      <span>User ID: {{ userId }}</span>
+    </div>
+
+  </div>
+
+</ion-content>

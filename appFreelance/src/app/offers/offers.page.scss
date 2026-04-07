@@ -1,0 +1,430 @@
+/* ============================================
+   OFFERS PAGE - Premium Profile Style
+============================================ */
+
+ion-content {
+  --background: #f4f5f7;
+}
+
+/* ===== Header ===== */
+ion-header ion-toolbar {
+  --background: linear-gradient(135deg, #0f1c4d, #1e2a78);
+  --color: #ffffff;
+  --border-width: 0;
+
+  ion-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  ion-button {
+    --color: #ffffff;
+  }
+}
+
+/* ===== Search ===== */
+.search-section {
+  padding: 16px;
+
+  ion-searchbar {
+    --background: #ffffff;
+    --border-radius: 14px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --placeholder-color: #8e8e93;
+    --icon-color: #8e8e93;
+    height: 46px;
+    color: #111;
+  }
+}
+
+/* ===== Active Category Banner ===== */
+.active-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 16px 12px;
+  background: #1e2a78;
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #fff;
+
+  ion-icon { font-size: 1rem; flex-shrink: 0; }
+
+  span {
+    flex: 1;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .clear-cat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255,255,255,0.18);
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    cursor: pointer;
+
+    ion-icon { font-size: 0.85rem; }
+  }
+}
+
+/* ===== Filter Chips ===== */
+.filter-tabs {
+  display: flex;
+  gap: 10px;
+  padding: 0 16px 16px;
+  overflow-x: auto;
+
+  .filter-chip {
+    background: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #555;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+    &.active {
+      background: #1e2a78;
+      color: #ffffff;
+
+      .chip-count {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+    }
+
+    .chip-count {
+      background: #eef0f4;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+  }
+}
+
+/* ===== Cards ===== */
+.offers-feed {
+  padding: 0 16px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.job-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: 0.25s ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .status-chip {
+    padding: 5px 12px;
+    border-radius: 14px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .status-chip.open {
+    background: #e6f4ea;
+    color: #1a7f37;
+  }
+
+  .status-chip.in-progress {
+    background: #fff4e5;
+    color: #b26a00;
+  }
+
+  .status-chip.closed {
+    background: #f3f3f3;
+    color: #888;
+  }
+
+  .post-time {
+    font-size: 0.7rem;
+    color: #999;
+  }
+
+  .job-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #111;
+  }
+
+  .budget-row {
+    margin-bottom: 10px;
+
+    .budget-label {
+      font-size: 0.7rem;
+      color: #888;
+    }
+
+    .budget-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #1e2a78;
+    }
+  }
+
+  .job-desc {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .meta-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .tag-pill {
+      background: #f0f2f6;
+      border-radius: 12px;
+      padding: 5px 10px;
+      font-size: 0.7rem;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+
+  .client-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 14px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.15s;
+
+    &:active { background: #f0f2f6; }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+      color: #fff;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .client-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .client-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .client-id {
+      font-size: 0.7rem;
+      color: #999;
+    }
+
+    .chevron-icon {
+      color: #bbb;
+    }
+  }
+
+  .card-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+
+    ion-button {
+      --border-radius: 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  }
+}
+
+/* Category chips (mirrors filter chips) - kept for future use */
+
+.browse-by-category {
+  padding: 18px 16px 36px;
+
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin: 0 0 14px;
+    color: #111;
+  }
+
+  h3 {
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin: 0 0 12px;
+    color: #111;
+  }
+
+  .tiles {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .tile {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 10px 12px;
+    min-width: 92px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.18s ease;
+
+    &.active {
+      border-color: #1e2a78;
+      background: #f0f2fc;
+
+      .tile-icon {
+        background: linear-gradient(135deg, #0f1c4d, #1e2a78);
+      }
+
+      .tile-label { color: #1e2a78; }
+    }
+
+    &:active { transform: scale(0.95); }
+  }
+
+  .tile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#1e2a78,#4e5bd4);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;
+  }
+
+  .tile-label { font-size: 0.8rem; font-weight:700; color:#111; }
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 8px;
+  color: #aaa;
+
+  ion-icon { font-size: 3rem; color: #d0d5e8; }
+  p { font-size: 1rem; font-weight: 700; color: #555; margin: 0; }
+  span { font-size: 0.85rem; color: #888; }
+}
+
+/* ===== FAB ===== */
+ion-fab {
+  margin-bottom: 16px;
+  margin-right: 8px;
+
+  ion-fab-button {
+    --background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+    --box-shadow: 0 6px 20px rgba(30,42,120,0.4);
+  }
+}
+
+/* ===== Post Job Modal ===== */
+ion-modal {
+  --border-radius: 20px 20px 0 0;
+}
+
+.modal-content {
+  --background: #f4f5f7;
+}
+
+.modal-form {
+  padding: 20px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e2a78;
+    .required { color: #e53935; margin-left: 2px; }
+  }
+
+  .form-input {
+    --background: #ffffff;
+    --color: #111;
+    --placeholder-color: #999;
+    --border-radius: 10px;
+    --border-color: #d0d5e8;
+    --border-width: 1.5px;
+    font-size: 0.95rem;
+  }
+
+  .category-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .cat-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #d0d5e8;
+      background: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &.selected {
+        background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+        border-color: transparent;
+        color: #fff;
+      }
+    }
+  }
+
+  .submit-btn {
+    margin-top: 8px;
+    --background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+    --border-radius: 12px;
+    --box-shadow: 0 4px 15px rgba(30,42,120,0.3);
+    font-weight: 700;
+    font-size: 1rem;
+    height: 52px;
+  }
+}

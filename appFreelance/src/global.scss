@@ -1,37 +1,232 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
+@use "@ionic/angular/css/core.css";
+@use "@ionic/angular/css/normalize.css";
+@use "@ionic/angular/css/structure.css";
+@use "@ionic/angular/css/typography.css";
+@use "@ionic/angular/css/display.css";
+@use "@ionic/angular/css/padding.css";
+@use "@ionic/angular/css/float-elements.css";
+@use "@ionic/angular/css/text-alignment.css";
+@use "@ionic/angular/css/text-transformation.css";
+@use "@ionic/angular/css/flex-utils.css";
+@use "theme/variables";
 
-/* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+// ============================================
+// FreelanceHub Global Styles - Revolut-inspired
+// ============================================
 
-/* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+// Font family (system-ui for native feel)
+* {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
 
-/* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+// Consistent toolbar styling
+ion-toolbar {
+  --border-width: 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+  ion-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+  }
+}
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+// Modern card styling
+.app-card {
+  background: var(--app-card-bg);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--app-border);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Buttons
+ion-button {
+  --border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+// Badge styling
+ion-badge {
+  --border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+// Input styling
+ion-input, ion-textarea {
+  --background: var(--app-bg);
+  --border-radius: 10px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  font-size: 0.95rem;
+}
+
+ion-item {
+  --border-radius: 10px;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+// Avatar styling
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  flex-shrink: 0;
+
+  &.sm { width: 36px; height: 36px; font-size: 0.75rem; }
+  &.lg { width: 52px; height: 52px; font-size: 1rem; }
+  &.gradient-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+  &.gradient-2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  &.gradient-3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  &.gradient-4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+  &.primary { background: var(--ion-color-primary); }
+}
+
+// Status chip/tag
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+
+  &.open { background: rgba(0, 214, 143, 0.15); color: #00d68f; }
+  &.in-progress { background: rgba(255, 170, 0, 0.15); color: #ffaa00; }
+  &.closed { background: rgba(143, 155, 179, 0.15); color: #8f9bb3; }
+  &.pending { background: rgba(255, 170, 0, 0.15); color: #ffaa00; }
+  &.accepted { background: rgba(0, 214, 143, 0.15); color: #00d68f; }
+  &.rejected { background: rgba(255, 61, 113, 0.15); color: #ff3d71; }
+}
+
+// Tag pill styling
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--app-bg);
+  border: 1px solid var(--app-border);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--app-text-secondary);
+
+  ion-icon { font-size: 0.85rem; }
+
+  &.highlight {
+    background: rgba(20, 168, 0, 0.1);
+    border-color: rgba(20, 168, 0, 0.2);
+    color: var(--ion-color-primary);
+  }
+}
+
+// Section headers
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 12px;
+
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--app-text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .section-action {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ion-color-primary);
+  }
+}
+
+// Empty state
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+
+  ion-icon {
+    font-size: 4rem;
+    color: var(--app-text-hint);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--app-text-primary);
+    margin: 0 0 8px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: var(--app-text-secondary);
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+}
+
+// Loading state
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  gap: 12px;
+
+  p {
+    font-size: 0.88rem;
+    color: var(--app-text-secondary);
+    margin: 0;
+  }
+}
+
+// Text utilities
+.text-primary { color: var(--app-text-primary) !important; }
+.text-secondary { color: var(--app-text-secondary) !important; }
+.text-hint { color: var(--app-text-hint) !important; }
+.text-success { color: var(--ion-color-success) !important; }
+.text-danger { color: var(--ion-color-danger) !important; }
+.text-warning { color: var(--ion-color-warning) !important; }
+
+// Font weights
+.fw-400 { font-weight: 400 !important; }
+.fw-500 { font-weight: 500 !important; }
+.fw-600 { font-weight: 600 !important; }
+.fw-700 { font-weight: 700 !important; }
+
+// Spacing
+.gap-4 { gap: 4px; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }

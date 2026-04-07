@@ -1,2 +1,122 @@
-// For information on how to create your own theme, please refer to:
+// FreelanceHub Theme - Revolut-inspired dark mode
 // https://ionicframework.com/docs/theming/
+
+:root {
+  // Primary - Vibrant green for CTAs
+  --ion-color-primary: #00d68f;
+  --ion-color-primary-rgb: 0, 214, 143;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #00bc7d;
+  --ion-color-primary-tint: #1ada9a;
+
+  // Secondary - Electric blue accent
+  --ion-color-secondary: #3b82f6;
+  --ion-color-secondary-rgb: 59, 130, 246;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #3474d9;
+  --ion-color-secondary-tint: #4f8ef7;
+
+  // Tertiary - Purple accent
+  --ion-color-tertiary: #8b5cf6;
+  --ion-color-tertiary-rgb: 139, 92, 246;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #7a51d8;
+  --ion-color-tertiary-tint: #976cf7;
+
+  // Success
+  --ion-color-success: #22c55e;
+  --ion-color-success-rgb: 34, 197, 94;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-shade: #1eac53;
+  --ion-color-success-tint: #38cb6e;
+
+  // Warning
+  --ion-color-warning: #f59e0b;
+  --ion-color-warning-rgb: 245, 158, 11;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-shade: #d88b0a;
+  --ion-color-warning-tint: #f6a823;
+
+  // Danger
+  --ion-color-danger: #ef4444;
+  --ion-color-danger-rgb: 239, 68, 68;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-shade: #d23c3c;
+  --ion-color-danger-tint: #f15757;
+
+  // Medium (muted)
+  --ion-color-medium: #6b7280;
+  --ion-color-medium-rgb: 107, 114, 128;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-shade: #5e6470;
+  --ion-color-medium-tint: #7a808d;
+
+  // Light
+  --ion-color-light: #f3f4f6;
+  --ion-color-light-rgb: 243, 244, 246;
+  --ion-color-light-contrast: #0d0f14;
+  --ion-color-light-shade: #d6d7d8;
+  --ion-color-light-tint: #f4f5f7;
+
+  // Dark
+  --ion-color-dark: #1f2937;
+  --ion-color-dark-rgb: 31, 41, 55;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1b2430;
+  --ion-color-dark-tint: #353e4b;
+
+  // ============================================
+  // Custom App Variables - Soft Blue Theme
+  // ============================================
+  
+  // Background hierarchy - Soft navy blue
+  --app-bg: #0f1729;
+  --app-bg-secondary: #152033;
+  --app-card-bg: #1c2a42;
+  --app-card-bg-hover: #243552;
+  --app-surface: #2b3f5c;
+  
+  // Borders - Soft blue tints
+  --app-border: #2e4263;
+  --app-border-light: #243552;
+  --app-divider: #1e3048;
+  
+  // Text colors
+  --app-text-primary: #ffffff;
+  --app-text-secondary: #a8b8d0;
+  --app-text-tertiary: #7a8fa8;
+  --app-text-hint: #5a7090;
+  
+  // Accents
+  --app-accent: #00d68f;
+  --app-accent-soft: rgba(0, 214, 143, 0.15);
+  
+  // Radii
+  --app-radius-sm: 8px;
+  --app-radius: 12px;
+  --app-radius-lg: 16px;
+  --app-radius-xl: 20px;
+  --app-radius-full: 9999px;
+  
+  // Shadows (soft blue glow)
+  --app-shadow: 0 1px 3px rgba(15, 23, 41, 0.3);
+  --app-shadow-md: 0 4px 12px rgba(15, 23, 41, 0.4);
+  --app-shadow-lg: 0 8px 24px rgba(15, 23, 41, 0.5);
+  
+  // Ionic overrides
+  --ion-background-color: var(--app-bg);
+  --ion-background-color-rgb: 15, 23, 41;
+  --ion-text-color: var(--app-text-primary);
+  --ion-text-color-rgb: 255, 255, 255;
+  --ion-toolbar-background: var(--app-bg);
+  --ion-toolbar-color: var(--app-text-primary);
+  --ion-item-background: var(--app-card-bg);
+  --ion-card-background: var(--app-card-bg);
+  --ion-border-color: var(--app-border);
+  --ion-tab-bar-background: var(--app-card-bg);
+  --ion-tab-bar-border-color: var(--app-border);
+}

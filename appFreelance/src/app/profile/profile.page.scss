@@ -1,0 +1,125 @@
+ion-content { --background: #f4f5f7; }
+
+ion-header ion-toolbar {
+  --background: linear-gradient(135deg, #0f1c4d, #1e2a78);
+  --color: #ffffff;
+  --border-width: 0;
+}
+
+.center-box {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.profile-container {
+  padding: 0 0 40px;
+}
+
+.profile-hero {
+  background: linear-gradient(135deg, #0f1c4d, #1e2a78);
+  padding: 32px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+
+  .avatar-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    border: 3px solid rgba(255,255,255,0.5);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+
+  .profile-name {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+  }
+
+  .role-badge {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .profile-bio {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.88rem;
+    margin: 4px 0 0;
+    max-width: 300px;
+    line-height: 1.5;
+  }
+}
+
+.info-card, .skills-card {
+  margin: 16px 16px 0;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f2f6;
+  font-size: 0.9rem;
+  color: #333;
+
+  &:last-child { border-bottom: none; }
+
+  ion-icon { color: #1e2a78; font-size: 1.1rem; flex-shrink: 0; }
+}
+
+.skills-card h3 {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #1e2a78;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.skills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .skill-pill {
+    background: #f0f2fc;
+    color: #1e2a78;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.coming-soon {
+  margin: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #aaa;
+
+  ion-icon { font-size: 3rem; color: #d0d5e8; }
+  p { font-size: 1rem; font-weight: 700; color: #555; margin: 0; }
+  span { font-size: 0.8rem; color: #aaa; }
+}

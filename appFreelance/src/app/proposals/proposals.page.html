@@ -1,0 +1,141 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/offers"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Job Details</ion-title>
+    <ion-buttons slot="end" *ngIf="offer?.status === 'in_progress'">
+      <ion-button [routerLink]="['/chat', offerId, getAcceptedFreelancerId()]" fill="clear">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="app-content">
+
+  <!-- Job summary card -->
+  <div class="section" *ngIf="offer">
+    <div class="app-card job-card">
+
+      <div class="card-header">
+        <span class="status-chip" [ngClass]="offer.status">
+          {{ offer.status === 'in_progress' ? 'In Progress' : (offer.status | titlecase) }}
+        </span>
+        <span class="post-date">{{ offer.createdAt | date:'MMM d, y' }}</span>
+      </div>
+
+      <h1 class="job-title">{{ offer.title }}</h1>
+
+      <div class="job-meta">
+        <div class="meta-item">
+          <span class="label">Budget</span>
+          <span class="value">${{ offer.budget | number }}</span>
+        </div>
+        <div class="meta-item" *ngIf="offer.deadline">
+          <span class="label">Deadline</span>
+          <span class="value">{{ offer.deadline | date:'MMM d' }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Proposals</span>
+          <span class="value">{{ proposals.length }}</span>
+        </div>
+      </div>
+
+      <p class="job-desc">{{ offer.description }}</p>
+
+    </div>
+  </div>
+
+  <!-- Submit proposal (freelancer, offer open, not yet submitted) -->
+  <div class="section" *ngIf="isFreelancer && !alreadySubmitted && offer?.status === 'open'">
+    <div class="app-card submit-card">
+      <h3 class="card-title">Submit Proposal</h3>
+
+      <div class="form-group">
+        <label>Your Bid (USD) *</label>
+        <ion-input type="number" [(ngModel)]="newProposal.amount"
+          placeholder="e.g. 450" fill="outline"></ion-input>
+      </div>
+
+      <div class="form-group">
+        <label>Cover Letter *</label>
+        <ion-textarea rows="5" [(ngModel)]="newProposal.message"
+          placeholder="Why are you the best fit for this job?"
+          fill="outline"></ion-textarea>
+      </div>
+
+      <ion-button expand="block" (click)="submitProposal()" [disabled]="isSubmitting">
+        <ion-spinner *ngIf="isSubmitting" name="crescent" slot="start"></ion-spinner>
+        {{ isSubmitting ? 'Submitting...' : 'Submit Proposal' }}
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Already submitted -->
+  <div class="notice-submitted" *ngIf="isFreelancer && alreadySubmitted">
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+    <p>You already submitted a proposal for this job.</p>
+  </div>
+
+  <!-- Proposals list -->
+  <h2 class="section-title" *ngIf="!isLoading">
+    {{ proposals.length }} Proposal{{ proposals.length !== 1 ? 's' : '' }}
+  </h2>
+
+  <div class="center-box" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && proposals.length === 0">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <p>No proposals yet</p>
+  </div>
+
+  <div class="proposals-list" *ngIf="!isLoading && proposals.length > 0">
+    <div class="proposal-card {{ p.status }}" *ngFor="let p of proposals">
+
+      <div class="proposal-top">
+        <div class="freelancer-row"
+             [routerLink]="['/profile/freelancer', p.freelancerId]">
+          <div class="freelancer-avatar">{{ getInitials(p.freelancerId) }}</div>
+          <div>
+            <span class="freelancer-name">Freelancer #{{ p.freelancerId?.slice(-6) }}</span>
+            <span class="proposal-date">{{ p.createdAt | date:'MMM d, h:mm a' }}</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="chevron-fwd"></ion-icon>
+        </div>
+        <span class="status-chip {{ p.status }}">{{ p.status | titlecase }}</span>
+      </div>
+
+      <div class="proposal-bid">${{ p.amount | number }}<span> USD</span></div>
+
+      <p class="proposal-message">{{ p.message }}</p>
+
+      <div class="actions" *ngIf="isClient && p.status === 'pending'">
+        <ion-button size="small" color="success" (click)="confirmAccept(p)">
+          <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+          Accept
+        </ion-button>
+        <ion-button size="small" fill="outline" color="danger" (click)="rejectProposal(p._id)">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Decline
+        </ion-button>
+      </div>
+
+      <!-- Chat button on accepted proposal -->
+      <div class="actions" *ngIf="p.status === 'accepted'">
+        <ion-button
+          size="small"
+          fill="solid"
+          color="primary"
+          [routerLink]="['/chat', offerId, isClient ? p.freelancerId : offer?.clientId]">
+          <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
+          Open Chat
+        </ion-button>
+      </div>
+
+    </div>
+  </div>
+
+</ion-content>
