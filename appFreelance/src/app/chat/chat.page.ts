@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -12,8 +12,8 @@ import { addIcons } from 'ionicons';
 import { send, checkmarkDoneOutline, chatbubblesOutline } from 'ionicons/icons';
 import { ApiService } from '../services/api.service';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { Subscription, interval } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { SocketService } from '../services/socket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -28,7 +28,6 @@ import { switchMap } from 'rxjs/operators';
   ]
 })
 export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
-  @ViewChild('messagesEnd') messagesEnd!: ElementRef;
   @ViewChild('ionContent') ionContent!: IonContent;
 
   offerId!: string;
@@ -38,13 +37,14 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
   isLoading = true;
   isSending = false;
   currentUserId = '';
-  private pollSub?: Subscription;
+  private messageSub?: Subscription;
   private shouldScroll = false;
 
   constructor(
     private route: ActivatedRoute,
     private api: ApiService,
     private auth: FreelanceAuthHelper,
+    private socket: SocketService,
     private toastCtrl: ToastController
   ) {
     addIcons({ send, checkmarkDoneOutline, chatbubblesOutline });
@@ -54,6 +54,12 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
     this.offerId = this.route.snapshot.paramMap.get('offerId') || this.route.snapshot.paramMap.get('id')!;
     this.receiverId = this.route.snapshot.paramMap.get('receiverId') || '';
     this.currentUserId = this.auth.getUserId();
+
+    this.socket.connect();
+    this.socket.joinOffer(this.offerId);
+    this.messageSub = this.socket.onMessage().subscribe((msg) => this.handleIncomingMessage(msg));
+
+    this.loadMessages();
     if (!this.receiverId) {
       this.api.getOffer(this.offerId).subscribe({
         next: (offer) => {
@@ -62,12 +68,9 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
           } else {
             this.receiverId = offer?.clientId || '';
           }
-          this.startPolling();
         },
-        error: () => this.startPolling()
+        error: () => {}
       });
-    } else {
-      this.startPolling();
     }
   }
 
@@ -75,17 +78,9 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
     if (this.shouldScroll) { this.ionContent?.scrollToBottom(300); this.shouldScroll = false; }
   }
 
-  ngOnDestroy() { this.pollSub?.unsubscribe(); }
-
-  private startPolling() {
-    this.loadMessages();
-    this.pollSub = interval(4000).pipe(
-      switchMap(() => this.api.getMessages(this.offerId))
-    ).subscribe({
-      next: (res: any[]) => {
-        if (res.length !== this.messages.length) { this.messages = res; this.shouldScroll = true; }
-      }
-    });
+  ngOnDestroy() {
+    this.messageSub?.unsubscribe();
+    this.socket.leaveOffer(this.offerId);
   }
 
   loadMessages() {
@@ -105,10 +100,13 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
     this.isSending = true;
     const content = this.newMessage.trim();
     this.newMessage = '';
-    this.api.sendMessage({ content, offerId: this.offerId, receiverId: this.receiverId }).subscribe({
-      next: () => { this.isSending = false; this.loadMessages(); },
-      error: async () => { this.isSending = false; this.newMessage = content; await this.toast('Failed to send', 'danger'); }
-    });
+    this.socket.sendMessage({ content, offerId: this.offerId, receiverId: this.receiverId })
+      .then(() => { this.isSending = false; })
+      .catch(async () => {
+        this.isSending = false;
+        this.newMessage = content;
+        await this.toast('Failed to send', 'danger');
+      });
   }
 
   onEnterKey(event: any) {
@@ -120,6 +118,13 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
   isDifferentDay(msg: any, prev: any): boolean {
     if (!prev) return true;
     return new Date(msg.createdAt).toDateString() !== new Date(prev.createdAt).toDateString();
+  }
+
+  private handleIncomingMessage(msg: any) {
+    if (!msg || msg.offerId !== this.offerId) return;
+    if (this.messages.some(m => m._id === msg._id)) return;
+    this.messages = [...this.messages, msg];
+    this.shouldScroll = true;
   }
 
   private async toast(message: string, color: string) {
