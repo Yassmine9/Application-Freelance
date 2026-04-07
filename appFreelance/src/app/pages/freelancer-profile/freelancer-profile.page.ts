@@ -2,13 +2,16 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonicModule, IonContent } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FreelancerProfileService } from './freelancer-profile.service';
+import { FreelancerProfileService } from '../../services/freelancer-profile.service';
 import { Router } from '@angular/router';
 
 export interface Project {
   title: string;
   description: string;
   link: string;
+}
+export interface Gig {
+  title :string;
 }
 
 export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'blocked';
@@ -25,6 +28,7 @@ export class FreelancerProfilePage implements OnInit {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
 
   // ---- Profile fields ----
+  id : string ='';
   name: string = 'asma';
   email: string = '';
   phone: string = '';
@@ -43,11 +47,12 @@ export class FreelancerProfilePage implements OnInit {
   avatarUrl: string = 'assets/avatar.png';
   projects: Project[] = [];
   profileStatus: ProfileStatus = 'draft';
-
+  gigs : Gig[] = [];
   // ---- UI state ----
   editMode = false;
   activeTab: string = 'bio';
   isLoading = true;
+  original_cv_name: string ="" ;
 
   get isTopRated(): boolean {
     return this.successRate >= 90;
@@ -75,9 +80,12 @@ export class FreelancerProfilePage implements OnInit {
   // ---- Load from API ----
   loadProfile() {
   this.isLoading = true;
+  console.log("inside the load profile");
   this.profileService.getProfile().subscribe({
     next: (data) => {
       console.log('DATA FROM API:', data);
+      
+      this.id = data.user.id
       this.name              = data.user.name;
       this.email             = data.user.email || '';
       this.phone             = data.user.phone || '';
@@ -92,10 +100,18 @@ export class FreelancerProfilePage implements OnInit {
       this.successRate       = data.user.success_rate || 0;
       this.cvName            = data.user.cv_filename || '';
       this.projects          = data.user.portfolio || [];
+      this.original_cv_name = this.name.concat("_cv")
+      this.gigs = (data.user.gigs || [])
+        .filter((g: Gig[] | null): g is Gig[] => g != null)
+        .flat();
       this.profileStatus     = data.user.status || 'draft';
-      if (data.avatar_filename) {
-        this.avatarUrl = `http://127.0.0.1:5000/uploads/avatars/${data.avatar_filename}`;
+      
+      if (data.user.avatar_filename) {
+        this.avatarUrl = `http://127.0.0.1:5000/api/uploads/avatars/${data.user.avatar_filename}`;
       }
+      else {
+      this.avatarUrl = 'appFreelance/src/assets/avatar.png';
+       }
       this.isLoading = false;
       
     },
@@ -118,7 +134,7 @@ export class FreelancerProfilePage implements OnInit {
   // ---- Edit mode ----
   toggleEdit() {
     //this.editMode = !this.editMode;
-     this.router.navigate(['/pages/freelancer-edit']);
+     this.router.navigate(['/freelancer-edit']);
   }
 
   // ---- CV ----
@@ -151,10 +167,14 @@ export class FreelancerProfilePage implements OnInit {
     this.projects.push({ title: '', description: '', link: '' });
   }
 
+
+
   removeProject(index: number) {
     this.projects.splice(index, 1);
   }
-
+getmygigs() {
+  this.router.navigate(['/my-gigs']);
+}
   // ---- Save ----
   saveProfile() {
     this.skillList = this.skills.split(',').map(s => s.trim()).filter(s => s);

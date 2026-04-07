@@ -1,0 +1,93 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>gigs</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<!--<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">gigs</ion-title>
+    </ion-toolbar>
+  </ion-header>
+</ion-content>-->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Browse Gigs</ion-title>
+  </ion-toolbar>
+
+  <!-- search bar -->
+  <ion-toolbar>
+    <ion-searchbar
+      placeholder="Search by title or tag..."
+      (ionInput)="onSearch($event)"
+      debounce="400">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- loading state -->
+  <div *ngIf="isLoading" class="center">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- error state -->
+  <div *ngIf="error && !isLoading" class="center">
+    <ion-icon name="alert-circle-outline" size="large" color="danger"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button fill="outline" (click)="loadGigs()">Retry</ion-button>
+  </div>
+
+  <!-- empty state -->
+  <div *ngIf="!isLoading && !error && filteredGigs.length === 0" class="center">
+    <ion-icon name="search-outline" size="large" color="medium"></ion-icon>
+    <p>No gigs found</p>
+  </div>
+
+  <!-- gig cards -->
+  <div class="gigs-grid" *ngIf="!isLoading && !error">
+    <ion-card
+      *ngFor="let gig of filteredGigs"
+      (click)="openGig(gig._id)"
+      class="gig-card">
+
+      <!-- gig image placeholder -->
+      <div class="gig-image">
+        <ion-icon name="briefcase-outline" size="large" color="medium"></ion-icon>
+      </div>
+
+      <ion-card-content>
+
+        <!-- freelancer name -->
+        <p class="freelancer-name">
+          <ion-icon name="person-outline"></ion-icon>
+          {{ gig.freelancer_name }}
+        </p>
+
+        <!-- title -->
+        <h2 class="gig-title">{{ gig.title }}</h2>
+
+        <!-- tags -->
+        <div class="tags">
+          <ion-chip
+            *ngFor="let tag of gig.tags"
+            color="primary"
+            outline="true"
+            size="small">
+            {{ tag }}
+          </ion-chip>
+        </div>
+
+        <!-- price -->
+        <div class="price-row">
+          <span class="price-label">Starting at</span>
+          <span class="price">${{ gig.price }}</span>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

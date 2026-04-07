@@ -33,7 +33,6 @@
       <div class="hero-info">
         <h1 class="hero-name">{{name}}</h1>
         <p class="hero-role"><span class="code-tag">&lt;/&gt;</span>{{ title}}</p>
-        <p class="hero-badge">⭐ Top Rated Freelancer • {{successRate}}% Success</p>
       </div>
     </div>
 
@@ -107,16 +106,20 @@
     <!-- View mode -->
     <div *ngIf="!editMode">
       <div *ngIf="cvName" class="cv-display">
-        <div class="cv-file-card">
-          <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
-          <div class="cv-info">
-            <span class="cv-filename">{{ cvName }}</span>
-            <span class="cv-type">PDF Document</span>
-          </div>
-          <ion-icon name="download-outline" class="cv-download"></ion-icon>
-        </div>
-      </div>
-      <p *ngIf="!cvName" class="empty-text">No Cv uploaded.</p>
+  <div class="cv-file-card">
+    <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
+    <div class="cv-info">
+      <!-- Download link -->
+      <a 
+        [href]="'http://127.0.0.1:5000/api/freelancer/profile/cv/download'" 
+        target="_blank"
+        class="cv-filename-link">
+        {{ original_cv_name }}
+      </a>
+      <span class="cv-type">PDF Document</span>
+    </div>
+  </div>
+</div>
     </div>
 
     <!-- Edit mode -->
@@ -149,6 +152,7 @@
         Add
       </ion-button>
     </div>
+
 
     <!-- View mode -->
     <div *ngIf="!editMode">
@@ -199,6 +203,7 @@
     </div>
   </div>
 
+
   <!-- ==================== PROFILE INSIGHTS (Stats) ==================== -->
   <div id="stats" class="section">
     <h2 class="section-title">Profile Insights</h2>
@@ -225,7 +230,27 @@
       </div>
     </div>
   </div>
-
+  <!-- ==================== GIGS (services) ================== -->
+    <div id="portfolio" class="section">
+    <div class="portfolio-header">
+      <h2 class="section-title">Gigs</h2>
+            <span class="view-stack-link" (click)="getmygigs()">VIEW Gigs</span>
+    </div>
+    <!-- View mode -->
+    <div *ngIf="!editMode">
+      <div *ngIf="gigs.length === 0" class="empty-text">No gigs added</div>
+      <div *ngFor="let gig of gigs" class="project-card">
+        <div class="project-top">
+          <div class="project-icon-wrap">
+            <ion-icon name="globe-outline"></ion-icon>
+          </div>
+          <div class="project-info">
+            <h4>{{ gig?.title }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
   <!-- ==================== CLIENT REVIEWS ==================== -->
   <div id="reviews" class="section">
     <div class="reviews-header">

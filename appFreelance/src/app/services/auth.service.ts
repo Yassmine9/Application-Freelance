@@ -75,7 +75,7 @@ export class AuthService {
   // ─── PROFILE ───────────────────────────────────────────────────
 
   getProfile(): Observable<{ user: any }> {
-    return this.http.get<{ user: any }>(`${this.apiUrl}/profile`, {
+    return this.http.get<{ user: any }>(`${this.apiUrl}/freelancer/profile`, {
       headers: this.getAuthHeaders()
     });
   }
@@ -97,6 +97,11 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  isFreelancer(): boolean {
+    const user = this.getStoredUser();
+    return user && user.role === 'freelancer';
   }
 
   logout(): void {

@@ -208,7 +208,7 @@ $text-light:    #9e97b5;
   }
 
   &.pending {
-    background: linear-gradient(135deg, #F2E6EE, darken(#0600AB, 6%));
+    background: linear-gradient(135deg, #F2E6EE);
     box-shadow: 0 4px 14px rgba($warm-bg, 0.30);
     animation: breathe 2s ease-in-out infinite;
   }
@@ -290,7 +290,7 @@ $text-light:    #9e97b5;
 
 .primary-button {
   --background: #{$primary};
-  --background-activated: #{darken($primary, 10%)};
+  --background-activated: #{$primary, 10%};
   --color: #ffffff;
   --border-radius: 16px;
   --box-shadow: 0 6px 20px rgba($primary, 0.28);

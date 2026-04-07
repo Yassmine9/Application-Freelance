@@ -46,12 +46,14 @@ export class LoginPage implements OnInit {
 
     this.authService.login(this.email, this.password).subscribe({
       next: async (res) => {
+        console.log("Inside the authservice.login");
         await loading.dismiss();
         if (res.status === 'pending') {
           this.router.navigate(['/registration-pending']);
         } else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/freelancer-profile']);
         }
+        
       },
       error: async (err) => {
         await loading.dismiss();

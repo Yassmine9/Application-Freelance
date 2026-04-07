@@ -1,20 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-import { FreelancerEditPageRoutingModule } from './freelancer-edit-routing.module';
-
-import { FreelancerEditPage } from './freelancer-edit.page';
+import { EditGigPage } from './edit-gig.page';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FreelancerEditPageRoutingModule,FreelancerEditPage
+    RouterModule.forChild([
+      {
+        path: '',
+        component: EditGigPage
+      }
+    ])
   ],
   declarations: []
 })
-export class FreelancerEditPageModule {}
+export class EditGigPageModule { }

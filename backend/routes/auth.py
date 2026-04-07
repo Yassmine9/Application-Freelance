@@ -29,7 +29,7 @@ def login():
     user = authenticate_user(email, password)
     
     if user:
-        token = create_access_token(identity=email)
+        token = create_access_token(identity=str(user["_id"]))
         return jsonify({
             "token": token,
             "user": user,

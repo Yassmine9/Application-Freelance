@@ -1,13 +1,16 @@
 from flask import Blueprint, request, jsonify, send_from_directory
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.freelancer import Freelancer
+from services.freelancer_service import get_public_profile
+from services.gig_service import fetch_my_gigs
 import os
 from werkzeug.utils import secure_filename
 
-freelancer_profile_bp = Blueprint('freelancer_profile', __name__)
+freelancer_routes = Blueprint('freelancer_routes', __name__)
 
-CV_FOLDER     = 'uploads/cv'
-AVATAR_FOLDER = 'uploads/avatars'
+CV_FOLDER     = os.path.join(os.getcwd(), 'uploads', 'cvs')
+AVATAR_FOLDER = os.path.join(os.getcwd(), 'uploads', 'avatars')
+
 ALLOWED_CV     = {'pdf', 'doc', 'docx'}
 ALLOWED_IMG    = {'jpg', 'jpeg', 'png'}
 
@@ -16,17 +19,17 @@ def allowed_file(filename, allowed):
 
 
 # ── GET my profile ──────────────────────────────────────────
-@freelancer_profile_bp.route('/freelancer/profile', methods=['GET'])
+@freelancer_routes.route('/freelancer/myprofile', methods=['GET'])
 @jwt_required()
 def get_profile():
     user_id = get_jwt_identity()
     user = Freelancer.find_by_id(user_id)
-
+    
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 404
     if user.get("role") != "freelancer":
         return jsonify({"error": "Accès refusé"}), 403
-
+    gigs = fetch_my_gigs(user_id)
     return jsonify({
         "user": {
         "id":                 user["_id"],
@@ -51,11 +54,30 @@ def get_profile():
         "experience_years":   user.get("experience_years", 0),
         # status
         "status":             user.get("status", "draft"),
+        "gigs": gigs,
     }}), 200
+
+# ── GET public profile ──────────────────────────────────────────
+@freelancer_routes.route('/freelancer/profile/<freelancer_name>', methods=['GET'])
+@jwt_required()
+def get_public_profile_route(freelancer_name):
+    """
+    Anyone logged-in viewing another freelancer's profile.
+    JWT required — but we use the URL param, not the token identity.
+    """
+    profile, err = get_public_profile(freelancer_name)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
+    return jsonify({"user": profile}), 200
+
+
+
+
+
 
 
 # ── UPDATE my profile ────────────────────────────────────────
-@freelancer_profile_bp.route('/freelancer/profile', methods=['PUT'])
+@freelancer_routes.route('/freelancer/profile', methods=['PUT'])
 @jwt_required()
 def update_profile():
     user_id = get_jwt_identity()
@@ -79,21 +101,16 @@ def update_profile():
     if not updates:
         return jsonify({"error": "Aucun champ valide à mettre à jour"}), 400
 
-    # auto move to pending when freelancer saves
-    current_status = user.get("status", "draft")
-    if current_status in ["draft", "rejected"]:
-        updates["status"] = "pending"
 
     Freelancer.update(user["email"], **updates)
 
     return jsonify({
         "message": "Profil mis à jour avec succès",
-        "status": updates.get("status", current_status)
     }), 200
 
 
 # ── UPLOAD AVATAR ────────────────────────────────────────────
-@freelancer_profile_bp.route('/freelancer/profile/avatar', methods=['POST'])
+@freelancer_routes.route('/freelancer/profile/avatar', methods=['POST'])
 @jwt_required()
 def upload_avatar():
     user_id = get_jwt_identity()
@@ -118,7 +135,7 @@ def upload_avatar():
 
 
 # ── UPLOAD CV ────────────────────────────────────────────────
-@freelancer_profile_bp.route('/freelancer/profile/cv', methods=['POST'])
+@freelancer_routes.route('/freelancer/profile/cv', methods=['POST'])
 @jwt_required()
 def upload_cv():
     user_id = get_jwt_identity()
@@ -143,20 +160,24 @@ def upload_cv():
 
 
 # ── DOWNLOAD CV ──────────────────────────────────────────────
-@freelancer_profile_bp.route('/freelancer/profile/cv/download', methods=['GET'])
-@jwt_required()
-def download_cv():
-    user_id = get_jwt_identity()
-    user = Freelancer.find_by_id(user_id)
+@freelancer_routes.route('/freelancer/profile/cv/download', methods=['GET'])
 
-    if not user or not user.get("cv_filename"):
-        return jsonify({"error": "Aucun CV trouvé"}), 404
+def download_cv():
 
     return send_from_directory(CV_FOLDER, user["cv_filename"])
 
 
 # ── GET all approved freelancers (public) ───────────────────
-@freelancer_profile_bp.route('/freelancers', methods=['GET'])
+@freelancer_routes.route('/freelancers', methods=['GET'])
 def get_all_freelancers():
     freelancers = Freelancer.find_approved()
     return jsonify(freelancers), 200
+    
+    
+@freelancer_routes.route('/uploads/avatars/<filename>', methods=['GET'])
+def serve_avatar(filename):
+    try:
+        print(filename)
+        return send_from_directory(AVATAR_FOLDER, filename)
+    except FileNotFoundError:
+        return jsonify({"error": "Image introuvable"}), 404

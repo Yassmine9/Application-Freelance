@@ -43,6 +43,11 @@ class BaseUser:
         if cls.collection is None:
             return None
         return cls._serialize(cls.collection.find_one({"email": email}))
+    @classmethod
+    def find_by_name(cls, name):
+        if cls.collection is None:
+            return None
+        return cls._serialize(cls.collection.find_one({"name": name}))
 
     @classmethod
     def find_by_id(cls, user_id):
