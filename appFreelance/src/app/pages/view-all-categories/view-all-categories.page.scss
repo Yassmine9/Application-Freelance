@@ -1,0 +1,115 @@
+:host {
+	display: block;
+	--text-primary: #1a1a2e;
+}
+
+.categories-toolbar {
+	--background: rgba(248, 249, 252, 0.92);
+	--color: var(--text-primary);
+	border-bottom: 1px solid rgba(232, 232, 232, 0.9);
+}
+
+.categories-content {
+	--background:
+		radial-gradient(circle at top left, rgba(151, 125, 255, 0.14), transparent 28%),
+		radial-gradient(circle at right 10% top 20%, rgba(0, 51, 255, 0.12), transparent 22%),
+		linear-gradient(180deg, #f8f9fc 0%, #f8f9fc 100%);
+}
+
+.categories-shell {
+	max-width: 1120px;
+	margin: 0 auto;
+	padding: 18px 16px 28px;
+}
+
+.section-heading {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 14px;
+	padding: 10px 12px;
+	background: linear-gradient(
+		90deg,
+		rgba(0, 54, 248, 0.14) 0,
+		rgba(0, 54, 248, 0) 25%,
+		transparent 25%,
+		transparent 100%
+	);
+}
+
+.section-kicker {
+	display: inline-flex;
+	color: #000;
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.section-heading h2 {
+	margin: 4px 0 0;
+	color: var(--text-primary);
+	font-size: 1.25rem;
+	line-height: 1.2;
+	letter-spacing: -0.03em;
+}
+
+.feature-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 10px;
+}
+
+.feature-card {
+	min-height: 110px;
+	padding: 14px 8px 12px;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.96);
+	border: 1px solid rgba(232, 232, 232, 0.9);
+	box-shadow: 0 10px 22px rgba(6, 0, 171, 0.04);
+	text-align: center;
+}
+
+.feature-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	border-radius: 14px;
+	margin-bottom: 10px;
+	color: #4456b8;
+	background: #f4f7ff;
+	border: 1px solid rgba(69, 86, 184, 0.12);
+}
+
+.feature-card h3 {
+	margin: 0;
+	color: var(--text-primary);
+	font-size: 0.8rem;
+	line-height: 1.25;
+	font-weight: 600;
+}
+
+.feature-card::after {
+	content: '';
+	display: block;
+	margin: 8px auto 0;
+	width: 22px;
+	height: 3px;
+	border-radius: 999px;
+	background: linear-gradient(135deg, rgba(69, 86, 184, 0.26), rgba(151, 125, 255, 0.26));
+}
+
+@media (max-width: 680px) {
+	.feature-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1024px) {
+	.feature-grid {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}

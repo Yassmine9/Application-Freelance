@@ -47,6 +47,10 @@ const routes: Routes = [
       redirectTo: 'preferences',
     pathMatch: 'full'
   },
+  {
+    path: 'view-all-categories',
+    loadChildren: () => import('./pages/view-all-categories/view-all-categories.module').then( m => m.ViewAllCategoriesPageModule)
+  },
 ];
 
 @NgModule({

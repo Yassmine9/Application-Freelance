@@ -61,7 +61,7 @@
           <span class="section-kicker">Service category</span>
 
         </div>
-        <a routerLink="/view-all-services" class="view-all">View all</a>
+        <a routerLink="/view-all-categories" class="view-all">View all</a>
       </div>
 
       <div class="feature-grid">
@@ -152,36 +152,4 @@
 
 </ion-content>
 
-<div class="custom-navbar">
-  <button type="button" class="nav-item active" aria-label="Home">
-    <ion-icon name="home-outline"></ion-icon>
-    <span>Home</span>
-  </button>
-
-  <button type="button" class="nav-item" aria-label="Store" (click)="goToStore()">
-    <ion-icon name="storefront-outline"></ion-icon>
-    <span>Store</span>
-  </button>
-
-  <button
-    type="button"
-    class="nav-item nav-item-center"
-    aria-label="join us"
-    (click)="openContactSheet()"
-  >
-    <span class="center-chip">
-<ion-icon name="log-in-outline"></ion-icon>
-    </span>
-    <span>Join us </span>
-  </button>
-
-  <button type="button" class="nav-item" aria-label="Feedback" (click)="openRemarksSheet()">
-    <ion-icon name="clipboard-outline"></ion-icon>
-    <span>Feedback</span>
-  </button>
-
-  <button type="button" class="nav-item" aria-label="Navigation scheme" (click)="openNavigationScheme()">
-    <ion-icon name="git-network-outline"></ion-icon>
-    <span>Nav map</span>
-  </button>
-</div>
+<app-side-bar activeTab="home"></app-side-bar>

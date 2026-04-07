@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from datetime import datetime, timezone
+from db.mongo import db
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from db.mongo import test_connection
 from models import Client, Freelancer, Admin, find_user_by_email, find_user_by_id, authenticate_user
@@ -98,6 +100,36 @@ def register():
         return jsonify(new_user), 400
     else:
         return jsonify({"error": "Erreur base de données"}), 500
+
+
+@auth_routes.route("/feedback", methods=["POST"])
+def create_feedback():
+    if db is None:
+        return jsonify({"error": "Database unavailable"}), 503
+
+    data = request.get_json() or {}
+    subject = (data.get("subject") or "").strip()
+    message = (data.get("message") or "").strip()
+    contact_email = (data.get("contactEmail") or "").strip()
+
+    if not subject or not message:
+        return jsonify({"error": "Subject and message are required"}), 400
+
+    feedback_doc = {
+        "subject": subject,
+        "message": message,
+        "contact_email": contact_email or None,
+        "recipient_role": "admin",
+        "status": "new",
+        "created_at": datetime.now(timezone.utc),
+    }
+
+    inserted = db["feedback"].insert_one(feedback_doc)
+
+    return jsonify({
+        "message": "Feedback sent to admin",
+        "feedbackId": str(inserted.inserted_id)
+    }), 201
 
 
 # ─── PROFIL ───────────────────────────────────────────────────────────────────

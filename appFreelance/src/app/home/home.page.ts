@@ -145,7 +145,7 @@ export class HomePage {
       avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=HM&backgroundColor=4f46e5&color=ffffff&fontSize=35&fontWeight=700',
     },
     {
-      title: 'Content Writing',
+      title: 'Content ',
       icon: 'create-outline',
       description: 'Copy that is concise, persuasive, and easy to trust.',
       provider: 'Rim Gharbi',
@@ -274,10 +274,6 @@ export class HomePage {
     this.router.navigateByUrl('/register');
   }
 
-  goToStore(): void {
-    this.router.navigateByUrl('/store');
-  }
-
   trackByIndex(index: number): number {
     return index;
   }
@@ -307,77 +303,6 @@ export class HomePage {
           text: 'Services',
           handler: () => {
             this.searchScope = 'services';
-          },
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-      ],
-    });
-
-    await actionSheet.present();
-  }
-
-  async openContactSheet(): Promise<void> {
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Contact us',
-      buttons: [
-        {
-          text: 'Go to login',
-          icon: 'log-in-outline',
-          handler: () => {
-            this.router.navigateByUrl('/login');
-          },
-        },
-        {
-          text: 'Create account',
-          icon: 'person-add-outline',
-          handler: () => {
-            this.router.navigateByUrl('/register');
-          },
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-      ],
-    });
-
-    await actionSheet.present();
-  }
-
-  openRemarksSheet(): void {
-    this.router.navigateByUrl('/feedback');
-  }
-
-  async openNavigationScheme(): Promise<void> {
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Navigation scheme',
-      buttons: [
-        {
-          text: 'Home (this page)',
-          icon: 'home-outline',
-        },
-        {
-          text: 'Services list',
-          icon: 'grid-outline',
-          handler: () => {
-            this.router.navigateByUrl('/view-all-services');
-          },
-        },
-        {
-          text: 'Freelancers list',
-          icon: 'people-outline',
-          handler: () => {
-            this.router.navigateByUrl('/view-all-freelancers');
-          },
-        },
-        {
-          text: 'Authentication',
-          icon: 'log-in-outline',
-          handler: () => {
-            this.router.navigateByUrl('/login');
           },
         },
         {

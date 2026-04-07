@@ -1,0 +1,58 @@
+<div class="custom-navbar">
+  <button
+    type="button"
+    class="nav-item"
+    [class.active]="activeTab === 'home'"
+    aria-label="Home"
+    (click)="goHome()"
+  >
+    <ion-icon name="home-outline"></ion-icon>
+    <span>Home</span>
+  </button>
+
+  <button
+    type="button"
+    class="nav-item"
+    [class.active]="activeTab === 'store'"
+    aria-label="Store"
+    (click)="goToStore()"
+  >
+    <ion-icon name="storefront-outline"></ion-icon>
+    <span>Store</span>
+  </button>
+
+  <button
+    type="button"
+    class="nav-item nav-item-center"
+    [class.active]="activeTab === 'join'"
+    aria-label="Join us"
+    (click)="openContactSheet()"
+  >
+    <span class="center-chip">
+      <ion-icon name="log-in-outline"></ion-icon>
+    </span>
+    <span>Join us</span>
+  </button>
+
+  <button
+    type="button"
+    class="nav-item"
+    [class.active]="activeTab === 'feedback'"
+    aria-label="Feedback"
+    (click)="goToFeedback()"
+  >
+    <ion-icon name="clipboard-outline"></ion-icon>
+    <span>Feedback</span>
+  </button>
+
+  <button
+    type="button"
+    class="nav-item"
+    [class.active]="activeTab === 'nav'"
+    aria-label="Navigation scheme"
+    (click)="openNavigationScheme()"
+  >
+    <ion-icon name="git-network-outline"></ion-icon>
+    <span>Nav map</span>
+  </button>
+</div>
