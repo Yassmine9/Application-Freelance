@@ -16,7 +16,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="page-content" [fullscreen]="true">
+<ion-content class="page-content" [fullscreen]="true" [forceOverscroll]="false">
   <div class="page-shell">
     <section class="hero-card">
       <div class="hero-badge">Talent board</div>
@@ -26,11 +26,11 @@
       </p>
       <div class="hero-stats">
         <div>
-          <strong>06</strong>
+          <strong>{{ freelancers.length }}</strong>
           <span>profiles</span>
         </div>
         <div>
-          <strong>4.9</strong>
+          <strong>{{ averageRating }}</strong>
           <span>avg rating</span>
         </div>
         <div>
@@ -48,7 +48,11 @@
         </div>
       </div>
 
-      <div class="freelancer-grid">
+      <div class="empty-state" *ngIf="isLoading">
+        Loading freelancers...
+      </div>
+
+      <div class="freelancer-grid" *ngIf="!isLoading && freelancers.length > 0">
         <article class="freelancer-card" *ngFor="let freelancer of freelancers; let index = index; trackBy: trackByIndex">
           <div class="avatar" [ngClass]="getAccentClass(index)">
             {{ getInitials(freelancer.name) }}
@@ -57,16 +61,23 @@
             <div class="copy-top">
               <div>
                 <h3>{{ freelancer.name }}</h3>
-                <p>{{ freelancer.role }}</p>
+                <p>{{ freelancer.primarySkill }}</p>
+                <div class="skills-row">
+                  <span class="skill-chip" *ngFor="let skill of freelancer.skills">{{ skill }}</span>
+                </div>
               </div>
               <ion-icon [name]="freelancer.icon"></ion-icon>
             </div>
             <div class="meta-row">
               <span>{{ freelancer.location }}</span>
-              <span class="rating">{{ freelancer.rating }} ★</span>
+              <span class="rating">{{ freelancer.rating | number: '1.1-1' }} ★</span>
             </div>
           </div>
         </article>
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading && freelancers.length === 0">
+        No freelancers available from database.
       </div>
     </section>
   </div>

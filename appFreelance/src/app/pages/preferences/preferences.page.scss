@@ -3,16 +3,16 @@
 }
 
 .preferences-toolbar {
-  --background: rgba(248, 249, 252, 0.96);
+  --background: rgba(248, 249, 252, 0.88);
   --color: #1a1a2e;
-  border-bottom: 1px solid rgba(232, 232, 232, 0.9);
+  border-bottom: 1px solid rgba(232, 232, 232, 0.95);
 }
 
 .preferences-content {
   --background:
     radial-gradient(circle at top left, rgba(151, 125, 255, 0.12), transparent 28%),
-    radial-gradient(circle at right top, rgba(0, 51, 255, 0.1), transparent 24%),
-    linear-gradient(180deg, #f8f9fc 0%, #f2f4ff 100%);
+    radial-gradient(circle at right top, rgba(6, 0, 171, 0.08), transparent 24%),
+    linear-gradient(180deg, #fafbfc 0%, #f8f9fc 100%);
 }
 
 .preferences-shell {
@@ -30,7 +30,7 @@
 
 .hero-block p {
   margin: 10px 0 0;
-  color: #6d7385;
+  color: #8e8e93;
   font-size: 0.96rem;
   line-height: 1.5;
 }
@@ -43,9 +43,9 @@
 }
 
 .category-chip {
-  border: 1px solid rgba(209, 213, 235, 0.9);
-  background: rgba(255, 255, 255, 0.9);
-  color: #2a2f45;
+  border: 1px solid rgba(232, 232, 232, 0.95);
+  background: rgba(255, 255, 255, 0.88);
+  color: #1a1a2e;
   border-radius: 14px;
   min-height: 52px;
   padding: 10px 12px;
@@ -56,7 +56,7 @@
 }
 
 .category-chip.active {
-  border-color: rgba(6, 0, 171, 0.34);
+  border-color: rgba(151, 125, 255, 0.4);
   background: rgba(151, 125, 255, 0.18);
   color: #0600ab;
 }

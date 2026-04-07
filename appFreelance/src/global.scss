@@ -25,6 +25,86 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+:root {
+	color-scheme: light;
+	font-family: "Aptos", "Segoe UI", sans-serif;
+}
+
+html,
+body,
+ion-app {
+	background: var(--app-bg);
+	color: var(--app-text-primary);
+	font-family: "Aptos", "Segoe UI", sans-serif;
+}
+
+body {
+	margin: 0;
+	background:
+		radial-gradient(circle at top left, rgba(151, 125, 255, 0.12), transparent 28%),
+		radial-gradient(circle at right top, rgba(6, 0, 171, 0.08), transparent 24%),
+		linear-gradient(180deg, #fafbfc 0%, var(--app-bg) 100%);
+	color: var(--app-text-primary);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+ion-content {
+	--background: transparent;
+	color: var(--app-text-primary);
+}
+
+ion-toolbar {
+	--background: rgba(248, 249, 252, 0.88);
+	--color: var(--app-text-primary);
+	--border-color: rgba(232, 232, 232, 0.95);
+	backdrop-filter: blur(18px);
+}
+
+ion-title {
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+ion-card {
+	margin: 0;
+	border-radius: var(--app-radius-md);
+	box-shadow: var(--app-shadow-soft);
+	border: 1px solid var(--app-border);
+}
+
+ion-item {
+	--background: rgba(255, 255, 255, 0.9);
+	--border-color: rgba(216, 222, 239, 0.9);
+	--color: var(--app-text-primary);
+	--inner-padding-end: 12px;
+	--padding-start: 14px;
+	--padding-end: 14px;
+	--min-height: 56px;
+	border-radius: var(--app-radius-sm);
+}
+
+ion-button {
+	--border-radius: 16px;
+	--box-shadow: 0 16px 30px rgba(151, 125, 255, 0.18);
+	text-transform: none;
+	font-weight: 700;
+}
+
+ion-chip {
+	border-radius: 999px;
+	font-weight: 600;
+}
+
+ion-searchbar {
+	--background: rgba(255, 255, 255, 0.88);
+	--box-shadow: none;
+	--color: var(--app-text-primary);
+	--placeholder-color: #8e8e93;
+	--icon-color: var(--app-primary);
+	--border-radius: 18px;
+}
+
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------

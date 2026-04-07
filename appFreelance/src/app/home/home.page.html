@@ -4,10 +4,6 @@
       <ion-menu-button menu="main-menu" class="icon-button"></ion-menu-button>
     </ion-buttons>
 
-    <div class="logo-container">
-      <img src="assets/logo.png" alt="logo" />
-    </div>
-
     <ion-buttons slot="end">
       <ion-button class="icon-button">
         <ion-icon name="notifications-outline"></ion-icon>
@@ -19,7 +15,7 @@
 <ion-content class="home-content" [fullscreen]="true" [forceOverscroll]="false">
   <div class="page-shell">
     <section class="hero-card">
-      <div class="hero-badge">Hello, User <span class="hand">👋🏻</span></div>
+      <div class="hero-badge">Hello, User </div>
       <h1 class="hero-title">Let's find best talent for you </h1>
 
 
@@ -73,7 +69,7 @@
         </article>
       </div>
     </section>
-
+  <!-- Freelancer Section -->
     <section class="feature-section" *ngIf="showFreelancersSection">
       <div class="section-heading">
         <div>
@@ -106,13 +102,13 @@
         </div>
       </div>
     </section>
-
+    <!-- Service Section -->
     <section class="service-section" *ngIf="showServicesSection">
       <div class="section-heading">
         <div>
-          <h2>Top Services</h2>
+          <span class="section-kicker">Top Services</span>
         </div>
-        <a routerLink="/view-all-services" class="view-all">View All</a>
+        <a routerLink="/gigs" class="view-all">View All</a>
       </div>
 
       <div class="services-grid">
