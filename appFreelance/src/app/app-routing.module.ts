@@ -47,6 +47,22 @@ const routes: Routes = [
     loadChildren: () => import('./offers/offers.module').then(m => m.OffersPageModule)
   },
   {
+    path: 'my-offers',
+    loadChildren: () => import('./my-offers/my-offers.module').then(m => m.MyOffersPageModule)
+  },
+  {
+    path: 'my-proposals',
+    loadChildren: () => import('./my-proposals/my-proposals.module').then(m => m.MyProposalsPageModule)
+  },
+  {
+    path: 'post-offer',
+    loadChildren: () => import('./post-offer/post-offer.module').then(m => m.PostOfferPageModule)
+  },
+  {
+    path: 'conversations',
+    loadChildren: () => import('./conversations/conversations.module').then(m => m.ConversationsPageModule)
+  },
+  {
     path: 'proposals/:id',
     loadChildren: () => import('./proposals/proposals.module').then(m => m.ProposalsPageModule)
   },
@@ -63,7 +79,20 @@ const routes: Routes = [
     loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  {
+    path: 'feedback',
+    loadChildren: () => import('./pages/feedback/feedback.module').then(m => m.FeedbackPageModule)
+  },
+  {
+    path: '',
+    redirectTo: 'preferences',
+    pathMatch: 'full'
+  },
+  {
+    path: 'view-all-categories',
+    loadChildren: () => import('./pages/view-all-categories/view-all-categories.module').then( m => m.ViewAllCategoriesPageModule)
+  },
+  { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({

@@ -29,7 +29,7 @@ export class ApiService {
   getOffer(id: string): Observable<any> {
     return this.http.get<any>(`${this.base}/offers/${id}`, { headers: this.headers() });
   }
-  createOffer(data: { title: string; description: string; budget: number; deadline?: string; category?: string }): Observable<any> {
+  createOffer(data: FormData): Observable<any> {
     return this.http.post<any>(`${this.base}/offers/`, data, { headers: this.headers() });
   }
   updateOffer(id: string, data: any): Observable<any> {
@@ -41,12 +41,17 @@ export class ApiService {
   getMyOffers(): Observable<any[]> {
     return this.http.get<any[]>(`${this.base}/offers/my/offers`, { headers: this.headers() });
   }
+  getOffersByFreelancer(freelancerId: string, proposalStatus?: string): Observable<any[]> {
+    let params = new HttpParams();
+    if (proposalStatus) params = params.set('proposalStatus', proposalStatus);
+    return this.http.get<any[]>(`${this.base}/offers/by-freelancer/${freelancerId}`, { headers: this.headers(), params });
+  }
 
   // Proposals
   getProposals(offerId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.base}/proposals/${offerId}`, { headers: this.headers() });
   }
-  submitProposal(data: { offerId: string; amount: number; message: string }): Observable<any> {
+  submitProposal(data: FormData): Observable<any> {
     return this.http.post<any>(`${this.base}/proposals/`, data, { headers: this.headers() });
   }
   acceptProposal(proposalId: string): Observable<any> {

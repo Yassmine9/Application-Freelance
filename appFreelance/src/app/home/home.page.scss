@@ -481,51 +481,6 @@ ion-content.home-content {
   }
 }
 
-.custom-navbar {
-  position: fixed;
-  left: 50%;
-  bottom: 18px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 10px;
-  width: min(92%, 440px);
-  height: 64px;
-  padding: 0 14px;
-  transform: translateX(-50%);
-  border-radius: 999px;
-  background: rgba(6, 0, 171, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 26px 60px rgba(15, 23, 42, 0.28);
-  backdrop-filter: blur(18px);
-}
-
-.custom-navbar ion-icon {
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 22px;
-}
-
-.custom-navbar ion-icon.active {
-  color: #fff;
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
-}
-
-.notif {
-  position: relative;
-}
-
-.badge {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #977dff;
-  box-shadow: 0 0 0 3px rgba(6, 0, 171, 0.92);
-}
-
 .accent-1 {
   background: linear-gradient(135deg, #977dff, #0600ab);
 }

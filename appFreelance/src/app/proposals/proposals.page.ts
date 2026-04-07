@@ -5,7 +5,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
   IonBackButton, IonIcon, IonSpinner, IonItem, IonLabel, IonInput,
-  IonTextarea, IonList, IonBadge,
+  IonList, IonBadge,
   ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -16,6 +16,7 @@ import {
 } from 'ionicons/icons';
 import { ApiService } from '../services/api.service';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-proposals',
@@ -26,7 +27,7 @@ import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
     CommonModule, FormsModule, RouterModule,
     IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
     IonBackButton, IonIcon, IonSpinner, IonItem, IonLabel, IonInput,
-    IonTextarea, IonList, IonBadge
+    IonList, IonBadge
   ]
 })
 export class ProposalsPage implements OnInit {
@@ -38,7 +39,9 @@ export class ProposalsPage implements OnInit {
   isClient = false;
   isFreelancer = false;
   currentUserId = '';
-  newProposal = { amount: null as number | null, message: '' };
+  newProposal = { amount: null as number | null };
+  coverLetterFile: File | null = null;
+  apiUrl = environment.apiUrl.replace(/\/api\/?$/, '');
 
   constructor(
     private route: ActivatedRoute,
@@ -72,17 +75,18 @@ export class ProposalsPage implements OnInit {
   }
 
   async submitProposal() {
-    if (!this.newProposal.amount || !this.newProposal.message.trim()) {
+    if (!this.newProposal.amount || !this.coverLetterFile) {
       return this.toast('Please fill all fields', 'warning');
     }
     this.isSubmitting = true;
-    this.api.submitProposal({
-      offerId: this.offerId,
-      amount: this.newProposal.amount,
-      message: this.newProposal.message
-    }).subscribe({
+    const payload = new FormData();
+    payload.append('offerId', this.offerId);
+    payload.append('amount', String(this.newProposal.amount));
+    payload.append('cover_letter', this.coverLetterFile);
+    this.api.submitProposal(payload).subscribe({
       next: async () => {
-        this.newProposal = { amount: null, message: '' };
+        this.newProposal = { amount: null };
+        this.coverLetterFile = null;
         this.isSubmitting = false;
         await this.toast('Proposal submitted!', 'success');
         this.loadProposals();
@@ -135,6 +139,11 @@ export class ProposalsPage implements OnInit {
   getAcceptedFreelancerId(): string {
     const accepted = this.proposals.find(p => p.status === 'accepted');
     return accepted?.freelancerId || '';
+  }
+
+  onCoverLetterSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.coverLetterFile = input.files && input.files.length ? input.files[0] : null;
   }
 
   private async toast(message: string, color: string) {

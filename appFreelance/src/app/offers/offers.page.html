@@ -53,7 +53,12 @@
         <span class="budget-value"> ${{ offer.budget | number }}</span>
       </div>
 
-      <p class="job-desc">{{ offer.description }}</p>
+      <p class="job-desc" *ngIf="offer.description">{{ offer.description }}</p>
+      <div class="file-row" *ngIf="offer.cahierChargeUrl">
+        <a class="file-link" [href]="apiUrl + offer.cahierChargeUrl" target="_blank" rel="noopener">
+          Cahier des charges
+        </a>
+      </div>
 
       <div class="meta-row">
         <span class="tag-pill" *ngIf="offer.deadline">
@@ -86,7 +91,7 @@
 
         <ion-button size="small" fill="outline" color="medium"
                     *ngIf="offer.status === 'in_progress'"
-                    [routerLink]="['/chat', offer._id]">
+                    [routerLink]="getChatLink(offer)">
           Chat
         </ion-button>
       </div>
@@ -121,6 +126,8 @@
   </div>
 
 </ion-content>
+
+<app-side-bar activeTab="offers"></app-side-bar>
 
 <!-- FAB: Post a Job (clients only) -->
 <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="isClient">
@@ -157,15 +164,12 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Description <span class="required">*</span></label>
-          <ion-textarea
-            [(ngModel)]="newOffer.description"
-            placeholder="Describe the job in detail..."
-            class="form-input"
-            fill="outline"
-            [autoGrow]="true"
-            rows="4">
-          </ion-textarea>
+          <label class="form-label">Cahier des charges <span class="required">*</span></label>
+          <input
+            type="file"
+            class="file-input"
+            accept=".pdf,.doc,.docx"
+            (change)="onCahierChargeSelected($event)" />
         </div>
 
         <div class="form-group">

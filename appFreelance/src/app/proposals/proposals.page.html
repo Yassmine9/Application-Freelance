@@ -42,7 +42,11 @@
         </div>
       </div>
 
-      <p class="job-desc">{{ offer.description }}</p>
+      <div class="file-row" *ngIf="offer.cahierChargeUrl">
+        <a class="file-link" [href]="apiUrl + offer.cahierChargeUrl" target="_blank" rel="noopener">
+          Cahier des charges
+        </a>
+      </div>
 
     </div>
   </div>
@@ -59,10 +63,12 @@
       </div>
 
       <div class="form-group">
-        <label>Cover Letter *</label>
-        <ion-textarea rows="5" [(ngModel)]="newProposal.message"
-          placeholder="Why are you the best fit for this job?"
-          fill="outline"></ion-textarea>
+        <label>Cover Letter (file) *</label>
+        <input
+          type="file"
+          class="file-input"
+          accept=".pdf,.doc,.docx"
+          (change)="onCoverLetterSelected($event)" />
       </div>
 
       <ion-button expand="block" (click)="submitProposal()" [disabled]="isSubmitting">
@@ -110,7 +116,9 @@
 
       <div class="proposal-bid">${{ p.amount | number }}<span> USD</span></div>
 
-      <p class="proposal-message">{{ p.message }}</p>
+      <div class="proposal-file" *ngIf="p.coverLetterUrl">
+        <a class="file-link" [href]="apiUrl + p.coverLetterUrl" target="_blank" rel="noopener">Cover letter</a>
+      </div>
 
       <div class="actions" *ngIf="isClient && p.status === 'pending'">
         <ion-button size="small" color="success" (click)="confirmAccept(p)">

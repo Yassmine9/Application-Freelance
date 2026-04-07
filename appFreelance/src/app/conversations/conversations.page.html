@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Messages</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="center-box" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="!isLoading && conversations.length">
+    <ion-item
+      *ngFor="let convo of conversations"
+      [routerLink]="convo.otherUserId ? ['/chat', convo.offerId, convo.otherUserId] : null"
+      [disabled]="!convo.otherUserId"
+      detail="true"
+    >
+      <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ convo.offerTitle || 'Conversation' }}</h2>
+        <p>{{ getLastPreview(convo) }}</p>
+      </ion-label>
+      <div class="item-meta" slot="end">
+        <span class="time" *ngIf="convo.lastMessage?.createdAt">{{ convo.lastMessage.createdAt | date:'MMM d' }}</span>
+        <ion-badge color="primary" *ngIf="convo.unreadCount">{{ convo.unreadCount }}</ion-badge>
+      </div>
+    </ion-item>
+  </ion-list>
+
+  <div class="empty-state" *ngIf="!isLoading && conversations.length === 0">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <p>No conversations yet</p>
+    <span>Start chatting once offers are in progress.</span>
+  </div>
+</ion-content>
+
+<app-side-bar activeTab="messages"></app-side-bar>

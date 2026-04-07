@@ -6,6 +6,10 @@ ion-content {
   --background: #f4f5f7;
 }
 
+ion-content::part(scroll) {
+  padding-bottom: 110px;
+}
+
 /* ===== Header ===== */
 ion-header ion-toolbar {
   --background: linear-gradient(135deg, #0f1c4d, #1e2a78);
@@ -188,6 +192,16 @@ ion-header ion-toolbar {
     font-size: 0.85rem;
     color: #666;
     line-height: 1.5;
+  }
+
+  .file-row {
+    margin-top: 8px;
+  }
+
+  .file-link {
+    color: #1e2a78;
+    font-weight: 600;
+    text-decoration: none;
   }
 
   .meta-row {
@@ -392,6 +406,16 @@ ion-modal {
     --border-color: #d0d5e8;
     --border-width: 1.5px;
     font-size: 0.95rem;
+  }
+
+  .file-input {
+    width: 100%;
+    border: 1.5px dashed #d0d5e8;
+    background: #fafbff;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 0.85rem;
+    color: #333;
   }
 
   .category-selector {

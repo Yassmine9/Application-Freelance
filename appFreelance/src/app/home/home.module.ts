@@ -1,17 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
+import { HomePage } from './home.page';
+import { SideBarComponent } from '../components/side-bar/side-bar.component';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { HomePage } from './home.page';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    SideBarComponent,
   ],
   declarations: [HomePage]
 })

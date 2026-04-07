@@ -91,6 +91,10 @@ ion-header ion-toolbar {
     line-height: 1.6;
     margin: 0;
   }
+
+  .file-row {
+    margin-top: 8px;
+  }
 }
 
 /* ===== Submit proposal card ===== */
@@ -122,6 +126,16 @@ ion-header ion-toolbar {
       --border-color: #d0d5e8;
       --border-width: 1.5px;
       font-size: 0.92rem;
+    }
+
+    .file-input {
+      width: 100%;
+      border: 1.5px dashed #d0d5e8;
+      background: #fafbff;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 0.85rem;
+      color: #333;
     }
   }
 
@@ -283,6 +297,16 @@ ion-header ion-toolbar {
     margin: 0 0 14px;
   }
 
+  .proposal-file {
+    margin: 0 0 14px;
+  }
+
+
+.file-link {
+  color: #1e2a78;
+  font-weight: 600;
+  text-decoration: none;
+}
   /* Actions */
   .actions {
     display: flex;

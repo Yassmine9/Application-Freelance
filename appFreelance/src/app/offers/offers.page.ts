@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
-  IonIcon, IonSpinner, IonModal, IonInput, IonTextarea, IonRefresher,
+  IonIcon, IonSpinner, IonModal, IonInput, IonRefresher,
   IonRefresherContent, IonList, IonItem, IonLabel, IonBadge, IonSearchbar,
   IonFab, IonFabButton,
   ToastController, AlertController
@@ -17,6 +17,8 @@ import {
 } from 'ionicons/icons';
 import { ApiService } from '../services/api.service';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
+import { SideBarComponent } from '../components/side-bar/side-bar.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-offers',
@@ -26,9 +28,10 @@ import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
   imports: [
     CommonModule, FormsModule, RouterModule,
     IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton,
-    IonIcon, IonSpinner, IonModal, IonInput, IonTextarea, IonRefresher,
+    IonIcon, IonSpinner, IonModal, IonInput, IonRefresher,
     IonRefresherContent, IonList, IonItem, IonLabel, IonBadge, IonSearchbar,
-    IonFab, IonFabButton
+    IonFab, IonFabButton,
+    SideBarComponent
   ]
 })
 export class OffersPage implements OnInit {
@@ -41,6 +44,7 @@ export class OffersPage implements OnInit {
   isFreelancer = false;
   searchQuery = '';
   activeFilter = 'all';
+  apiUrl = environment.apiUrl.replace(/\/api\/?$/, '');
   // Category filtering
   categories: string[] = ['All', 'Design', 'Marketing', 'Development', 'Writing'];
   selectedCategory = 'All';
@@ -54,11 +58,13 @@ export class OffersPage implements OnInit {
     { key: 'Accounting', label: 'Accounting', icon: 'calculator' }
   ];
 
-  newOffer = { title: '', description: '', budget: null as number | null, deadline: '', category: '' };
+  newOffer = { title: '', budget: null as number | null, deadline: '', category: '' };
+  cahierChargeFile: File | null = null;
 
   constructor(
     private api: ApiService,
     private auth: FreelanceAuthHelper,
+    private route: ActivatedRoute,
     private toastCtrl: ToastController,
     private alertCtrl: AlertController
   ) {
@@ -74,6 +80,13 @@ export class OffersPage implements OnInit {
     this.isClient = this.auth.isClient();
     this.isFreelancer = this.auth.isFreelancer();
     this.loadOffers();
+
+    this.route.queryParamMap.subscribe((params) => {
+      const openCreate = params.get('create') === '1';
+      if (openCreate && this.isClient) {
+        this.openCreate();
+      }
+    });
   }
 
   onSearch(ev: any) {
@@ -120,22 +133,20 @@ export class OffersPage implements OnInit {
       result = result.filter(o => o.status === this.activeFilter);
     }
 
-    // Search: match title or description
+    // Search: match title
     const q = this.searchQuery.trim().toLowerCase();
     if (q) {
       result = result.filter(o =>
-        (o.title || '').toLowerCase().includes(q) ||
-        (o.description || '').toLowerCase().includes(q)
+        (o.title || '').toLowerCase().includes(q)
       );
     }
 
-    // Category: match stored field OR fallback to title/description text
+    // Category: match stored field OR fallback to title text
     if (this.selectedCategory && this.selectedCategory !== 'All') {
       const cat = this.selectedCategory.toLowerCase();
       result = result.filter(o =>
         (o.category || '').toLowerCase() === cat ||
-        (o.title || '').toLowerCase().includes(cat) ||
-        (o.description || '').toLowerCase().includes(cat)
+        (o.title || '').toLowerCase().includes(cat)
       );
     }
 
@@ -161,18 +172,25 @@ export class OffersPage implements OnInit {
     return clientId ? clientId.slice(-2).toUpperCase() : 'CL';
   }
 
+  onCahierChargeSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.cahierChargeFile = input.files && input.files.length ? input.files[0] : null;
+  }
+
   async createOffer() {
-    if (!this.newOffer.title?.trim() || !this.newOffer.description?.trim() || !this.newOffer.budget) {
+    if (!this.newOffer.title?.trim() || !this.newOffer.budget || !this.cahierChargeFile) {
       return this.toast('Please fill all required fields', 'warning');
     }
+
+    const payload = new FormData();
+    payload.append('title', this.newOffer.title.trim());
+    payload.append('budget', String(this.newOffer.budget));
+    if (this.newOffer.deadline) payload.append('deadline', this.newOffer.deadline);
+    if (this.newOffer.category) payload.append('category', this.newOffer.category);
+    payload.append('cahier_charge', this.cahierChargeFile);
+
     this.isSubmitting = true;
-    this.api.createOffer({
-      title: this.newOffer.title,
-      description: this.newOffer.description,
-      budget: this.newOffer.budget,
-      deadline: this.newOffer.deadline || undefined,
-      category: this.newOffer.category || undefined
-    }).subscribe({
+    this.api.createOffer(payload).subscribe({
       next: async () => {
         this.isSubmitting = false;
         this.showCreateModal = false;
@@ -210,7 +228,18 @@ export class OffersPage implements OnInit {
     });
   }
 
-  resetForm() { this.newOffer = { title: '', description: '', budget: null, deadline: '', category: '' }; }
+  getChatLink(offer: any): any[] {
+    if (this.isClient) {
+      return ['/chat', offer._id, offer.acceptedFreelancerId || ''];
+    }
+
+    return ['/chat', offer._id, offer.clientId || ''];
+  }
+
+  resetForm() {
+    this.newOffer = { title: '', budget: null, deadline: '', category: '' };
+    this.cahierChargeFile = null;
+  }
 
   private async toast(message: string, color: string) {
     const t = await this.toastCtrl.create({ message, duration: 2200, color, position: 'top' });

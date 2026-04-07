@@ -32,6 +32,8 @@ export class AuthService {
       tap(res => {
         localStorage.setItem(this.tokenKey, res.token);
         localStorage.setItem(this.userKey, JSON.stringify(res.user));
+        localStorage.setItem('role', res.user?.role || '');
+        localStorage.setItem('userId', res.user?._id || res.user?.id || '');
         this.currentUser$.next(res.user);
       })
     );
@@ -91,6 +93,8 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+    localStorage.removeItem('role');
+    localStorage.removeItem('userId');
     this.currentUser$.next(null);
   }
 

@@ -5,7 +5,7 @@
     </ion-buttons>
 
     <div class="logo-container">
-      <img src="assets/logo.png" alt="logo" />
+     
     </div>
 
     <ion-buttons slot="end">
@@ -61,7 +61,7 @@
           <span class="section-kicker">Service category</span>
 
         </div>
-        <a routerLink="/view-all-services" class="view-all">View all</a>
+        <a routerLink="/view-all-categories" class="view-all">View all</a>
       </div>
 
       <div class="feature-grid">
@@ -152,14 +152,4 @@
 
 </ion-content>
 
-<div class="custom-navbar">
-  <ion-icon name="home-outline" class="active"></ion-icon>
-  <ion-icon name="search-outline"></ion-icon>
-
-  <div class="notif">
-    <ion-icon name="notifications-outline"></ion-icon>
-    <span class="badge"></span>
-  </div>
-
-  <ion-icon name="person-outline"></ion-icon>
-</div>
+<app-side-bar activeTab="home"></app-side-bar>

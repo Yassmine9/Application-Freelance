@@ -54,6 +54,30 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
     this.offerId = this.route.snapshot.paramMap.get('offerId') || this.route.snapshot.paramMap.get('id')!;
     this.receiverId = this.route.snapshot.paramMap.get('receiverId') || '';
     this.currentUserId = this.auth.getUserId();
+    if (!this.receiverId) {
+      this.api.getOffer(this.offerId).subscribe({
+        next: (offer) => {
+          if (this.auth.isClient()) {
+            this.receiverId = offer?.acceptedFreelancerId || '';
+          } else {
+            this.receiverId = offer?.clientId || '';
+          }
+          this.startPolling();
+        },
+        error: () => this.startPolling()
+      });
+    } else {
+      this.startPolling();
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (this.shouldScroll) { this.ionContent?.scrollToBottom(300); this.shouldScroll = false; }
+  }
+
+  ngOnDestroy() { this.pollSub?.unsubscribe(); }
+
+  private startPolling() {
     this.loadMessages();
     this.pollSub = interval(4000).pipe(
       switchMap(() => this.api.getMessages(this.offerId))
@@ -63,12 +87,6 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
       }
     });
   }
-
-  ngAfterViewChecked() {
-    if (this.shouldScroll) { this.ionContent?.scrollToBottom(300); this.shouldScroll = false; }
-  }
-
-  ngOnDestroy() { this.pollSub?.unsubscribe(); }
 
   loadMessages() {
     this.isLoading = true;
@@ -80,6 +98,10 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
 
   sendMessage() {
     if (!this.newMessage.trim() || this.isSending) return;
+    if (!this.receiverId) {
+      this.toast('No recipient available yet', 'warning');
+      return;
+    }
     this.isSending = true;
     const content = this.newMessage.trim();
     this.newMessage = '';
