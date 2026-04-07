@@ -159,6 +159,23 @@
   font-size: 0.88rem;
 }
 
+.skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.skill-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(151, 125, 255, 0.14);
+  color: #4a3ea8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
 .copy-top ion-icon {
   color: #0600ab;
   font-size: 1.25rem;

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { PreferencesService } from '../services/preferences.service';
+import { environment } from '../../environments/environment';
 
 interface HomeFeature {
   title: string;
@@ -13,6 +15,16 @@ interface HomeFreelancer {
   icon: string;
   avatarImage: string;
   category: string;
+}
+
+interface FreelancerApiItem {
+  _id: string;
+  name?: string;
+  skills?: string[];
+}
+
+interface FreelancersApiResponse {
+  freelancers: FreelancerApiItem[];
 }
 
 interface HomeService {
@@ -77,44 +89,7 @@ export class HomePage {
       icon: 'sparkles-outline',
     },
   ];
-  readonly allFreelancers: HomeFreelancer[] = [
-    {
-      name: 'Yassmine Abdelhak',
-      icon: 'color-palette-outline',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=YA&backgroundColor=977dff&color=ffffff&fontSize=35&fontWeight=700',
-      category: 'Graphic Design',
-    },
-    {
-      name: 'Asma Abdedaiem ',
-      icon: 'megaphone-outline',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=AA&backgroundColor=0600ab&color=ffffff&fontSize=35&fontWeight=700',
-      category: 'Digital Marketing',
-    },
-    {
-      name : 'Sirine Saidi',
-      icon: 'code-slash-outline',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=SS&backgroundColor=6b7dff&color=ffffff&fontSize=35&fontWeight=700',
-      category: 'Web Development',
-    },
-    {
-      name: 'Yasmine Srioui',
-      icon: 'film-outline',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=YS&backgroundColor=4f46e5&color=ffffff&fontSize=35&fontWeight=700',
-      category: 'Video Editing',
-    },
-    {
-      name: 'Amira Kacem',
-      icon: 'create-outline',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=CW&backgroundColor=7c7dff&color=ffffff&fontSize=35&fontWeight=700',
-      category: 'Content Writing',
-    },
-    {
-      name: 'Ines Chatti',
-      icon: 'phone-portrait-outline',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=UU&backgroundColor=5555ff&color=ffffff&fontSize=35&fontWeight=700',
-      category: 'UI / UX Design',
-    },
-  ];
+  allFreelancers: HomeFreelancer[] = [];
   readonly allServices: HomeService[] = [
     {
       title: 'Graphic Design',
@@ -181,6 +156,7 @@ export class HomePage {
     private readonly router: Router,
     private readonly actionSheetController: ActionSheetController,
     private readonly preferencesService: PreferencesService,
+    private readonly http: HttpClient,
   ) {}
 
   ionViewWillEnter(): void {
@@ -190,6 +166,60 @@ export class HomePage {
     }
 
     this.preferredCategories = this.preferencesService.getPreferences().categories;
+    this.loadFreelancers();
+  }
+
+  private loadFreelancers(): void {
+    this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
+      next: (response) => {
+        const mapped = (response.freelancers ?? [])
+          .map((freelancer) => this.mapFreelancerFromApi(freelancer))
+          .filter((freelancer): freelancer is HomeFreelancer => freelancer !== null);
+
+        this.allFreelancers = mapped;
+      },
+      error: () => {
+        this.allFreelancers = [];
+      },
+    });
+  }
+
+  private mapFreelancerFromApi(freelancer: FreelancerApiItem): HomeFreelancer | null {
+    const name = freelancer.name?.trim();
+
+    if (!name) {
+      return null;
+    }
+
+    const category = freelancer.skills?.[0]?.trim() || 'Freelancer';
+
+    return {
+      name,
+      category,
+      icon: this.iconForCategory(category),
+      avatarImage: this.avatarForName(name),
+    };
+  }
+
+  private iconForCategory(category: string): string {
+    const label = category.toLowerCase();
+
+    if (label.includes('design')) return 'color-palette-outline';
+    if (label.includes('market')) return 'megaphone-outline';
+    if (label.includes('web') || label.includes('dev')) return 'code-slash-outline';
+    if (label.includes('video')) return 'film-outline';
+    if (label.includes('content') || label.includes('writing')) return 'create-outline';
+    if (label.includes('ui') || label.includes('ux')) return 'phone-portrait-outline';
+    if (label.includes('data')) return 'document-text-outline';
+
+    return 'person-outline';
+  }
+
+  private avatarForName(name: string): string {
+    const parts = name.split(' ').filter(Boolean);
+    const initials = parts.slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'FR';
+
+    return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(initials)}&backgroundColor=977dff&color=ffffff&fontSize=35&fontWeight=700`;
   }
 
   get features(): HomeFeature[] {

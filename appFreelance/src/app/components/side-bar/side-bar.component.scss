@@ -1,19 +1,24 @@
 .custom-navbar {
   position: fixed;
-  left: 50%;
-  bottom: 12px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
-  width: min(95%, 460px);
+  width: 100%;
+  max-width: none;
   min-height: 74px;
-  padding: 8px 10px;
-  transform: translateX(-50%);
-  border-radius: 26px;
+  padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+  transform: none;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.97);
-  border: 1px solid rgba(214, 220, 235, 0.9);
+  border-top: 1px solid rgba(214, 220, 235, 0.9);
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
   box-shadow: 0 14px 36px rgba(20, 33, 82, 0.18);
   backdrop-filter: blur(10px);
 }

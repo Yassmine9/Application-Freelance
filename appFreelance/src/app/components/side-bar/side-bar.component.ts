@@ -51,7 +51,9 @@ export class SideBarComponent implements OnInit {
       return [];
     }
 
-    const roleSpecificOptions: MenuOption[] = [];
+    const roleSpecificOptions: MenuOption[] = [
+      { label: 'Store', icon: 'storefront-outline', action: 'navigate', route: '/store' },
+    ];
 
     if (this.userRole === 'client') {
       roleSpecificOptions.push(
@@ -67,10 +69,7 @@ export class SideBarComponent implements OnInit {
       );
     }
 
-    roleSpecificOptions.push(
-      { label: 'Feedback', icon: 'clipboard-outline', action: 'navigate', route: '/feedback' },
-      { label: 'Logout', icon: 'log-out-outline', action: 'logout' },
-    );
+
 
     return roleSpecificOptions;
   }

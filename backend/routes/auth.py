@@ -25,20 +25,23 @@ def login():
     email = data.get("email")
     password = data.get("password")
 
-    if not email or not password or user.is_blocked:
+    if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
 
     user = authenticate_user(email, password)
 
-    if user:
-        token = create_access_token(identity=user["_id"])
-        return jsonify({
-            "token": token,
-            "user": user,
-            "status": user.get("status", "active")
-        })
+    if not user:
+        return jsonify({"error": "Email or password is incorrect"}), 401
 
-    return jsonify({"error": "Email or password is incorrect"}), 401
+    if user.get("is_blocked"):
+        return jsonify({"error": "Your account is blocked"}), 403
+
+    token = create_access_token(identity=user["_id"])
+    return jsonify({
+        "token": token,
+        "user": user,
+        "status": user.get("status", "active")
+    })
 
 
 @auth_routes.route("/register", methods=["POST"])
@@ -143,6 +146,22 @@ def get_profile():
         user.pop("password", None)
         return jsonify({"user": user})
     return jsonify({"error": "Utilisateur non trouvé"}), 404
+
+
+@auth_routes.route("/freelancers", methods=["GET"])
+def get_freelancers():
+    freelancers = Freelancer.get_all()
+    status_filter = (request.args.get("status") or "all").strip().lower()
+
+    filtered_freelancers = []
+    for freelancer in freelancers:
+        if status_filter != "all" and freelancer.get("status", "").lower() != status_filter:
+            continue
+
+        freelancer.pop("password", None)
+        filtered_freelancers.append(freelancer)
+
+    return jsonify({"freelancers": filtered_freelancers, "count": len(filtered_freelancers)})
 
 
 # ─── ADMIN : Comptes en attente ────────────────────────────────────────────────

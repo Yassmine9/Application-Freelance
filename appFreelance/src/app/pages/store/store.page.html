@@ -39,7 +39,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="store-content">
+<ion-content class="store-content" [fullscreen]="true" [forceOverscroll]="false">
 
   <!-- Loading skeleton -->
   <div class="products-grid" *ngIf="isLoading">
