@@ -39,6 +39,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/view-all-services/view-all-services.module').then(m => m.ViewAllServicesPageModule)
   },
   {
+    path: 'feedback',
+    loadChildren: () => import('./pages/feedback/feedback.module').then(m => m.FeedbackPageModule)
+  },
+  {
     path: '',
       redirectTo: 'preferences',
     pathMatch: 'full'

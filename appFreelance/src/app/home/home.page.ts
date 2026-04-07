@@ -91,13 +91,13 @@ export class HomePage {
       category: 'Video Editing',
     },
     {
-      name: 'Content Writing',
+      name: 'Amira Kacem',
       icon: 'create-outline',
       avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=CW&backgroundColor=7c7dff&color=ffffff&fontSize=35&fontWeight=700',
       category: 'Content Writing',
     },
     {
-      name: 'UI / UX Design',
+      name: 'Ines Chatti',
       icon: 'phone-portrait-outline',
       avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=UU&backgroundColor=5555ff&color=ffffff&fontSize=35&fontWeight=700',
       category: 'UI / UX Design',
@@ -115,7 +115,7 @@ export class HomePage {
       avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=NB&backgroundColor=977dff&color=ffffff&fontSize=35&fontWeight=700',
     },
     {
-      title: 'Digital Marketing',
+      title: 'Rim Gharbi',
       icon: 'megaphone-outline',
       description: 'Campaigns, social content, and growth-focused strategy.',
       provider: 'Amira Kacem',
@@ -125,7 +125,7 @@ export class HomePage {
       avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=AK&backgroundColor=0600ab&color=ffffff&fontSize=35&fontWeight=700',
     },
     {
-      title: 'Web Development',
+      title: 'Hiba Mansouri',
       icon: 'code-slash-outline',
       description: 'Responsive websites and front-end builds that feel fast.',
       provider: 'Sami Trabelsi',
@@ -135,7 +135,7 @@ export class HomePage {
       avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=ST&backgroundColor=6b7dff&color=ffffff&fontSize=35&fontWeight=700',
     },
     {
-      title: 'Video Editing',
+      title: 'Nour Ben Ali',
       icon: 'film-outline',
       description: 'Short-form and promo edits with a polished rhythm.',
       provider: 'Hiba Mansouri',
@@ -274,6 +274,10 @@ export class HomePage {
     this.router.navigateByUrl('/register');
   }
 
+  goToStore(): void {
+    this.router.navigateByUrl('/store');
+  }
+
   trackByIndex(index: number): number {
     return index;
   }
@@ -303,6 +307,77 @@ export class HomePage {
           text: 'Services',
           handler: () => {
             this.searchScope = 'services';
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+
+    await actionSheet.present();
+  }
+
+  async openContactSheet(): Promise<void> {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Contact us',
+      buttons: [
+        {
+          text: 'Go to login',
+          icon: 'log-in-outline',
+          handler: () => {
+            this.router.navigateByUrl('/login');
+          },
+        },
+        {
+          text: 'Create account',
+          icon: 'person-add-outline',
+          handler: () => {
+            this.router.navigateByUrl('/register');
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+
+    await actionSheet.present();
+  }
+
+  openRemarksSheet(): void {
+    this.router.navigateByUrl('/feedback');
+  }
+
+  async openNavigationScheme(): Promise<void> {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Navigation scheme',
+      buttons: [
+        {
+          text: 'Home (this page)',
+          icon: 'home-outline',
+        },
+        {
+          text: 'Services list',
+          icon: 'grid-outline',
+          handler: () => {
+            this.router.navigateByUrl('/view-all-services');
+          },
+        },
+        {
+          text: 'Freelancers list',
+          icon: 'people-outline',
+          handler: () => {
+            this.router.navigateByUrl('/view-all-freelancers');
+          },
+        },
+        {
+          text: 'Authentication',
+          icon: 'log-in-outline',
+          handler: () => {
+            this.router.navigateByUrl('/login');
           },
         },
         {
