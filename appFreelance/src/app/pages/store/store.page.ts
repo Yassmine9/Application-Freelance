@@ -75,4 +75,8 @@ export class StorePage implements OnInit {
     this.loadProducts();
     setTimeout(() => event.target.complete(), 800);
   }
+
+  goBack() {
+  this.router.navigate(['/home']);
+}
 }

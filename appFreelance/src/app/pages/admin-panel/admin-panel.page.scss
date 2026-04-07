@@ -1,0 +1,404 @@
+// ── Variables ─────────────────────────────────────────────
+$primary:    #977DFF;
+$secondary:  #FFCCF2;
+$accent:     #0033FF;
+$dark-bg:    #00033D;
+$light-bg:   #F2E6EE;
+$white:      #ffffff;
+$border:     #e8e8e8;
+$text-dark:  #1a1a2e;
+$text-light: #8e8e93;
+
+// ── Animations ────────────────────────────────────────────
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+// ── Header ────────────────────────────────────────────────
+.admin-header ion-toolbar {
+  --background: transparent;
+  --border-style: none;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: $text-dark;
+}
+
+.back-btn, .icon-btn {
+  --color: #{$primary};
+  --icon-font-size: 24px;
+}
+
+// ── Content ───────────────────────────────────────────────
+.admin-content {
+  --background: linear-gradient(180deg, #{$light-bg} 0%, #e8e0ff 100%);
+}
+
+.admin-container {
+  padding: 16px 20px;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom));
+}
+
+// ── Welcome ───────────────────────────────────────────────
+.welcome-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.admin-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, $dark-bg 0%, $primary 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba($primary, 0.35);
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 28px;
+    color: $white;
+  }
+}
+
+.welcome-label {
+  font-size: 13px;
+  color: $text-light;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 500;
+}
+
+.welcome-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 2px 0 0;
+  background: linear-gradient(135deg, $primary 0%, $accent 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ── Stats grid ────────────────────────────────────────────
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: rgba($white, 0.95);
+  border-radius: 20px;
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+  border: 2px solid transparent;
+  animation: fadeInUp 0.55s ease-out both;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    border-color: rgba($primary, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba($primary, 0.12);
+  }
+}
+
+.stat-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon { font-size: 22px; color: $white; }
+
+  &.purple { background: linear-gradient(135deg, $primary, lighten($primary, 10%)); box-shadow: 0 4px 12px rgba($primary, 0.35); }
+  &.blue   { background: linear-gradient(135deg, $accent, $primary);               box-shadow: 0 4px 12px rgba($accent,  0.3);  }
+  &.pink   { background: linear-gradient(135deg, #ff6b9d, #ff8cc8);                box-shadow: 0 4px 12px rgba(255,107,157,0.3); }
+  &.dark   { background: linear-gradient(135deg, $dark-bg, $primary);              box-shadow: 0 4px 12px rgba($dark-bg, 0.35); }
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: $text-dark;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: $text-light;
+  font-weight: 500;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.skeleton-val {
+  width: 48px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f0e6ff 25%, #e0d0ff 50%, #f0e6ff 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  margin-bottom: 4px;
+}
+
+// ── Section header row ────────────────────────────────────
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  animation: fadeInUp 0.55s ease-out both;
+}
+
+.section-title-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-icon {
+  font-size: 20px;
+  color: $primary;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-dark;
+  margin: 0;
+}
+
+.badge-count {
+  background: linear-gradient(135deg, $primary, $accent);
+  color: $white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  box-shadow: 0 3px 10px rgba($primary, 0.35);
+}
+
+// ── Freelancer card ───────────────────────────────────────
+.freelancer-card {
+  background: rgba($white, 0.95);
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+  border: 2px solid transparent;
+  animation: fadeInUp 0.55s ease-out both;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    border-color: rgba($primary, 0.18);
+    box-shadow: 0 10px 32px rgba($primary, 0.1);
+  }
+}
+
+.freelancer-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.freelancer-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, $primary 0%, $accent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba($primary, 0.3);
+
+  span {
+    font-size: 16px;
+    font-weight: 700;
+    color: $white;
+  }
+}
+
+.freelancer-info { flex: 1; min-width: 0; }
+
+.freelancer-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text-dark;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.freelancer-email {
+  font-size: 12px;
+  color: $text-light;
+  margin: 0 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.freelancer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.meta-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba($primary, 0.08);
+  color: $primary;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 20px;
+
+  ion-icon { font-size: 12px; }
+}
+
+// ── Action buttons ────────────────────────────────────────
+.freelancer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  ion-icon { font-size: 20px; color: $white; }
+
+  &:active { transform: scale(0.92); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.approve-btn {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.35);
+  &:hover { box-shadow: 0 6px 16px rgba(46, 204, 113, 0.45); }
+}
+
+.reject-btn {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.35);
+  &:hover { box-shadow: 0 6px 16px rgba(231, 76, 60, 0.45); }
+}
+
+.mini-spinner {
+  width: 18px;
+  height: 18px;
+  color: $white;
+}
+
+// ── Skeleton cards ────────────────────────────────────────
+.skeleton-card {
+  cursor: default;
+  &:hover { transform: none; border-color: transparent; }
+}
+
+.skeleton-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #f0e6ff 25%, #e0d0ff 50%, #f0e6ff 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  flex-shrink: 0;
+}
+
+.skeleton-lines { flex: 1; }
+
+.skeleton-line {
+  height: 13px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f0e6ff 25%, #e0d0ff 50%, #f0e6ff 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+// ── Empty state ───────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 20px;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.empty-icon-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary 0%, $accent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 24px rgba($primary, 0.3);
+  ion-icon { font-size: 34px; color: $white; }
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-dark;
+  margin: 0 0 6px;
+}
+
+.empty-sub {
+  font-size: 14px;
+  color: $text-light;
+  margin: 0;
+}
+
+// ── Safe area ─────────────────────────────────────────────
+@supports (padding-top: env(safe-area-inset-top)) {
+  .admin-header { padding-top: env(safe-area-inset-top); }
+}

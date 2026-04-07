@@ -2,6 +2,9 @@
   <ion-toolbar class="store-toolbar">
     <div class="toolbar-content">
       <div class="header-top">
+        <ion-button fill="clear" (click)="goBack()" class="back-btn">
+          <ion-icon name="chevron-back" slot="icon-only"></ion-icon>
+        </ion-button>
         <div>
           <h1 class="store-title">Store</h1>
         </div>
@@ -78,7 +81,7 @@
         <h3 class="product-title">{{ product.title }}</h3>
         <p class="product-desc">{{ product.description }}</p>
         <div class="card-footer">
-          <span class="product-price">${{ product.price }}</span>
+          <span class="product-price">{{ product.price }} T.D</span>
           <div class="download-count">
             <ion-icon name="download-outline"></ion-icon>
             <span>{{ product.downloadCount }}</span>
