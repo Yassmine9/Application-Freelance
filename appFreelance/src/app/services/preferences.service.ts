@@ -17,6 +17,16 @@ export class PreferencesService {
     'Video Editing',
     'Content Writing',
     'UI / UX Design',
+    'Mobile Development',
+    'SEO Optimization',
+    'Translation',
+    'Social Media Management',
+    'Data Entry',
+    'Voice Over',
+    'Photography',
+    '3D Modeling',
+    'Cybersecurity',
+    'AI Automation',
   ];
 
   hasPreferences(): boolean {

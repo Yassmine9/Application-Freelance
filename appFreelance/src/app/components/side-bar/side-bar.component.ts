@@ -1,9 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
-type SideBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav';
+type SideBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav' | 'projects' | 'services' | 'orders' | 'profile';
+
+interface MenuOption {
+  label: string;
+  icon: string;
+  action: 'navigate' | 'logout' | 'sheet';
+  route?: string;
+}
 
 @Component({
   selector: 'app-side-bar',
@@ -12,13 +20,68 @@ type SideBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav';
   standalone: true,
   imports: [CommonModule, IonicModule],
 })
-export class SideBarComponent {
+export class SideBarComponent implements OnInit {
   @Input() activeTab: SideBarTab = 'home';
+
+  isLoggedIn = false;
+  userRole: string | null = null;
 
   constructor(
     private readonly router: Router,
     private readonly actionSheetController: ActionSheetController,
-  ) {}
+    private readonly authService: AuthService,
+  ) {
+    this.updateAuthStatus();
+  }
+
+  ngOnInit(): void {
+    // Subscribe to user changes to update auth status dynamically
+    this.authService.getCurrentUser().subscribe(() => {
+      this.updateAuthStatus();
+    });
+  }
+
+  private updateAuthStatus(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.userRole = this.authService.getUserRole();
+  }
+
+  get menuOptions(): MenuOption[] {
+    if (!this.isLoggedIn) {
+      return [];
+    }
+
+    const roleSpecificOptions: MenuOption[] = [];
+
+    if (this.userRole === 'client') {
+      roleSpecificOptions.push(
+        { label: 'My Projects', icon: 'briefcase-outline', action: 'navigate', route: '/client/projects' },
+        { label: 'My Orders', icon: 'cart-outline', action: 'navigate', route: '/client/orders' },
+        { label: 'Profile', icon: 'person-circle-outline', action: 'navigate', route: '/client/profile' },
+      );
+    } else if (this.userRole === 'freelancer') {
+      roleSpecificOptions.push(
+        { label: 'My Services', icon: 'layers-outline', action: 'navigate', route: '/freelancer/services' },
+        { label: 'My Orders', icon: 'cart-outline', action: 'navigate', route: '/freelancer/orders' },
+        { label: 'Profile', icon: 'person-circle-outline', action: 'navigate', route: '/freelancer/profile' },
+      );
+    }
+
+    roleSpecificOptions.push(
+      { label: 'Feedback', icon: 'clipboard-outline', action: 'navigate', route: '/feedback' },
+      { label: 'Logout', icon: 'log-out-outline', action: 'logout' },
+    );
+
+    return roleSpecificOptions;
+  }
+
+  handleMenuAction(option: MenuOption): void {
+    if (option.action === 'navigate' && option.route) {
+      this.router.navigateByUrl(option.route);
+    } else if (option.action === 'logout') {
+      this.logout();
+    }
+  }
 
   goHome(): void {
     this.router.navigateByUrl('/home');
@@ -30,6 +93,12 @@ export class SideBarComponent {
 
   goToFeedback(): void {
     this.router.navigateByUrl('/feedback');
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.updateAuthStatus();
+    this.router.navigateByUrl('/home', { replaceUrl: true });
   }
 
   async openContactSheet(): Promise<void> {

@@ -99,6 +99,11 @@ export class AuthService {
     return !!this.getToken();
   }
 
+  getUserRole(): string | null {
+    const user = this.getStoredUser();
+    return user?.role || null;
+  }
+
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);

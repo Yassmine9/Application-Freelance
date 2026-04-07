@@ -40,29 +40,41 @@ export class HomePage {
   private preferredCategories: string[] = [];
 
   readonly allFeatures: HomeFeature[] = [
-    {
-      title: 'Graphic Design',
-      icon: 'color-palette-outline',
-    },
-    {
-      title: 'Digital Marketing',
-      icon: 'megaphone-outline',
-    },
+
     {
       title: 'Web Development',
       icon: 'code-slash-outline',
     },
-    {
-      title: 'Video Editing',
-      icon: 'film-outline',
-    },
-    {
-      title: 'Content Writing',
-      icon: 'create-outline',
-    },
+
     {
       title: 'UI / UX Design',
       icon: 'phone-portrait-outline',
+    },
+    {
+      title: 'Mobile Development',
+      icon: 'phone-portrait-outline',
+    },
+    {
+      title: 'SEO Optimization',
+      icon: 'trending-up-outline',
+    },
+
+    {
+      title: 'Data Entry',
+      icon: 'document-text-outline',
+    },
+
+    {
+      title: '3D Modeling',
+      icon: 'cube-outline',
+    },
+    {
+      title: 'Cybersecurity',
+      icon: 'shield-checkmark-outline',
+    },
+    {
+      title: 'AI Automation',
+      icon: 'sparkles-outline',
     },
   ];
   readonly allFreelancers: HomeFreelancer[] = [

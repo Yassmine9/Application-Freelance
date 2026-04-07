@@ -26,9 +26,13 @@ export class ViewAllCategoriesPage {
     { title: 'Mobile Development', icon: 'phone-portrait-outline' },
     { title: 'SEO Optimization', icon: 'trending-up-outline' },
     { title: 'Translation', icon: 'language-outline' },
-    { title: 'Social Media', icon: 'people-circle-outline' },
+    { title: 'Social Media Management', icon: 'people-circle-outline' },
     { title: 'Data Entry', icon: 'document-text-outline' },
     { title: 'Voice Over', icon: 'mic-outline' },
+    { title: 'Photography', icon: 'camera-outline' },
+    { title: '3D Modeling', icon: 'cube-outline' },
+    { title: 'Cybersecurity', icon: 'shield-checkmark-outline' },
+    { title: 'AI Automation', icon: 'sparkles-outline' },
   ];
 
   constructor() {}

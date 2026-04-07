@@ -26,7 +26,7 @@ def login():
     password = data.get("password")
 
     if not email or not password or user.is_blocked:
-        return jsonify({"error": "Email et mot de passe requis"}), 400
+        return jsonify({"error": "Email and password are required"}), 400
 
     user = authenticate_user(email, password)
 
@@ -38,7 +38,7 @@ def login():
             "status": user.get("status", "active")
         })
 
-    return jsonify({"error": "Email ou mot de passe incorrect"}), 401
+    return jsonify({"error": "Email or password is incorrect"}), 401
 
 
 @auth_routes.route("/register", methods=["POST"])
@@ -54,12 +54,12 @@ def register():
     role = data.get("role", "client")
 
     if not email or not password or not name:
-        return jsonify({"error": "Email, mot de passe et nom sont requis"}), 400
+        return jsonify({"error": "Email, password and name are required"}), 400
 
     # Vérifier si l'email existe dans n'importe quelle collection
     existing_user = find_user_by_email(email)
     if existing_user:
-        return jsonify({"error": "Un utilisateur avec cet email existe déjà"}), 400
+        return jsonify({"error": "A user with this email already exists"}), 400
 
     new_user = None
 

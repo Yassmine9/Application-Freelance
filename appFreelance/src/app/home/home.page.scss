@@ -44,7 +44,7 @@ ion-content.home-content {
 }
 
 .page-shell {
-  padding: 18px 16px 108px;
+  padding: 18px 16px 140px;
 }
 
 .hero-card {
@@ -236,7 +236,7 @@ ion-content.home-content {
 
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -272,7 +272,7 @@ ion-content.home-content {
 .freelancer-copy h3 {
   margin: 0;
   color: var(--text-primary);
-  font-size: 0.8rem;
+  font-size: 0.63rem;
   line-height: 1.25;
   font-weight: 600;
 }
@@ -509,7 +509,7 @@ ion-content.home-content {
   .page-shell {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 28px 24px 120px;
+    padding: 28px 24px 150px;
   }
 
   .hero-card {
