@@ -146,6 +146,10 @@ export class ProposalsPage implements OnInit {
     this.coverLetterFile = input.files && input.files.length ? input.files[0] : null;
   }
 
+  statusClass(status: string): string {
+    return status === 'in_progress' ? 'in-progress' : status;
+  }
+
   private async toast(message: string, color: string) {
     const t = await this.toastCtrl.create({ message, duration: 2200, color, position: 'top' });
     await t.present();

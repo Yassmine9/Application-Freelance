@@ -19,7 +19,7 @@
     <div class="app-card job-card">
 
       <div class="card-header">
-        <span class="status-chip" [ngClass]="offer.status">
+        <span class="status-chip" [ngClass]="statusClass(offer.status)">
           {{ offer.status === 'in_progress' ? 'In Progress' : (offer.status | titlecase) }}
         </span>
         <span class="post-date">{{ offer.createdAt | date:'MMM d, y' }}</span>

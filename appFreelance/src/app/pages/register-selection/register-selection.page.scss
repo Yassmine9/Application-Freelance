@@ -1,12 +1,12 @@
-$primary:       #977DFF;
-$secondary:     #F2E6EE;
-$accent:        #0600AB;
-$dark-bg:       #00033D;
-$light-bg:      #F2E6EE;
+$primary:       #1e2a78;
+$secondary:     #eef2f8;
+$accent:        #4e5bd4;
+$dark-bg:       #0f1c4d;
+$light-bg:      #f4f6fb;
 $white:         #ffffff;
-$border:        #e8e8e8;
-$text-dark:     #1a1a2e;
-$text-light:    #8e8e93;
+$border:        #e3e7f2;
+$text-dark:     #1a1f36;
+$text-light:    #6b7a99;
 
 @keyframes fadeInScale {
   from {
@@ -181,7 +181,7 @@ $text-light:    #8e8e93;
   background: linear-gradient(
     145deg,
     rgba($accent, 0.9) 0%,
-    rgba(#653eff, 0.6) 100%
+    rgba(#4e5bd4, 0.6) 100%
   );
 
   -webkit-background-clip: text;

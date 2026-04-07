@@ -1,27 +1,27 @@
 :host {
   display: block;
-  --page-bg: #f8f9fc;
-  --card-bg: rgba(255, 255, 255, 0.88);
-  --card-border: rgba(232, 232, 232, 0.95);
-  --text-primary: #1a1a2e;
-  --text-secondary: #8e8e93;
+  --page-bg: #f4f6fb;
+  --card-bg: rgba(255, 255, 255, 0.92);
+  --card-border: rgba(227, 231, 242, 0.95);
+  --text-primary: #1a1f36;
+  --text-secondary: #6b7a99;
   --accent-start: #1e2a78;
-  --accent-end: #0600ab;
-  --shadow-soft: 0 20px 44px rgba(6, 0, 171, 0.08);
+  --accent-end: #4e5bd4;
+  --shadow-soft: 0 20px 44px rgba(30, 42, 120, 0.12);
 }
 
 ion-content.home-content {
   --background:
-    radial-gradient(circle at top left, rgba(151, 125, 255, 0.14), transparent 28%),
-    radial-gradient(circle at right 10% top 20%, rgba(0, 51, 255, 0.12), transparent 22%),
-    linear-gradient(180deg, #f8f9fc 0%, var(--page-bg) 100%);
+    radial-gradient(circle at top left, rgba(78, 91, 212, 0.14), transparent 28%),
+    radial-gradient(circle at right 10% top 20%, rgba(30, 42, 120, 0.12), transparent 22%),
+    linear-gradient(180deg, #f4f6fb 0%, var(--page-bg) 100%);
 }
 
 .custom-header {
-  --background: rgba(6, 21, 64, 0.344);
+  --background: rgba(255, 255, 255, 0.9);
   --color: var(--text-primary);
   backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(232, 232, 232, 0.278);
+  border-bottom: 1px solid rgba(227, 231, 242, 0.8);
 }
 
 .icon-button {
@@ -44,7 +44,7 @@ ion-content.home-content {
 }
 
 .page-shell {
-  padding: 18px 16px 108px;
+  padding: 18px 16px 110px;
 }
 
 .hero-card {
@@ -128,7 +128,7 @@ ion-content.home-content {
   --border-radius: 20px;
   --placeholder-color: #8e8e93;
   --color: var(--text-primary);
-  --icon-color: #977dff;
+  --icon-color: #4e5bd4;
   padding-inline-end: 102px;
   padding-inline: 0;
 }
@@ -148,7 +148,7 @@ ion-content.home-content {
   margin: 0;
   min-width: 42px;
 
-  --color: #0600ab;
+  --color: #1e2a78;
   border-radius: 14px;
 
   z-index: 2;
@@ -202,8 +202,8 @@ ion-content.home-content {
 
   background: linear-gradient(
     90deg,
-    rgba(0, 54, 248, 0.14) 0,
-    rgba(0, 54, 248, 0) 25%,
+    rgba(78, 91, 212, 0.14) 0,
+    rgba(78, 91, 212, 0) 25%,
     transparent 25%,
     transparent 100%
   );
@@ -227,7 +227,7 @@ ion-content.home-content {
 }
 
 .view-all {
-  color: #0600ab;
+  color: #1e2a78;
   font-size: 0.92rem;
   font-weight: 700;
   text-decoration: none;
@@ -245,8 +245,8 @@ ion-content.home-content {
   padding: 14px 8px 12px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(232, 232, 232, 0.9);
-  box-shadow: 0 10px 22px rgba(6, 0, 171, 0.04);
+  border: 1px solid rgba(227, 231, 242, 0.9);
+  box-shadow: 0 10px 22px rgba(30, 42, 120, 0.04);
   text-align: center;
 }
 
@@ -262,9 +262,9 @@ ion-content.home-content {
 }
 
 .feature-icon {
-  color: #4456b8;
-  background: #f4f7ff;
-  border: 1px solid rgba(69, 86, 184, 0.12);
+  color: #1e2a78;
+  background: #eef2ff;
+  border: 1px solid rgba(30, 42, 120, 0.12);
 }
 
 .feature-card h3,
@@ -284,7 +284,7 @@ ion-content.home-content {
   width: 22px;
   height: 3px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(69, 86, 184, 0.26), rgba(151, 125, 255, 0.26));
+  background: linear-gradient(135deg, rgba(30, 42, 120, 0.26), rgba(78, 91, 212, 0.26));
 }
 
 .freelancer-strip {
@@ -320,8 +320,8 @@ ion-content.home-content {
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  border: 2px solid rgba(151, 125, 255, 0.16);
-  background: #eef0ff;
+  border: 2px solid rgba(78, 91, 212, 0.16);
+  background: #eef2ff;
 }
 
 .freelancer-avatar img {
@@ -344,7 +344,7 @@ ion-content.home-content {
   margin-top: 8px;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(151, 125, 255, 0.08);
+  background: rgba(78, 91, 212, 0.08);
   color: var(--text-secondary);
   font-size: 0.76rem;
   font-weight: 700;
@@ -352,7 +352,7 @@ ion-content.home-content {
 
 .freelancer-tag ion-icon {
   font-size: 0.92rem;
-  color: #0600ab;
+  color: #1e2a78;
 }
 
 .service-section {
@@ -410,12 +410,12 @@ ion-content.home-content {
   height: 42px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(151, 125, 255, 0.16);
+  border: 2px solid rgba(78, 91, 212, 0.16);
 }
 
 .service-icon {
   margin-bottom: 0;
-  background: linear-gradient(135deg, #977dff, #0600ab);
+  background: linear-gradient(135deg, #1e2a78, #4e5bd4);
 }
 
 .service-copy h4 {
@@ -455,8 +455,8 @@ ion-content.home-content {
 }
 
 .service-more-btn {
-  --background: #0600ab;
-  --background-hover: #1609bd;
+  --background: #1e2a78;
+  --background-hover: #1a2568;
   --border-radius: 10px;
   --box-shadow: none;
   font-size: 0.78rem;
@@ -482,27 +482,27 @@ ion-content.home-content {
 }
 
 .accent-1 {
-  background: linear-gradient(135deg, #977dff, #0600ab);
+  background: linear-gradient(135deg, #1e2a78, #4e5bd4);
 }
 
 .accent-2 {
-  background: linear-gradient(135deg, #0033ff, #977dff);
+  background: linear-gradient(135deg, #4e5bd4, #06b6d4);
 }
 
 .accent-3 {
-  background: linear-gradient(135deg, #0600ab, #0033ff);
+  background: linear-gradient(135deg, #0f1c4d, #1e2a78);
 }
 
 .accent-4 {
-  background: linear-gradient(135deg, #977dff, #0033ff);
+  background: linear-gradient(135deg, #1e2a78, #06b6d4);
 }
 
 .accent-5 {
-  background: linear-gradient(135deg, #0600ab, #977dff);
+  background: linear-gradient(135deg, #0f1c4d, #4e5bd4);
 }
 
 .accent-6 {
-  background: linear-gradient(135deg, #1a1a2e, #0600ab);
+  background: linear-gradient(135deg, #1a1f36, #1e2a78);
 }
 
 @media (min-width: 768px) {

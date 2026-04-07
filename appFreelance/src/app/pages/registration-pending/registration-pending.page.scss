@@ -1,21 +1,22 @@
 
-$primary:       #977DFF;
-$primary-dark:  #0600AB;
-$primary-light: #0033FF;
+
+$primary:       #1e2a78;
+$primary-dark:  #0f1c4d;
+$primary-light: #4e5bd4;
 
 $success:       #34c77b;
 $warning:       #f5a623;
 
-$warm-bg:       #F2E6EE;
+$warm-bg:       #eef2f8;
 $white:         #ffffff;
-$border:        #eeecf5;
-$text-dark:     #2c2841;
-$text-mid:      #6b6584;
-$text-light:    #9e97b5;
+$border:        #e3e7f2;
+$text-dark:     #1a1f36;
+$text-mid:      #4b5875;
+$text-light:    #6b7a99;
 
 .pending-content {
   --background: #ffffff;
-  background: linear-gradient(180deg, #ffffff 0%, #f9f8fc 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f4f6fb 100%);
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -208,7 +209,7 @@ $text-light:    #9e97b5;
   }
 
   &.pending {
-    background: linear-gradient(135deg, #F2E6EE, darken(#0600AB, 6%));
+    background: linear-gradient(135deg, $warm-bg, darken($primary, 6%));
     box-shadow: 0 4px 14px rgba($warm-bg, 0.30);
     animation: breathe 2s ease-in-out infinite;
   }

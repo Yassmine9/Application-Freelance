@@ -73,7 +73,7 @@
         <div class="offer-item" *ngFor="let offer of freelancerOffers">
           <div class="offer-header">
             <div class="offer-title">{{ offer.title || 'Untitled offer' }}</div>
-            <span class="status-chip" [ngClass]="offer.status">{{ offer.status === 'in_progress' ? 'In Progress' : (offer.status | titlecase) }}</span>
+            <span class="status-chip" [ngClass]="statusClass(offer.status)">{{ offer.status === 'in_progress' ? 'In Progress' : (offer.status | titlecase) }}</span>
           </div>
           <div class="offer-meta">
             <span class="budget">${{ offer.budget | number }}</span>

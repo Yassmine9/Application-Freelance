@@ -4,9 +4,9 @@
 
 .menu-hero {
   padding: 28px 22px 18px;
-  background: linear-gradient(145deg, rgba(151, 125, 255, 0.96), rgba(6, 0, 171, 0.96));
-  border-bottom: 1px solid rgba(232, 232, 232, 0.8);
-  box-shadow: 0 18px 40px rgba(6, 0, 171, 0.1);
+  background: linear-gradient(145deg, rgba(78, 91, 212, 0.96), rgba(30, 42, 120, 0.96));
+  border-bottom: 1px solid rgba(227, 231, 242, 0.8);
+  box-shadow: 0 18px 40px rgba(30, 42, 120, 0.12);
 }
 
 .menu-brand {
@@ -20,7 +20,7 @@
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--app-font);
 }
 
 .menu-hero h2 {
@@ -44,21 +44,21 @@
 }
 
 .menu-list ion-item {
-  --background: rgba(255, 255, 255, 0.86);
-  --background-hover: rgba(255, 255, 255, 0.96);
-  --background-focused: rgba(255, 255, 255, 0.96);
-  --color: #1a1a2e;
+  --background: rgba(255, 255, 255, 0.92);
+  --background-hover: rgba(255, 255, 255, 0.98);
+  --background-focused: rgba(255, 255, 255, 0.98);
+  --color: #1a1f36;
   --border-radius: 18px;
   --padding-start: 14px;
   --padding-end: 14px;
   --min-height: 54px;
   margin: 10px 12px;
-  border: 1px solid rgba(232, 232, 232, 0.95);
-  box-shadow: 0 10px 24px rgba(6, 0, 171, 0.06);
+  border: 1px solid rgba(227, 231, 242, 0.95);
+  box-shadow: 0 10px 24px rgba(30, 42, 120, 0.08);
 }
 
 .menu-list ion-icon {
-  color: #977dff;
+  color: #4e5bd4;
 }
 
 .menu-list ion-label {

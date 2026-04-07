@@ -46,7 +46,7 @@ ion-header ion-toolbar {
     font-weight: 700;
 
     &.open        { background: #e6f4ea; color: #1a7f37; }
-    &.in_progress { background: #fff4e5; color: #b26a00; }
+    &.in-progress { background: #fff4e5; color: #b26a00; }
     &.closed      { background: #f3f3f3; color: #888; }
   }
 

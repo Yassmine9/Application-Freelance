@@ -115,6 +115,10 @@ export class ProfilePage implements OnInit {
     this.cahierChargeFile = input.files && input.files.length ? input.files[0] : null;
   }
 
+  statusClass(status: string): string {
+    return status === 'in_progress' ? 'in-progress' : status;
+  }
+
   async createOffer() {
     if (!this.newOffer.title?.trim() || !this.newOffer.budget || !this.cahierChargeFile) {
       return this.toast('Please fill all required fields', 'warning');
