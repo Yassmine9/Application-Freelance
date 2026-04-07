@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from bson import ObjectId
 from datetime import datetime
 from db.mongo import db
+from utils.uploads import save_upload
 
 offers_bp = Blueprint("offers", __name__)
 
@@ -15,6 +16,8 @@ def serialize_offer(offer):
     # include category if present
     if "category" in offer:
         offer["category"] = offer["category"]
+    if offer.get("cahierChargePath"):
+        offer["cahierChargeUrl"] = f"/uploads/{offer['cahierChargePath']}"
     return offer
 
 
@@ -26,20 +29,38 @@ def create_offer():
     if claims.get("role") != "client":
         return jsonify({"error": "Only clients can create offers"}), 403
 
-    data = request.json
-    required = ["title", "description", "budget"]
-    if not all(field in data for field in required):
-        return jsonify({"error": "Missing required fields: title, description, budget"}), 400
+    title = (request.form.get("title") or "").strip()
+    budget_raw = request.form.get("budget")
+    deadline_raw = request.form.get("deadline")
+    category = request.form.get("category")
+    cahier_charge = request.files.get("cahier_charge")
 
-    if not isinstance(data["budget"], (int, float)) or data["budget"] <= 0:
+    if not title or not budget_raw:
+        return jsonify({"error": "Missing required fields: title, budget"}), 400
+
+    try:
+        budget = float(budget_raw)
+    except ValueError:
+        return jsonify({"error": "Budget must be a number"}), 400
+
+    if budget <= 0:
         return jsonify({"error": "Budget must be a positive number"}), 400
 
+    if not cahier_charge:
+        return jsonify({"error": "Cahier de charge file is required"}), 400
+
+    try:
+        upload = save_upload(cahier_charge, "cahier_charge")
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
     offer = {
-        "title": data["title"].strip(),
-        "description": data["description"].strip(),
-        "budget": data["budget"],
-        "deadline": datetime.fromisoformat(data["deadline"]) if data.get("deadline") else None,
-        "category": data.get("category") or None,
+        "title": title,
+        "budget": budget,
+        "deadline": datetime.fromisoformat(deadline_raw) if deadline_raw else None,
+        "category": category or None,
+        "cahierChargePath": upload["relative_path"],
+        "cahierChargeName": upload["filename"],
         "clientId": get_jwt_identity(),
         "status": "open",   # open | in_progress | closed
         "createdAt": datetime.utcnow()
@@ -148,3 +169,60 @@ def get_my_offers():
     current_user = get_jwt_identity()
     offers = [serialize_offer(o) for o in db.offers.find({"clientId": current_user}).sort("createdAt", -1)]
     return jsonify(offers), 200
+
+
+# ─── Get Offers Proposed By Freelancer ───────────────────────────────────────
+@offers_bp.route("/by-freelancer/<freelancer_id>", methods=["GET"])
+@jwt_required()
+def get_offers_by_freelancer(freelancer_id):
+    if db is None:
+        return jsonify([]), 200
+
+    status_filter = request.args.get("proposalStatus")
+    proposal_query = {"freelancerId": freelancer_id}
+    if status_filter:
+        proposal_query["status"] = status_filter
+
+    proposal_cursor = db.proposals.find(proposal_query).sort("createdAt", -1)
+    proposals = []
+    offer_ids = []
+    for p in proposal_cursor:
+        offer_id = p.get("offerId")
+        if not offer_id:
+            continue
+        if not isinstance(offer_id, ObjectId):
+            try:
+                offer_id = ObjectId(str(offer_id))
+            except Exception:
+                continue
+
+        p["_id"] = str(p["_id"])
+        p["offerId"] = str(offer_id)
+        if "createdAt" in p and p["createdAt"]:
+            p["createdAt"] = p["createdAt"].isoformat()
+        proposals.append(p)
+        offer_ids.append(offer_id)
+
+    if not offer_ids:
+        return jsonify([]), 200
+
+    offers_by_id = {}
+    for offer in db.offers.find({"_id": {"$in": offer_ids}}):
+        serialized = serialize_offer(offer)
+        offers_by_id[serialized["_id"]] = serialized
+
+    results = []
+    for p in proposals:
+        offer = offers_by_id.get(p["offerId"])
+        if not offer:
+            continue
+        offer["proposal"] = {
+            "_id": p.get("_id"),
+            "status": p.get("status"),
+            "amount": p.get("amount"),
+            "coverLetterUrl": f"/uploads/{p['coverLetterPath']}" if p.get("coverLetterPath") else None,
+            "createdAt": p.get("createdAt")
+        }
+        results.append(offer)
+
+    return jsonify(results), 200

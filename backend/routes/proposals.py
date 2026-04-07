@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from bson import ObjectId
 from datetime import datetime
 from db.mongo import db
+from utils.uploads import save_upload
 
 proposals_bp = Blueprint("proposals", __name__)
 
@@ -11,6 +12,8 @@ def serialize_proposal(p):
     p["offerId"] = str(p["offerId"])
     if "createdAt" in p and p["createdAt"]:
         p["createdAt"] = p["createdAt"].isoformat()
+    if p.get("coverLetterPath"):
+        p["coverLetterUrl"] = f"/uploads/{p['coverLetterPath']}"
     # attach freelancer profile info if available
     try:
         user = db.users.find_one({"_id": p["freelancerId"]}) or db.users.find_one({"userId": p["freelancerId"]})
@@ -32,14 +35,19 @@ def submit_proposal():
     if claims.get("role") != "freelancer":
         return jsonify({"error": "Only freelancers can submit proposals"}), 403
 
-    data = request.json
-    required = ["offerId", "amount", "message"]
-    if not all(field in data for field in required):
-        return jsonify({"error": "Missing required fields: offerId, amount, message"}), 400
+    offer_id = request.form.get("offerId")
+    amount_raw = request.form.get("amount")
+    cover_letter = request.files.get("cover_letter")
+
+    if not offer_id or not amount_raw:
+        return jsonify({"error": "Missing required fields: offerId, amount"}), 400
+
+    if not cover_letter:
+        return jsonify({"error": "Cover letter file is required"}), 400
 
     # Validate offer exists and is open
     try:
-        offer = db.offers.find_one({"_id": ObjectId(data["offerId"])})
+        offer = db.offers.find_one({"_id": ObjectId(offer_id)})
     except Exception:
         return jsonify({"error": "Invalid offer ID"}), 400
 
@@ -53,20 +61,31 @@ def submit_proposal():
 
     # Prevent duplicate proposals from same freelancer
     existing = db.proposals.find_one({
-        "offerId": ObjectId(data["offerId"]),
+        "offerId": ObjectId(offer_id),
         "freelancerId": current_user
     })
     if existing:
         return jsonify({"error": "You already submitted a proposal for this offer"}), 400
 
-    if not isinstance(data["amount"], (int, float)) or data["amount"] <= 0:
+    try:
+        amount = float(amount_raw)
+    except ValueError:
+        return jsonify({"error": "Amount must be a number"}), 400
+
+    if amount <= 0:
         return jsonify({"error": "Amount must be a positive number"}), 400
 
+    try:
+        upload = save_upload(cover_letter, "cover_letters")
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
     proposal = {
-        "offerId": ObjectId(data["offerId"]),
+        "offerId": ObjectId(offer_id),
         "freelancerId": current_user,
-        "amount": data["amount"],
-        "message": data["message"].strip(),
+        "amount": amount,
+        "coverLetterPath": upload["relative_path"],
+        "coverLetterName": upload["filename"],
         "status": "pending",   # pending | accepted | rejected
         "createdAt": datetime.utcnow()
     }

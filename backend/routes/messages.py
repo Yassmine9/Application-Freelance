@@ -118,12 +118,29 @@ def get_conversations():
             "read": False
         })
 
+        if not offer.get("acceptedFreelancerId") and not last_msg:
+            continue
+
+        other_user_id = ''
+        other_role = ''
+        if offer.get("clientId") == current_user:
+            other_user_id = offer.get("acceptedFreelancerId") or ''
+            other_role = 'freelancer'
+        else:
+            other_user_id = offer.get("clientId") or ''
+            other_role = 'client'
+
+        if not other_user_id:
+            continue
+
         conversations.append({
             "offerId": str(offer["_id"]),
             "offerTitle": offer["title"],
             "offerStatus": offer["status"],
             "lastMessage": serialize_message(last_msg) if last_msg else None,
-            "unreadCount": unread_count
+            "unreadCount": unread_count,
+            "otherUserId": str(other_user_id) if other_user_id else '',
+            "otherRole": other_role
         })
 
     return jsonify(conversations), 200
