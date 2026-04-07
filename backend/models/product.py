@@ -44,6 +44,8 @@ class Product:
     @classmethod
     def get_all(cls, category_id=None, search=None):
         query = {}
+        if cls.collection is None:
+            return []
         if category_id:
             query["category_id"] = ObjectId(category_id)
         if search:
@@ -63,7 +65,19 @@ class Product:
 
     @classmethod
     def increment_download(cls, product_id):
-        cls.collection.update_one(
+        if cls.collection is None:
+            return False
+        result = cls.collection.update_one(
             {"_id": ObjectId(product_id)},
             {"$inc": {"downloadCount": 1}}
         )
+        return result.modified_count > 0
+
+
+    @classmethod
+    def delete(cls,product_id):
+        if cls.collection is None:
+            return False
+        result = cls.collection.delete_one({"_id":ObjectId(product_id)})
+
+        return result.deleted_count>0

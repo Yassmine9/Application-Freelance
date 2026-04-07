@@ -9,6 +9,8 @@ from db.mongo import client
 from routes.auth import auth_routes
 from routes.product_routes import product_bp
 from routes.category_routes import category_bp
+from routes.admin_routes import admin_bp
+
 
 def create_app():
     app = Flask(__name__)
@@ -22,7 +24,8 @@ def create_app():
     app.register_blueprint(product_bp, url_prefix="/products")
     app.register_blueprint(auth_routes, url_prefix="/api")
     app.register_blueprint(category_bp, url_prefix="/categories")
-
+    app.register_blueprint(admin_bp, url_prefix="/admin")
+    
     @app.route("/")
     def home():
         return {"message": "API running"}

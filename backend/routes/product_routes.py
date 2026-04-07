@@ -47,13 +47,13 @@ def purchase_product():
         return {"error": "Product not found"}, 404
 
     Purchase.create(
-        buyer_id=data["userId"],
+        buyer_id=data["buyerId"],
         product_id=data["productId"]
     )
 
     return {
         "message": "Purchase successful",
-        "download_link": product["file_path"]
+        "download_link": product["filePath"]
     }, 201
 
 @product_bp.route("/download/<product_id>", methods=["GET"])
@@ -64,9 +64,14 @@ def download_product(product_id):
         return {"error": "Product not found"}, 404
 
     return {
-        "download": product["file_path"]
+        "download": product["filePath"]
     }
 
-@product_bp.route("/test", methods=["GET"])
-def test():
-    return {"message": "products route works"}
+@product_bp.route("/<product_id>", methods=["DELETE"])
+def delete_product(product_id):
+    success = Product.delete(product_id)
+
+    if success:
+        return jsonify({"message": "Product deleted successfully"}), 200
+    else:
+        return jsonify({"error": "Product not found"}), 404

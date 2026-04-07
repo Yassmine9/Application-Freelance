@@ -31,6 +31,19 @@ const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full'
   },
+  {
+    path: 'store',
+    loadChildren: () => import('./pages/store/store.module').then( m => m.StorePageModule)
+  },
+  {
+    path: 'product-detail',
+    loadChildren: () => import('./pages/product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
+  },
+  {
+  path: 'product/:id',
+  loadChildren: () => import('./pages/product-detail/product-detail.module')
+    .then(m => m.ProductDetailPageModule)
+}
 ];
 
 @NgModule({
