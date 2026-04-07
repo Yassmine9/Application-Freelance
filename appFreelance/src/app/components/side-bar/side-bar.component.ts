@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
-type SideBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav' | 'projects' | 'services' | 'orders' | 'profile';
+type SideBarTab = 'home' | 'store' | 'join' | 'search' | 'nav' | 'projects' | 'services' | 'orders' | 'profile';
 
 interface MenuOption {
   label: string;
@@ -63,9 +63,9 @@ export class SideBarComponent implements OnInit {
       );
     } else if (this.userRole === 'freelancer') {
       roleSpecificOptions.push(
-        { label: 'My Services', icon: 'layers-outline', action: 'navigate', route: '/freelancer/services' },
+        { label: 'My Services', icon: 'layers-outline', action: 'navigate', route: '/my-gigs' },
         { label: 'My Orders', icon: 'cart-outline', action: 'navigate', route: '/freelancer/orders' },
-        { label: 'Profile', icon: 'person-circle-outline', action: 'navigate', route: '/freelancer/profile' },
+        { label: 'Profile', icon: 'person-circle-outline', action: 'navigate', route: '/freelancer-profile' },
       );
     }
 
@@ -90,8 +90,8 @@ export class SideBarComponent implements OnInit {
     this.router.navigateByUrl('/store');
   }
 
-  goToFeedback(): void {
-    this.router.navigateByUrl('/feedback');
+  openSearch(): void {
+    this.router.navigateByUrl('/search');
   }
 
   logout(): void {
@@ -140,6 +140,13 @@ export class SideBarComponent implements OnInit {
           },
         },
         {
+          text: 'Search',
+          icon: 'search-outline',
+          handler: () => {
+            this.router.navigateByUrl('/search');
+          },
+        },
+        {
           text: 'Services list',
           icon: 'grid-outline',
           handler: () => {
@@ -151,6 +158,34 @@ export class SideBarComponent implements OnInit {
           icon: 'people-outline',
           handler: () => {
             this.router.navigateByUrl('/view-all-freelancers');
+          },
+        },
+        {
+          text: 'Categories',
+          icon: 'layers-outline',
+          handler: () => {
+            this.router.navigateByUrl('/view-all-categories');
+          },
+        },
+        {
+          text: 'Store',
+          icon: 'storefront-outline',
+          handler: () => {
+            this.router.navigateByUrl('/store');
+          },
+        },
+        {
+          text: 'All Gigs',
+          icon: 'briefcase-outline',
+          handler: () => {
+            this.router.navigateByUrl('/gigs');
+          },
+        },
+        {
+          text: 'Preferences',
+          icon: 'settings-outline',
+          handler: () => {
+            this.router.navigateByUrl('/preferences');
           },
         },
         {

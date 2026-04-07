@@ -58,10 +58,7 @@ export class HomePage {
       icon: 'code-slash-outline',
     },
 
-    {
-      title: 'UI / UX Design',
-      icon: 'phone-portrait-outline',
-    },
+
     {
       title: 'Mobile Development',
       icon: 'phone-portrait-outline',
@@ -76,10 +73,7 @@ export class HomePage {
       icon: 'document-text-outline',
     },
 
-    {
-      title: '3D Modeling',
-      icon: 'cube-outline',
-    },
+ 
     {
       title: 'Cybersecurity',
       icon: 'shield-checkmark-outline',

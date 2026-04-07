@@ -36,7 +36,7 @@ def login():
     if user.get("is_blocked"):
         return jsonify({"error": "Your account is blocked"}), 403
 
-    token = create_access_token(identity=user["_id"])
+    token = create_access_token(identity=str(user["_id"]))
     return jsonify({
         "token": token,
         "user": user,
@@ -79,9 +79,6 @@ def register():
             email=email,
             password=password,
             name=name,
-            skills=data.get("skills", []),
-            hourly_rate=data.get("hourly_rate", 0),
-            bio=data.get("bio", ""),
             phone=data.get("phone", "")
         )
     elif role == "admin":
@@ -136,8 +133,7 @@ def create_feedback():
 
 
 # ─── PROFIL ───────────────────────────────────────────────────────────────────
-
-@auth_routes.route("/profile", methods=["GET"])
+@auth_routes.route("/freelancer/profile", methods=["GET"])
 @jwt_required()
 def get_profile():
     user_id = get_jwt_identity()

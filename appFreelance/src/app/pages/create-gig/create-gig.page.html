@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/my-gigs"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Create Gig</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="onSubmit()">
+
+    <!-- Title -->
+    <ion-item>
+      <ion-label position="stacked">Gig Title</ion-label>
+      <ion-input
+        [(ngModel)]="gig.title"
+        name="title"
+        placeholder="Ex: Développement d'un site web"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <!-- Category 
+    <ion-item>
+      <ion-label position="stacked">Related tags</ion-label>
+      <ion-select
+        [(ngModel)]="gig.tags"
+        name="category"
+        placeholder="Select some related tags"
+        required
+      >
+        <ion-select-option *ngFor="let cat of categories" [value]="cat">
+          {{ cat }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>-->
+
+    <!-- Description -->
+    <ion-item>
+      <ion-label position="stacked">Description</ion-label>
+      <ion-textarea
+        [(ngModel)]="gig.description"
+        name="description"
+        placeholder="Describe your gig..."
+        rows="4"
+        required
+      ></ion-textarea>
+    </ion-item>
+
+    <!-- Price -->
+    <ion-item>
+      <ion-label position="stacked">Price (dt)</ion-label>
+      <ion-input
+        [(ngModel)]="gig.price"
+        name="price"
+        type="number"
+        placeholder="Ex: 50"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <!-- Duration 
+    <ion-item>
+      <ion-label position="stacked">Duration</ion-label>
+      <ion-select
+        [(ngModel)]="gig.duration"
+        name="duration"
+        placeholder="Sélectionnez un délai"
+        required
+      >
+        <ion-select-option *ngFor="let dur of durations" [value]="dur">
+          {{ dur }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>-->
+
+    <!-- Deliverables 
+    <ion-item>
+      <ion-label position="stacked">Livrables (ce qui sera fourni)</ion-label>
+      <ion-textarea
+        [(ngModel)]="gig.deliverables"
+        name="deliverables"
+        placeholder="Ex: Site web responsive, 5 pages, support email..."
+        rows="3"
+      ></ion-textarea>
+    </ion-item>-->
+
+    <!-- Submit Button -->
+    <ion-button expand="block" type="submit" class="ion-margin-top">
+      Create gig
+    </ion-button>
+
+    <!-- Cancel Button -->
+    <ion-button expand="block" fill="clear" (click)="goBack()">
+      Cancel
+    </ion-button>
+  </form>
+</ion-content>
