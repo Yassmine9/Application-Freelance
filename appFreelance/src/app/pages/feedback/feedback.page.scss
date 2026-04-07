@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.feedback-content {
+  --background: linear-gradient(180deg, #f7f9ff 0%, #f1f4fb 100%);
+}
+
+.feedback-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 22px 16px 28px;
+}
+
+.feedback-shell h1 {
+  margin: 0;
+  color: #111a4f;
+  font-size: 1.55rem;
+}
+
+.feedback-shell p {
+  margin: 8px 0 20px;
+  color: #5f678f;
+  font-size: 0.95rem;
+}
+
+.field-item {
+  --background: #ffffff;
+  --border-radius: 14px;
+  --padding-start: 10px;
+  --inner-padding-end: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #e0e5f2;
+  border-radius: 14px;
+}
+
+.send-btn {
+  margin-top: 8px;
+  --background: #2f3fda;
+  --background-hover: #2131c0;
+  --border-radius: 12px;
+  height: 46px;
+  font-weight: 700;
+}

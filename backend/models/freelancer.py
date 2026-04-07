@@ -15,6 +15,7 @@ class Freelancer(BaseUser):
             hourly_rate=hourly_rate,
             bio=bio,
             phone=phone,
+            is_blocked=False,
             portfolio=[],
             proposals_sent=[]
         )

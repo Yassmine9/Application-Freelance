@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
+from datetime import datetime, timezone
+from db.mongo import db
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from db.mongo import test_connection
-from models import Client, Freelancer, Admin, find_user_by_email, authenticate_user
+from models import Client, Freelancer, Admin, find_user_by_email, find_user_by_id, authenticate_user
 
 auth_routes = Blueprint("auth_routes", __name__)
 
@@ -23,13 +25,13 @@ def login():
     email = data.get("email")
     password = data.get("password")
 
-    if not email or not password:
+    if not email or not password or user.is_blocked:
         return jsonify({"error": "Email et mot de passe requis"}), 400
 
     user = authenticate_user(email, password)
 
     if user:
-        token = create_access_token(identity=email)
+        token = create_access_token(identity=user["_id"])
         return jsonify({
             "token": token,
             "user": user,
@@ -100,13 +102,43 @@ def register():
         return jsonify({"error": "Erreur base de données"}), 500
 
 
+@auth_routes.route("/feedback", methods=["POST"])
+def create_feedback():
+    if db is None:
+        return jsonify({"error": "Database unavailable"}), 503
+
+    data = request.get_json() or {}
+    subject = (data.get("subject") or "").strip()
+    message = (data.get("message") or "").strip()
+    contact_email = (data.get("contactEmail") or "").strip()
+
+    if not subject or not message:
+        return jsonify({"error": "Subject and message are required"}), 400
+
+    feedback_doc = {
+        "subject": subject,
+        "message": message,
+        "contact_email": contact_email or None,
+        "recipient_role": "admin",
+        "status": "new",
+        "created_at": datetime.now(timezone.utc),
+    }
+
+    inserted = db["feedback"].insert_one(feedback_doc)
+
+    return jsonify({
+        "message": "Feedback sent to admin",
+        "feedbackId": str(inserted.inserted_id)
+    }), 201
+
+
 # ─── PROFIL ───────────────────────────────────────────────────────────────────
 
 @auth_routes.route("/profile", methods=["GET"])
 @jwt_required()
 def get_profile():
-    email = get_jwt_identity()
-    user = find_user_by_email(email)
+    user_id = get_jwt_identity()
+    user = find_user_by_id(user_id)
     if user:
         user.pop("password", None)
         return jsonify({"user": user})
@@ -118,8 +150,8 @@ def get_profile():
 @auth_routes.route("/admin/pending", methods=["GET"])
 @jwt_required()
 def get_pending_users():
-    email = get_jwt_identity()
-    admin = Admin.find_by_email(email)
+    admin_id = get_jwt_identity()
+    admin = Admin.find_by_id(admin_id)
     if not admin:
         return jsonify({"error": "Accès réservé aux admins"}), 403
 
@@ -130,8 +162,8 @@ def get_pending_users():
 @auth_routes.route("/admin/validate", methods=["POST"])
 @jwt_required()
 def validate_user():
-    admin_email = get_jwt_identity()
-    admin = Admin.find_by_email(admin_email)
+    admin_id = get_jwt_identity()
+    admin = Admin.find_by_id(admin_id)
     if not admin:
         return jsonify({"error": "Accès réservé aux admins"}), 403
 
@@ -150,8 +182,8 @@ def validate_user():
 @auth_routes.route("/admin/reject", methods=["POST"])
 @jwt_required()
 def reject_user():
-    admin_email = get_jwt_identity()
-    admin = Admin.find_by_email(admin_email)
+    admin_id = get_jwt_identity()
+    admin = Admin.find_by_id(admin_id)
     if not admin:
         return jsonify({"error": "Accès réservé aux admins"}), 403
 

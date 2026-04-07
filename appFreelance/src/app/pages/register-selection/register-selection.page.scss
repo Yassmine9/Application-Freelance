@@ -1,337 +1,566 @@
-$primary:       #977DFF; 
-$secondary:     #FFCCF2; 
-$accent:        #0033FF;  
-$dark-bg:       #00033D;  
-$light-bg:      #F2E6EE; 
+$primary:       #977DFF;
+$secondary:     #F2E6EE;
+$accent:        #0600AB;
+$dark-bg:       #00033D;
+$light-bg:      #F2E6EE;
 $white:         #ffffff;
 $border:        #e8e8e8;
 $text-dark:     #1a1a2e;
 $text-light:    #8e8e93;
 
-@keyframes fadeInUp {
+@keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: scale(0.95) translateY(30px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
   }
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: scale(1.05);
+    transform: translateY(-12px) rotate(2deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
   }
   100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes pulseRing {
+  0% {
     transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
   }
 }
 
-
-.selection-header {
-  ion-toolbar {
-    --background: transparent;
-    --border-style: none;
-    --min-height: 56px;
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
-.header-title {
-  font-size: 18px;
+// Header styles
+.transparent-toolbar {
+  --background: rgba(255, 255, 255, 0.7);
+  --border-style: none;
+  --min-height: 56px;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba($primary, 0.08);
+}
+
+.page-title {
+  font-size: 15px;
   font-weight: 600;
   color: $text-dark;
+  letter-spacing: 0.3px;
 }
 
-.back-btn {
+.back-button {
   --color: #{$primary};
-  --icon-font-size: 28px;
+  --icon-font-size: 22px;
   --padding-start: 8px;
   --padding-end: 8px;
 }
 
-.selection-content {
-  --background: linear-gradient(180deg, #{$light-bg} 0%, #977DFF 100%);
+.main-content {
+
   --padding-top: 0;
   --padding-bottom: env(safe-area-inset-bottom);
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(ellipse at 30% 20%, rgba($primary, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba($secondary, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 10%, rgba($accent, 0.08) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
-.action-icon{
-    font-size: 18px;
-    transition: transform 0.3s ease;
-}
-.selection-container {
-  padding: 16px 20px;
-  padding-bottom: calc(24px + env(safe-area-inset-bottom));
-  min-height: 100%;
+.content-wrapper {
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+  max-width: 440px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
-.selection-header-section {
+// Hero section
+.hero-section {
   text-align: center;
-  padding: 20px 0 32px;
+  margin-bottom: 48px;
+  animation: fadeInScale 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.logo-container {
-  width: 80px;
-  height: 80px;
-  margin: 30px auto 16px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, $primary 0%, $accent 50%, $secondary 100%);
+.brand-logo {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 28px;
+  border-radius: 28px;
+  background: linear-gradient(145deg, rgba($primary, 0.9) 0%, rgba($accent, 0.6) 100%);
+  background-size: 200% 200%;
+  animation: gentleFloat 5s ease-in-out infinite, gradientShift 8s ease infinite;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba($primary, 0.3);
-}
+  position: relative;
+  box-shadow: 
+    0 18px 40px rgba($primary, 0.4),
+    0 6px 14px rgba($accent, 0.4),
+    inset 0 1px 0 rgba($white, 0.3);
 
-.logo-icon {
-  font-size: 40px;
-  color: $white;
-}
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 32px;
+    background: linear-gradient(145deg, rgba($primary, 0.6), rgba($accent, 0.8));
+    opacity: 0.35;
+    filter: blur(16px);
+    z-index: -1;
+    animation: pulseRing 3s ease-out infinite;
+  }
 
-.selection-title {
-  font-size: 32px;
-  font-weight: 800;
-  background: linear-gradient(135deg, $primary 0%, $accent 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0 0 12px;
-}
-
-.selection-subtitle {
-  font-size: 16px;
-  color: rgba($text-dark, 0.8);
-  margin: 0;
-  font-weight: 400;
-}
-
-.options-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  margin: 40px 0;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  &::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    height: 40%;
+    background: linear-gradient(180deg, rgba($white, 0.3) 0%, transparent 100%);
+    border-radius: 24px 24px 50% 50%;
+    pointer-events: none;
   }
 }
 
-.option-card {
-  background: rgba($white, 0.95);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid transparent;
+.brand-icon {
+  font-size: 44px;
+  color: $white;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
   position: relative;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: 28px;
+  font-weight: 800;
+
+  background: linear-gradient(
+    145deg,
+    rgba($accent, 0.9) 0%,
+    rgba(#653eff, 0.6) 100%
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  margin: 0 0 10px;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+}
+
+.hero-subtitle {
+  font-size: 15px;
+  color: $text-light;
+  margin: 0;
+  font-weight: 450;
+  opacity: 0.75;
+  line-height: 1.5;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  max-width: 360px;
+  margin: 40px auto 24px;
+  max-height: 2200;
+}
+
+
+.role-card {
+  position: relative;
+  border-radius: 28px;
   overflow: hidden;
-  animation: fadeInUp 0.8s ease-out both;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fadeInScale 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  min-height:50px;
+  background: rgba($white, 0.65);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba($white, 0.8);
+  box-shadow: 
+    0 12px 32px rgba($primary, 0.16),
+    0 6px 16px rgba($accent, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba($white, 0.9);
 
   &:nth-child(1) {
-    animation-delay: 0.2s;
+    animation-delay: 0.15s;
   }
 
   &:nth-child(2) {
-    animation-delay: 0.4s;
+    animation-delay: 0.3s;
   }
 
-  &:nth-child(3) {
-    animation-delay: 0.6s;
+  &:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 
+      0 24px 48px rgba($primary, 0.25),
+      0 12px 24px rgba($accent, 0.12),
+      0 4px 8px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba($white, 1);
+    border-color: rgba($primary, 0.2);
+  }
+
+  &:active {
+    transform: translateY(-2px) scale(1.005);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba($primary, 0.5);
+    outline-offset: 3px;
   }
 }
 
-.freelancer-card:hover {
-  border-color: rgba($primary, 0.3);
-  transform: translateY(-4px);
-}
+.card-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
 
-.client-card:hover {
-  border-color: rgba($accent, 0.3);
-  transform: translateY(-4px);
-}
-
-.admin-card:hover {
-  border-color: rgba($dark-bg, 0.3);
-  transform: translateY(-4px);
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.card-badge {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-
-  &.popular {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-    color: $white;
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba($primary, 0.06) 0%, transparent 70%);
+    transition: all 0.5s ease;
   }
 
-  &.admin {
-    background: linear-gradient(135deg, $dark-bg, $primary);
-    color: $white;
-    box-shadow: 0 2px 8px rgba($dark-bg, 0.3);
+  .role-card:hover &::before {
+    transform: scale(1.5);
+    opacity: 1;
   }
+}
+
+.card-gradient {
+  display: none;
+}
+
+.freelancer-gradient,
+.client-gradient {
+  display: none;
 }
 
 .card-content {
-  flex: 1;
+  position: relative;
+  z-index: 2;
+  padding: 28px 24px;
+  height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
 }
 
-.card-text {
-  flex: 1;
+.card-icon-wrapper {
+  flex-shrink: 0;
 }
 
-.card-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: $text-dark;
-  margin: 0 0 8px;
-  background: linear-gradient(135deg, $text-dark 0%, rgba($text-dark, 0.8) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.card-description {
-  font-size: 16px;
-  color: $text-light;
-  margin: 0 0 16px;
-  line-height: 1.5;
-  opacity: 0.9;
-}
-
-.card-features {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
-  li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: $text-dark;
-    opacity: 0.8;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    background: inherit;
+    filter: blur(12px);
+    opacity: 0.5;
+    z-index: -1;
+    transition: all 0.4s ease;
+  }
 
-    .feature-icon {
-      font-size: 16px;
-      color: #0033FF;
-      flex-shrink: 0;
+  .role-card:hover & {
+    transform: scale(1.08) rotate(-3deg);
+    
+    &::before {
+      opacity: 0.7;
+      transform: scale(1.1);
     }
   }
 }
 
-.card-footer {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid rgba($border, 0.3);
+.freelancer-icon {
+  background: linear-gradient(145deg, rgba($primary, 0.9) 0%, rgba($accent, 0.6) 100%);
+  border: 1px solid rgba($white, 0.65);
+  box-shadow: 0 8px 20px rgba($primary, 0.25);
+}
+
+.client-icon {
+   background: linear-gradient(145deg, rgba($primary, 0.9) 0%, rgba($accent, 0.6) 100%);
+  border: 1px solid rgba($white, 0.65);
+  box-shadow: 0 8px 20px rgba($primary, 0.22);
+}
+
+.icon-main {
+  font-size: 32px;
+  color: $white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.card-info {
+  flex: 1;
+  text-align: left;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: $text-dark;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+.card-description {
+  font-size: 13px;
+  margin: 0;
+  color: $text-light;
+  opacity: 0.85;
+  font-weight: 450;
+  line-height: 1.4;
 }
 
 .card-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  color: $primary;
-  transition: color 0.3s ease;
-
-  .action-icon {
-    font-size: 18px;
-    transition: transform 0.3s ease;
-  }
-
-  &:hover .action-icon {
-    transform: translateX(4px);
-  }
-}
-
-.card-arrow {
-  opacity: 0.6;
-}
-
-.arrow-icon {
-  font-size: 24px;
-  color: $text-light;
-}
-
-.login-link-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 6px;
-  padding: 16px 0 8px;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+   background: linear-gradient(145deg, rgba($primary, 0.9) 0%, rgba($accent, 0.6) 100%);
+  border-radius: 14px;
+  flex-shrink: 0;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 12px rgba($primary, 0.3);
+
+  .role-card:hover & {
+    transform: scale(1.1) translateX(4px);
+    box-shadow: 0 8px 20px rgba($primary, 0.4);
+  }
 }
 
-.login-text {
-  font-size: 15px;
+.action-text {
+  display: none;
+}
+
+.action-arrow {
+  font-size: 20px;
+  color: $white;
+  transition: transform 0.3s ease;
+
+  .role-card:hover & {
+    transform: translateX(2px);
+  }
+}
+
+.card-hover-effect {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba($primary, 0.03) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+
+  .role-card:hover & {
+    opacity: 1;
+  }
+}
+
+
+.footer-section {
+  text-align: center;
+  padding: 16px 0;
+  animation: fadeInScale 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+
+.footer-text {
+  font-size: 13px;
   color: $text-light;
+  margin: 0;
+  opacity: 0.7;
+  font-weight: 450;
 }
 
 .login-link {
-  font-size: 15px;
   color: $primary;
   font-weight: 600;
   text-decoration: none;
-  padding: 8px 4px;
-}
-
-// ────────────────────────────────────────────────
-// Card Icons
-// ────────────────────────────────────────────────
-.card-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  margin-left: 4px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba($primary, 0.1), rgba($accent, 0.08));
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  &:hover {
+    color: $accent;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 }
 
-.freelancer-card .card-icon {
-  background: linear-gradient(135deg, #0033FF 0%, #977DFF 100%);
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding: 20px 16px;
+    min-height: auto;
+    justify-content: flex-start;
+  }
+
+  .hero-section {
+    margin-bottom: 32px;
+  }
+
+  .brand-logo {
+    width: 76px;
+    height: 76px;
+    border-radius: 24px;
+  }
+
+  .brand-icon {
+    font-size: 38px;
+  }
+
+  .hero-title {
+    font-size: 26px;
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+  }
+
+  .cards-grid {
+    gap: 16px;
+    margin-bottom: 20px;
+    max-width: 100%;
+  }
+
+  .role-card {
+    min-height: auto;
+    border-radius: 24px;
+  }
+
+  .card-content {
+    padding: 18px 16px;
+    gap: 10px;
+  }
+
+  .card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+  }
+
+  .icon-main {
+    font-size: 28px;
+  }
+
+  .card-title {
+    font-size: 18px;
+  }
+
+  .card-description {
+    font-size: 12px;
+  }
+
+  .card-action {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .action-arrow {
+    font-size: 18px;
+  }
 }
 
-.client-card .card-icon {
-  background: linear-gradient(135deg, $accent 0%, $primary 100%);
-}
-
-.admin-card .card-icon {
-  background: linear-gradient(135deg, $dark-bg 0%, $primary 100%);
-}
-
-.option-icon {
-  font-size: 32px;
-  color: $white;
-
-}
-
-// ────────────────────────────────────────────────
-// iOS Safe Area Support
-// ────────────────────────────────────────────────
 @supports (padding-top: env(safe-area-inset-top)) {
-  .selection-header {
-    padding-top: env(safe-area-inset-top);
+  .main-content {
+    --padding-top: env(safe-area-inset-top);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-logo,
+  .role-card,
+  .hero-section {
+    animation: none;
+  }
+  
+  .brand-logo::before {
+    animation: none;
   }
 }

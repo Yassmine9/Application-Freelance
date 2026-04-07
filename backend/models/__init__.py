@@ -15,6 +15,15 @@ def find_user_by_email(email):
     return None
 
 
+def find_user_by_id(user_id):
+    """Cherche un utilisateur par id dans les 3 collections"""
+    for model in (Client, Freelancer, Admin):
+        user = model.find_by_id(user_id)
+        if user:
+            return user
+    return None
+
+
 def authenticate_user(email, password):
     """Authentifie un utilisateur depuis n'importe quelle collection"""
     for model in (Client, Freelancer, Admin):

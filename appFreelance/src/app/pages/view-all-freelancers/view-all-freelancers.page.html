@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar class="page-toolbar">
+    <ion-buttons slot="start">
+      <ion-button routerLink="/home" class="back-button">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Freelancers</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button routerLink="/view-all-services" class="toolbar-link">
+        Services
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content" [fullscreen]="true">
+  <div class="page-shell">
+    <section class="hero-card">
+      <div class="hero-badge">Talent board</div>
+      <h1>All freelancers in one polished view</h1>
+      <p>
+        Compare profiles, ratings, and locations to shortlist the right people faster.
+      </p>
+      <div class="hero-stats">
+        <div>
+          <strong>06</strong>
+          <span>profiles</span>
+        </div>
+        <div>
+          <strong>4.9</strong>
+          <span>avg rating</span>
+        </div>
+        <div>
+          <strong>24h</strong>
+          <span>response</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Freelancers</span>
+          <h2>Ready to collaborate</h2>
+        </div>
+      </div>
+
+      <div class="freelancer-grid">
+        <article class="freelancer-card" *ngFor="let freelancer of freelancers; let index = index; trackBy: trackByIndex">
+          <div class="avatar" [ngClass]="getAccentClass(index)">
+            {{ getInitials(freelancer.name) }}
+          </div>
+          <div class="copy">
+            <div class="copy-top">
+              <div>
+                <h3>{{ freelancer.name }}</h3>
+                <p>{{ freelancer.role }}</p>
+              </div>
+              <ion-icon [name]="freelancer.icon"></ion-icon>
+            </div>
+            <div class="meta-row">
+              <span>{{ freelancer.location }}</span>
+              <span class="rating">{{ freelancer.rating }} ★</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</ion-content>

@@ -3,6 +3,10 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: 'preferences',
+    loadChildren: () => import('./pages/preferences/preferences.module').then( m => m.PreferencesPageModule)
+  },
+  {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
@@ -27,8 +31,20 @@ const routes: Routes = [
     loadChildren: () => import('./pages/registration-pending/registration-pending.module').then( m => m.RegistrationPendingPageModule)
   },
   {
+    path: 'view-all-freelancers',
+    loadChildren: () => import('./pages/view-all-freelancers/view-all-freelancers.module').then(m => m.ViewAllFreelancersPageModule)
+  },
+  {
+    path: 'view-all-services',
+    loadChildren: () => import('./pages/view-all-services/view-all-services.module').then(m => m.ViewAllServicesPageModule)
+  },
+  {
+    path: 'feedback',
+    loadChildren: () => import('./pages/feedback/feedback.module').then(m => m.FeedbackPageModule)
+  },
+  {
     path: '',
-    redirectTo: 'login',
+      redirectTo: 'preferences',
     pathMatch: 'full'
   },
   {
@@ -43,7 +59,11 @@ const routes: Routes = [
   path: 'product/:id',
   loadChildren: () => import('./pages/product-detail/product-detail.module')
     .then(m => m.ProductDetailPageModule)
-}
+  },
+  {
+    path: 'view-all-categories',
+    loadChildren: () => import('./pages/view-all-categories/view-all-categories.module').then( m => m.ViewAllCategoriesPageModule)
+  },
 ];
 
 @NgModule({
