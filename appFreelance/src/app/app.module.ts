@@ -9,6 +9,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 
+import { provideHttpClient } from '@angular/common/http';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, SideMenuComponent],

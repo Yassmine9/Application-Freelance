@@ -48,6 +48,19 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'store',
+    loadChildren: () => import('./pages/store/store.module').then( m => m.StorePageModule)
+  },
+  {
+    path: 'product-detail',
+    loadChildren: () => import('./pages/product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
+  },
+  {
+  path: 'product/:id',
+  loadChildren: () => import('./pages/product-detail/product-detail.module')
+    .then(m => m.ProductDetailPageModule)
+  },
+  {
     path: 'view-all-categories',
     loadChildren: () => import('./pages/view-all-categories/view-all-categories.module').then( m => m.ViewAllCategoriesPageModule)
   },

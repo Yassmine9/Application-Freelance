@@ -3,6 +3,7 @@ from models.base_user import BaseUser
 
 
 class Freelancer(BaseUser):
+    """Modèle Freelancer – collection 'freelancer_profile'"""
     collection = db["freelancer"] if db is not None else None
 
     @classmethod
