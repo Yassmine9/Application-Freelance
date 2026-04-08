@@ -58,16 +58,21 @@ def get_profile():
     }}), 200
 
 # ── GET public profile ──────────────────────────────────────────
-@freelancer_routes.route('/freelancer/profile/<freelancer_name>', methods=['GET'])
-@jwt_required()
-def get_public_profile_route(freelancer_name):
+@freelancer_routes.route('/freelancer/<freelancer_id>', methods=['GET'])
+def get_public_profile_route(freelancer_id):
+
     """
-    Anyone logged-in viewing another freelancer's profile.
-    JWT required — but we use the URL param, not the token identity.
+    Anyone viewing another freelancer's profile.
+    Returns only public fields.
     """
-    profile, err = get_public_profile(freelancer_name)
+    profile, err = get_public_profile(freelancer_id)
     if err:
         return jsonify({"error": err[0]}), err[1]
+    
+    # Add gigs to the profile
+    gigs = fetch_my_gigs(freelancer_id)
+    profile["gigs"] = gigs
+    
     return jsonify({"user": profile}), 200
 
 

@@ -3,13 +3,9 @@ from models.base_user import BaseUser
 
 
 class Freelancer(BaseUser):
-<<<<<<< HEAD
-    """Modèle Freelancer – collection 'freelancer_profile'"""
-=======
 
     """Modèle Freelancer – collection 'freelancer'"""
 
->>>>>>> 15992b168dc7515f40bf9ed1e4ef895032ca7405
     collection = db["freelancer"] if db is not None else None
 
     @classmethod
