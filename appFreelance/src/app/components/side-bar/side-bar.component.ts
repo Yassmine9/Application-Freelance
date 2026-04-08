@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
+import { AuthService } from '../../services/auth.service';
 
-type SideBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav' | 'offers' | 'action' | 'messages' | 'profile';
+type SideBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav' | 'offers' | 'action' | 'messages' | 'profile' | 'search';
 
 @Component({
   selector: 'app-side-bar',
@@ -13,29 +13,40 @@ type SideBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav' | 'offers' | 'a
   standalone: true,
   imports: [CommonModule, IonicModule],
 })
-export class SideBarComponent {
+export class SideBarComponent implements OnInit {
   @Input() activeTab: SideBarTab = 'home';
+
+  isLoggedIn = false;
+  userRole: string | null = null;
 
   constructor(
     private readonly router: Router,
     private readonly actionSheetController: ActionSheetController,
-    private readonly auth: FreelanceAuthHelper
+    private readonly authService: AuthService,
   ) {}
 
-  get isLoggedIn(): boolean {
-    return this.auth.isLoggedIn();
+  ngOnInit(): void {
+    this.updateAuthStatus();
+    this.authService.getCurrentUser().subscribe(() => {
+      this.updateAuthStatus();
+    });
+  }
+
+  private updateAuthStatus(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.userRole = this.authService.getUserRole();
   }
 
   get offersLabel(): string {
-    return this.auth.isClient() ? 'My offers' : 'Offers';
+    return this.authService.isClient() ? 'My offers' : 'Offers';
   }
 
   get actionLabel(): string {
-    return this.auth.isClient() ? 'Post' : 'Proposals';
+    return this.authService.isClient() ? 'Post' : 'Proposals';
   }
 
   get actionIcon(): string {
-    return this.auth.isClient() ? 'add-outline' : 'document-text-outline';
+    return this.authService.isClient() ? 'add-outline' : 'document-text-outline';
   }
 
   goHome(): void {
@@ -43,7 +54,7 @@ export class SideBarComponent {
   }
 
   goToOffers(): void {
-    if (this.auth.isClient()) {
+    if (this.authService.isClient()) {
       this.router.navigateByUrl('/my-offers');
       return;
     }
@@ -52,7 +63,7 @@ export class SideBarComponent {
   }
 
   goToMessages(): void {
-    if (!this.auth.isLoggedIn()) {
+    if (!this.authService.isLoggedIn()) {
       this.router.navigateByUrl('/login');
       return;
     }
@@ -61,23 +72,23 @@ export class SideBarComponent {
   }
 
   goToProfile(): void {
-    if (!this.auth.isLoggedIn()) {
+    if (!this.authService.isLoggedIn()) {
       this.router.navigateByUrl('/login');
       return;
     }
 
-    const role = this.auth.getRole() || 'client';
-    const userId = this.auth.getUserId();
+    const role = this.authService.getUserRole() || 'client';
+    const userId = this.authService.getUserId();
     this.router.navigateByUrl(`/profile/${role}/${userId}`);
   }
 
   goToAction(): void {
-    if (!this.auth.isLoggedIn()) {
+    if (!this.authService.isLoggedIn()) {
       this.router.navigateByUrl('/login');
       return;
     }
 
-    if (this.auth.isClient()) {
+    if (this.authService.isClient()) {
       this.router.navigateByUrl('/post-offer');
       return;
     }
@@ -91,6 +102,16 @@ export class SideBarComponent {
 
   goToFeedback(): void {
     this.router.navigateByUrl('/feedback');
+  }
+
+  openSearch(): void {
+    this.router.navigateByUrl('/search');
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.updateAuthStatus();
+    this.router.navigateByUrl('/home', { replaceUrl: true });
   }
 
   async openContactSheet(): Promise<void> {
@@ -133,6 +154,13 @@ export class SideBarComponent {
           },
         },
         {
+          text: 'Search',
+          icon: 'search-outline',
+          handler: () => {
+            this.router.navigateByUrl('/search');
+          },
+        },
+        {
           text: 'Services list',
           icon: 'grid-outline',
           handler: () => {
@@ -147,10 +175,31 @@ export class SideBarComponent {
           },
         },
         {
-          text: 'Authentication',
-          icon: 'log-in-outline',
+          text: 'Categories',
+          icon: 'layers-outline',
           handler: () => {
-            this.router.navigateByUrl('/login');
+            this.router.navigateByUrl('/view-all-categories');
+          },
+        },
+        {
+          text: 'Store',
+          icon: 'storefront-outline',
+          handler: () => {
+            this.router.navigateByUrl('/store');
+          },
+        },
+        {
+          text: 'All Gigs',
+          icon: 'briefcase-outline',
+          handler: () => {
+            this.router.navigateByUrl('/gigs');
+          },
+        },
+        {
+          text: 'Preferences',
+          icon: 'settings-outline',
+          handler: () => {
+            this.router.navigateByUrl('/preferences');
           },
         },
         {
@@ -162,5 +211,4 @@ export class SideBarComponent {
 
     await actionSheet.present();
   }
-
 }

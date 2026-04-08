@@ -1,11 +1,25 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface FreelancerCard {
   name: string;
-  role: string;
+  primarySkill: string;
+  skills: string[];
   icon: string;
-  rating: string;
+  rating: number;
   location: string;
+}
+
+interface FreelancerApiItem {
+  _id: string;
+  name?: string;
+  skills?: string[];
+  hourly_rate?: number;
+}
+
+interface FreelancersApiResponse {
+  freelancers: FreelancerApiItem[];
 }
 
 @Component({
@@ -15,14 +29,89 @@ interface FreelancerCard {
   standalone: false,
 })
 export class ViewAllFreelancersPage {
-  readonly freelancers: FreelancerCard[] = [
-    { name: 'Yassmine Abdelhak', role: 'Graphic Designer', icon: 'color-palette-outline', rating: '4.9', location: 'Tunis' },
-    { name: 'Asma Abdedaiem', role: 'Digital Marketer', icon: 'megaphone-outline', rating: '4.8', location: 'Sfax' },
-    { name: 'Sirine Saidi', role: 'Frontend Developer', icon: 'code-slash-outline', rating: '5.0', location: 'Sousse' },
-    { name: 'Yasmine Srioui', role: 'Video Editor', icon: 'film-outline', rating: '4.7', location: 'Bizerte' },
-    { name: 'Amira Ben Ali', role: 'Content Writer', icon: 'create-outline', rating: '4.9', location: 'Ariana' },
-    { name: 'Meriem Trabelsi', role: 'UI / UX Designer', icon: 'phone-portrait-outline', rating: '4.8', location: 'Monastir' },
-  ];
+  freelancers: FreelancerCard[] = [];
+  isLoading = false;
+
+  constructor(private readonly http: HttpClient) {}
+
+  ionViewWillEnter(): void {
+    this.loadFreelancers();
+  }
+
+  private loadFreelancers(): void {
+    this.isLoading = true;
+
+    this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
+      next: (response) => {
+        this.freelancers = (response.freelancers ?? [])
+          .map((freelancer) => this.mapFreelancer(freelancer))
+          .filter((freelancer): freelancer is FreelancerCard => freelancer !== null);
+        this.isLoading = false;
+      },
+      error: () => {
+        this.freelancers = [];
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private mapFreelancer(freelancer: FreelancerApiItem): FreelancerCard | null {
+    const name = freelancer.name?.trim();
+
+    if (!name) {
+      return null;
+    }
+
+    const normalizedSkills = (freelancer.skills ?? [])
+      .map((skill) => skill.trim())
+      .filter((skill) => skill.length > 0);
+
+    const skills = normalizedSkills.length > 0 ? normalizedSkills : ['Freelancer'];
+    const primarySkill = skills[0];
+
+    return {
+      name,
+      primarySkill,
+      skills,
+      icon: this.iconForRole(primarySkill),
+      rating: this.ratingFromRate(freelancer.hourly_rate),
+      location: 'Tunisia',
+    };
+  }
+
+  private iconForRole(role: string): string {
+    const label = role.toLowerCase();
+
+    if (label.includes('design')) return 'color-palette-outline';
+    if (label.includes('market')) return 'megaphone-outline';
+    if (label.includes('web') || label.includes('dev')) return 'code-slash-outline';
+    if (label.includes('video')) return 'film-outline';
+    if (label.includes('content') || label.includes('writing')) return 'create-outline';
+    if (label.includes('ui') || label.includes('ux')) return 'phone-portrait-outline';
+
+    return 'person-outline';
+  }
+
+  private ratingFromRate(rate?: number): number {
+    if (!rate || rate <= 0) {
+      return 4.8;
+    }
+
+    if (rate >= 80) return 5.0;
+    if (rate >= 50) return 4.9;
+    if (rate >= 30) return 4.8;
+
+    return 4.7;
+  }
+
+  get averageRating(): string {
+    if (this.freelancers.length === 0) {
+      return '0.0';
+    }
+
+    const total = this.freelancers.reduce((sum, freelancer) => sum + freelancer.rating, 0);
+    return (total / this.freelancers.length).toFixed(1);
+  }
 
   trackByIndex(index: number): number {
     return index;

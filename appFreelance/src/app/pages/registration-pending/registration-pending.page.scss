@@ -291,7 +291,7 @@ $text-light:    #6b7a99;
 
 .primary-button {
   --background: #{$primary};
-  --background-activated: #{darken($primary, 10%)};
+  --background-activated: #{$primary, 10%};
   --color: #ffffff;
   --border-radius: 16px;
   --box-shadow: 0 6px 20px rgba($primary, 0.28);

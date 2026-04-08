@@ -9,20 +9,26 @@ export class SocketService {
   private socket?: Socket;
   private messageSubject = new Subject<any>();
   private conversationSubject = new Subject<any>();
+  private lastToken = '';
 
   constructor(private auth: FreelanceAuthHelper) {}
 
   connect(): void {
-    if (this.socket?.connected) {
+    const token = this.auth.getToken();
+    if (!token) {
+      this.disconnect();
       return;
     }
 
-    const token = this.auth.getToken();
-    if (!token) {
-      return;
+    if (this.socket?.connected) {
+      if (this.lastToken === token) {
+        return;
+      }
+      this.disconnect();
     }
 
     const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
+    this.lastToken = token;
     this.socket = io(baseUrl, {
       auth: { token },
       transports: ['websocket']
@@ -35,6 +41,7 @@ export class SocketService {
   disconnect(): void {
     this.socket?.disconnect();
     this.socket = undefined;
+    this.lastToken = '';
   }
 
   joinOffer(offerId: string): void {

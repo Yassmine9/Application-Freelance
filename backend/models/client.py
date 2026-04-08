@@ -3,6 +3,7 @@ from models.base_user import BaseUser
 
 
 class Client(BaseUser):
+    """Modèle Client – collection 'clients'"""
     collection = db["client"] if db is not None else None
 
     @classmethod

@@ -30,19 +30,6 @@ ion-content.home-content {
   --padding-end: 10px;
 }
 
-.logo-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 56px;
-}
-
-.logo-container img {
-  width: 92px;
-  height: auto;
-  object-fit: contain;
-}
-
 .page-shell {
   padding: 18px 16px 110px;
 }
@@ -52,8 +39,7 @@ ion-content.home-content {
   overflow: hidden;
   margin: -18px -16px 0;
   padding: 24px 36px 22px;
-
-  background: linear-gradient(145deg, rgba(30, 42, 120, 0.96), rgba(15,28,77, 0.96));
+  background: linear-gradient(145deg, rgba(30, 42, 120, 0.96), rgba(15, 28, 77, 0.96));
   color: #fff;
   box-shadow: var(--shadow-soft);
 }
@@ -104,14 +90,6 @@ ion-content.home-content {
   letter-spacing: -0.02em;
 }
 
-.hero-subtitle {
-  margin: 0;
-  max-width: 38rem;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 0.98rem;
-  line-height: 1.7;
-}
-
 .hero-actions {
   display: grid;
   gap: 14px;
@@ -147,10 +125,8 @@ ion-content.home-content {
   --border-radius: 14px;
   margin: 0;
   min-width: 42px;
-
   --color: #1e2a78;
   border-radius: 14px;
-
   z-index: 2;
 }
 
@@ -199,7 +175,6 @@ ion-content.home-content {
   gap: 16px;
   margin-bottom: 14px;
   padding: 10px 12px;
-
   background: linear-gradient(
     90deg,
     rgba(78, 91, 212, 0.14) 0,
@@ -219,7 +194,7 @@ ion-content.home-content {
 
 .section-kicker {
   display: inline-flex;
-  color: black;
+  color: #000;
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -250,8 +225,7 @@ ion-content.home-content {
   text-align: center;
 }
 
-.feature-icon,
-.service-icon {
+.feature-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -259,32 +233,17 @@ ion-content.home-content {
   height: 42px;
   border-radius: 14px;
   margin-bottom: 10px;
-}
-
-.feature-icon {
   color: #1e2a78;
   background: #eef2ff;
   border: 1px solid rgba(30, 42, 120, 0.12);
 }
 
-.feature-card h3,
-.service-card h3,
-.freelancer-copy h3 {
+.feature-card h3 {
   margin: 0;
   color: var(--text-primary);
   font-size: 0.8rem;
   line-height: 1.25;
   font-weight: 600;
-}
-
-.feature-card::after {
-  content: '';
-  display: block;
-  margin: 8px auto 0;
-  width: 22px;
-  height: 3px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, rgba(30, 42, 120, 0.26), rgba(78, 91, 212, 0.26));
 }
 
 .freelancer-strip {
@@ -413,9 +372,11 @@ ion-content.home-content {
   border: 2px solid rgba(78, 91, 212, 0.16);
 }
 
-.service-icon {
-  margin-bottom: 0;
-  background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+.service-copy h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .service-copy h4 {
@@ -467,104 +428,18 @@ ion-content.home-content {
   padding: 0 14px;
 }
 
-@media (max-width: 480px) {
-  .service-overlay {
-    width: 64%;
-  }
-
-  .service-copy p {
-    font-size: 0.78rem;
-  }
-
-  .service-more-btn {
-    font-size: 0.72rem;
-  }
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 8px;
+  color: #7b7f9a;
+  text-align: center;
 }
 
-.accent-1 {
-  background: linear-gradient(135deg, #1e2a78, #4e5bd4);
-}
-
-.accent-2 {
-  background: linear-gradient(135deg, #4e5bd4, #06b6d4);
-}
-
-.accent-3 {
-  background: linear-gradient(135deg, #0f1c4d, #1e2a78);
-}
-
-.accent-4 {
-  background: linear-gradient(135deg, #1e2a78, #06b6d4);
-}
-
-.accent-5 {
-  background: linear-gradient(135deg, #0f1c4d, #4e5bd4);
-}
-
-.accent-6 {
-  background: linear-gradient(135deg, #1a1f36, #1e2a78);
-}
-
-@media (min-width: 768px) {
-  .page-shell {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 28px 24px 120px;
-  }
-
-  .hero-card {
-    padding: 30px;
-  }
-
-  .hero-title {
-    max-width: 11ch;
-  }
-
+@media (max-width: 680px) {
   .feature-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .services-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .freelancer-strip {
-    grid-auto-flow: initial;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    overflow: visible;
-  }
-}
-
-@media (min-width: 1024px) {
-  .hero-card {
-    display: grid;
-
-    gap: 20px;
-    align-items: end;
-  }
-
-  .hero-actions {
-    align-self: end;
-  }
-
-  .hero-title {
-    max-width: 12ch;
-  }
-
-  .feature-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-
-  .feature-card {
-    min-height: 150px;
-  }
-
-  .services-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.hand {
-  display: inline-block;
-  font-size: 1.35rem;
-  line-height: 1;
 }

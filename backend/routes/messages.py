@@ -48,6 +48,7 @@ def send_message():
         "senderId": current_user,
         "receiverId": data["receiverId"],
         "offerId": ObjectId(data["offerId"]),
+        "offerIdStr": str(data["offerId"]),
         "content": data["content"].strip(),
         "createdAt": datetime.utcnow(),
         "read": False

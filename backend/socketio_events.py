@@ -146,6 +146,7 @@ def init_socketio(socketio) -> None:
             "senderId": user_id,
             "receiverId": receiver_id,
             "offerId": ObjectId(offer_id),
+            "offerIdStr": str(offer_id),
             "content": content,
             "createdAt": datetime.utcnow(),
             "read": is_read

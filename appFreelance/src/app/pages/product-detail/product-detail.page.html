@@ -1,0 +1,163 @@
+<ion-header class="detail-header ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="header-title">Product Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="icon-btn" (click)="shareProduct()">
+        <ion-icon name="share-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="detail-content" [fullscreen]="true">
+
+  <!-- Loading -->
+  <div class="skeleton-wrapper" *ngIf="isLoading">
+    <div class="skeleton-hero"></div>
+    <div class="detail-container">
+      <div class="skeleton-line" style="width:60%; height:20px"></div>
+      <div class="skeleton-line" style="width:35%; height:14px; margin-top:10px"></div>
+      <div class="skeleton-line" style="width:100%; height:12px; margin-top:24px"></div>
+      <div class="skeleton-line" style="width:90%; height:12px; margin-top:8px"></div>
+      <div class="skeleton-line" style="width:80%; height:12px; margin-top:8px"></div>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="empty-state" *ngIf="!isLoading && !product">
+    <div class="empty-icon-wrap">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+    </div>
+    <h3 class="empty-title">Product not found</h3>
+    <p class="empty-sub">This product may have been removed</p>
+    <button class="btn-primary" (click)="goBack()">Go Back</button>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && product">
+
+    <!-- Hero banner -->
+    <div class="hero-banner">
+      <ion-icon name="cube-outline" class="hero-icon"></ion-icon>
+      <span class="hero-badge">{{ product.license }}</span>
+      <div class="hero-overlay"></div>
+    </div>
+
+    <div class="detail-container">
+
+      <!-- Title + price row -->
+      <div class="title-row" style="animation-delay: 0.05s">
+        <div class="title-block">
+          <h1 class="product-title">{{ product.title }}</h1>
+          <p class="product-version">v{{ product.version }}</p>
+        </div>
+        <div class="price-tag">
+          <span class="price-amount">{{ product.price }} T.D</span>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-row" style="animation-delay: 0.1s">
+        <div class="stat-pill">
+          <ion-icon name="download-outline"></ion-icon>
+          <span>{{ product.downloadCount }} downloads</span>
+        </div>
+        <div class="stat-pill">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          <span>{{ product.license }}</span>
+        </div>
+        <div class="stat-pill">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>{{ product.createdAt | date:'MMM y' }}</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="section-card" style="animation-delay: 0.15s">
+        <div class="section-header">
+          <ion-icon name="document-text-outline" class="section-icon"></ion-icon>
+          <h2 class="section-title">Description</h2>
+        </div>
+        <p class="description-text">{{ product.description }}</p>
+      </div>
+
+      <!-- Details -->
+      <div class="section-card" style="animation-delay: 0.2s">
+        <div class="section-header">
+          <ion-icon name="information-circle-outline" class="section-icon"></ion-icon>
+          <h2 class="section-title">Details</h2>
+        </div>
+        <div class="details-list">
+          <div class="detail-row">
+            <span class="detail-label">Version</span>
+            <span class="detail-value">{{ product.version }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">License</span>
+            <span class="detail-value">{{ product.license }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Creator</span>
+            <span class="detail-value">{{ product.creatorId }}</span>
+          </div>
+          <div class="detail-row" style="border-bottom: none">
+            <span class="detail-label">Published</span>
+            <span class="detail-value">{{ product.createdAt | date:'mediumDate' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Download section (shown after purchase) -->
+      <div class="section-card download-card" *ngIf="downloadLink" style="animation-delay: 0.25s">
+        <div class="section-header">
+          <ion-icon name="cloud-download-outline" class="section-icon"></ion-icon>
+          <h2 class="section-title">Your Download</h2>
+        </div>
+        <div class="download-link-row">
+          <ion-icon name="link-outline" class="link-icon"></ion-icon>
+          <span class="download-url">{{ downloadLink }}</span>
+        </div>
+        <button class="btn-download" (click)="openDownload()">
+          <ion-icon name="download-outline"></ion-icon>
+          Download File
+        </button>
+      </div>
+
+      <!-- Spacer for sticky button -->
+      <div style="height: 100px"></div>
+
+    </div>
+  </div>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+</ion-content>
+
+<!-- Sticky purchase button -->
+<div class="sticky-footer" *ngIf="!isLoading && product">
+  <div class="footer-inner">
+    <div class="footer-price-block">
+      <span class="footer-label">Total</span>
+      <span class="footer-price">{{ product.price }} T.D</span>
+    </div>
+    <button
+      class="btn-purchase"
+      [class.btn-purchased]="isPurchased"
+      [disabled]="isPurchasing || isPurchased"
+      (click)="purchase()">
+      <ion-spinner name="crescent" *ngIf="isPurchasing" class="btn-spinner"></ion-spinner>
+      <ion-icon
+        *ngIf="!isPurchasing"
+        [name]="isPurchased ? 'checkmark-circle-outline' : 'bag-add-outline'">
+      </ion-icon>
+      <span>{{ isPurchased ? 'Purchased' : 'Buy Now' }}</span>
+    </button>
+  </div>
+</div>

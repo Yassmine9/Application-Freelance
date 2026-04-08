@@ -1,0 +1,100 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="store-toolbar">
+    <div class="toolbar-content">
+      <div class="header-top">
+        <ion-button fill="clear" (click)="goBack()" class="back-btn">
+          <ion-icon name="chevron-back" slot="icon-only"></ion-icon>
+        </ion-button>
+        <div>
+          <h1 class="store-title">Store</h1>
+        </div>
+        <ion-button fill="clear" class="cart-btn">
+          <ion-icon name="bag-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+
+      <!-- Search bar -->
+      <div class="search-container">
+        <ion-searchbar
+          [(ngModel)]="searchQuery"
+          (ionInput)="onSearch()"
+          placeholder="Search products..."
+          class="store-searchbar"
+          animated>
+        </ion-searchbar>
+      </div>
+
+      <!-- Category chips -->
+      <div class="categories-scroll">
+        <ion-chip
+          [class.active-chip]="selectedCategory === null"
+          (click)="selectCategory(null)">
+          All
+        </ion-chip>
+        <ion-chip
+          *ngFor="let cat of categories"
+          [class.active-chip]="selectedCategory === cat._id"
+          (click)="selectCategory(cat._id)">
+          {{ cat.name }}
+        </ion-chip>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="store-content" [fullscreen]="true" [forceOverscroll]="false">
+
+  <!-- Loading skeleton -->
+  <div class="products-grid" *ngIf="isLoading">
+    <div class="product-card skeleton-card" *ngFor="let s of [1,2,3,4,5,6]">
+      <ion-skeleton-text animated class="skeleton-img"></ion-skeleton-text>
+      <div class="card-body">
+        <ion-skeleton-text animated style="width:70%; height:14px; border-radius:6px"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width:40%; height:12px; border-radius:6px; margin-top:8px"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width:55%; height:12px; border-radius:6px; margin-top:6px"></ion-skeleton-text>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!isLoading && products.length === 0">
+    <ion-icon name="cube-outline" class="empty-icon"></ion-icon>
+    <h3>No products found</h3>
+    <p>Try a different search or category</p>
+  </div>
+
+  <!-- Products grid -->
+  <div class="products-grid" *ngIf="!isLoading && products.length > 0">
+    <div
+      class="product-card"
+      *ngFor="let product of products"
+      (click)="goToProduct(product._id)">
+
+      <div class="card-image-wrapper">
+        <div class="card-image-placeholder">
+          <ion-icon name="cube-outline"></ion-icon>
+        </div>
+        <div class="license-badge">{{ product.license }}</div>
+      </div>
+
+      <div class="card-body">
+        <h3 class="product-title">{{ product.title }}</h3>
+        <p class="product-desc">{{ product.description }}</p>
+        <div class="card-footer">
+          <span class="product-price">{{ product.price }} T.D</span>
+          <div class="download-count">
+            <ion-icon name="download-outline"></ion-icon>
+            <span>{{ product.downloadCount }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+</ion-content>

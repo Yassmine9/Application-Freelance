@@ -1,12 +1,10 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime, timezone
-from db.mongo import db
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from db.mongo import test_connection
+from db.mongo import db, test_connection
 from models import Client, Freelancer, Admin, find_user_by_email, find_user_by_id, authenticate_user
 
 auth_bp = Blueprint("auth_bp", __name__)
-
 
 if test_connection():
     print(" Succès de la connexion ")
@@ -61,7 +59,6 @@ def register():
     if not email or not password or not name:
         return jsonify({"error": "Email, mot de passe et nom sont requis"}), 400
 
-    # Vérifier si l'email existe dans n'importe quelle collection
     existing_user = find_user_by_email(email)
     if existing_user:
         return jsonify({"error": "Un utilisateur avec cet email existe déjà"}), 400
@@ -137,8 +134,6 @@ def create_feedback():
     }), 201
 
 
-# ─── PROFIL ───────────────────────────────────────────────────────────────────
-
 @auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
 def get_profile():
@@ -160,7 +155,26 @@ def get_profile_by_id(user_id):
     return jsonify({"error": "Utilisateur non trouvé"}), 404
 
 
-# ─── ADMIN : Comptes en attente ────────────────────────────────────────────────
+@auth_bp.route("/freelancer/profile", methods=["GET"])
+@jwt_required()
+def get_freelancer_profile_alias():
+    return get_profile()
+
+
+@auth_bp.route("/freelancers", methods=["GET"])
+def get_freelancers():
+    freelancers = Freelancer.get_all()
+    status_filter = (request.args.get("status") or "all").strip().lower()
+
+    filtered = []
+    for freelancer in freelancers:
+        if status_filter != "all" and freelancer.get("status", "").lower() != status_filter:
+            continue
+        freelancer.pop("password", None)
+        filtered.append(freelancer)
+
+    return jsonify({"freelancers": filtered, "count": len(filtered)})
+
 
 @auth_bp.route("/admin/pending", methods=["GET"])
 @jwt_required()

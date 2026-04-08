@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { SocketService } from './socket.service';
 
 export interface AuthResponse {
   token: string;
@@ -25,7 +26,10 @@ export class AuthService {
 
   private currentUser$ = new BehaviorSubject<any>(this.getStoredUser());
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private socketService: SocketService
+  ) {}
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
@@ -90,12 +94,31 @@ export class AuthService {
     return !!this.getToken();
   }
 
+  getUserRole(): string | null {
+    const user = this.getStoredUser();
+    return user?.role || localStorage.getItem('role') || null;
+  }
+
+  getUserId(): string {
+    const user = this.getStoredUser();
+    return user?._id || user?.id || localStorage.getItem('userId') || '';
+  }
+
+  isFreelancer(): boolean {
+    return this.getUserRole() === 'freelancer';
+  }
+
+  isClient(): boolean {
+    return this.getUserRole() === 'client';
+  }
+
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
     localStorage.removeItem('role');
     localStorage.removeItem('userId');
     this.currentUser$.next(null);
+    this.socketService.disconnect();
   }
 
   private getAuthHeaders(): HttpHeaders {
