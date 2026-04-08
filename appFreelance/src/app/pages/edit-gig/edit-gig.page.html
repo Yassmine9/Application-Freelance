@@ -65,31 +65,8 @@
       ></ion-input>
     </ion-item>
 
-    <!-- Duration -->
-    <ion-item>
-      <ion-label position="stacked">Délai de livraison</ion-label>
-      <ion-select
-        [(ngModel)]="gig.duration"
-        name="duration"
-        placeholder="Sélectionnez un délai"
-        required
-      >
-        <ion-select-option *ngFor="let dur of durations" [value]="dur">
-          {{ dur }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
 
-    <!-- Deliverables -->
-    <ion-item>
-      <ion-label position="stacked">Livrables (ce qui sera fourni)</ion-label>
-      <ion-textarea
-        [(ngModel)]="gig.deliverables"
-        name="deliverables"
-        placeholder="Ex: Site web responsive, 5 pages, support email..."
-        rows="3"
-      ></ion-textarea>
-    </ion-item>
+    
 
     <!-- Submit Button -->
     <ion-button expand="block" type="submit" class="ion-margin-top">

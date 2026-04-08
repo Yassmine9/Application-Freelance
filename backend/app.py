@@ -1,7 +1,13 @@
+from datetime import timedelta
+
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from config import Config
+
+from db.mongo import client  
+
+#import blueprints
 from routes.auth import auth_routes
 from routes.product_routes import product_bp
 from routes.category_routes import category_bp
@@ -14,6 +20,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.config["JWT_SECRET_KEY"] = Config.JWT_SECRET_KEY
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] =timedelta(hours=2)
     CORS(app, origins=["http://localhost:8100", "http://127.0.0.1:5000"])
 
     JWTManager(app)

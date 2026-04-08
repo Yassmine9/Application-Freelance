@@ -51,7 +51,7 @@ export class LoginPage implements OnInit {
         if (res.status === 'pending') {
           this.router.navigate(['/registration-pending']);
         } else {
-          this.router.navigate(['/freelancer-profile']);
+          this.router.navigate(['/home']);
         }
         
       },
@@ -59,7 +59,7 @@ export class LoginPage implements OnInit {
         await loading.dismiss();
         const alert = await this.alertCtrl.create({
           header: 'Erreur',
-          message: err.error?.error || 'Email ou mot de passe incorrect.',
+          message: err.error?.error || 'Email or password incorrect.',
           buttons: ['OK']
         });
         await alert.present();

@@ -52,6 +52,7 @@ def create_new_gig(user_id,data):
 
 
 def update_existing_gig(gig_id,user_id,data):
+    print("Updating Gig:", gig_id, "with data:", data)
     user , err = verify_freelancer(user_id)
     if err:
         return None,err

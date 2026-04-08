@@ -29,7 +29,7 @@ export class FreelancerProfilePage implements OnInit {
 
   // ---- Profile fields ----
   id : string ='';
-  name: string = 'asma';
+  name: string = '';
   email: string = '';
   phone: string = '';
   title: string = '';

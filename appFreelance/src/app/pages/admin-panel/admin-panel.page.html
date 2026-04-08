@@ -1,0 +1,159 @@
+<ion-header class="admin-header ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="header-title">Admin Panel</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="icon-btn" (click)="refreshAll()">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content" [fullscreen]="true">
+  <div class="admin-container">
+
+    <!-- Welcome -->
+    <div class="welcome-section">
+      <div class="admin-avatar">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </div>
+      <div>
+        <p class="welcome-label">Welcome back</p>
+        <h1 class="welcome-title">Admin Dashboard</h1>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" [class.loading]="statsLoading">
+      <div class="stat-card" style="animation-delay: 0.05s">
+        <div class="stat-icon-wrap purple">
+          <ion-icon name="people-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_users }}</span>
+          <div class="skeleton-val" *ngIf="statsLoading"></div>
+          <span class="stat-label">Total Users</span>
+        </div>
+      </div>
+
+      <div class="stat-card" style="animation-delay: 0.1s">
+        <div class="stat-icon-wrap blue">
+          <ion-icon name="briefcase-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_freelancers }}</span>
+          <div class="skeleton-val" *ngIf="statsLoading"></div>
+          <span class="stat-label">Freelancers</span>
+        </div>
+      </div>
+
+      <div class="stat-card" style="animation-delay: 0.15s">
+        <div class="stat-icon-wrap pink">
+          <ion-icon name="cube-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_products }}</span>
+          <div class="skeleton-val" *ngIf="statsLoading"></div>
+          <span class="stat-label">Products</span>
+        </div>
+      </div>
+
+      <div class="stat-card" style="animation-delay: 0.2s">
+        <div class="stat-icon-wrap dark">
+          <ion-icon name="bag-check-outline"></ion-icon>
+        </div>
+        <div class="stat-info">
+          <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_purchases }}</span>
+          <div class="skeleton-val" *ngIf="statsLoading"></div>
+          <span class="stat-label">Purchases</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending approvals -->
+    <div class="section-header-row" style="animation-delay: 0.25s">
+      <div class="section-title-block">
+        <ion-icon name="hourglass-outline" class="section-icon"></ion-icon>
+        <h2 class="section-title">Pending Approvals</h2>
+      </div>
+      <span class="badge-count" *ngIf="freelancers.length > 0">{{ freelancers.length }}</span>
+    </div>
+
+    <!-- Freelancer list loading -->
+    <div *ngIf="freelancersLoading">
+      <div class="freelancer-card skeleton-card" *ngFor="let s of [1,2,3]">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line" style="width:55%"></div>
+          <div class="skeleton-line" style="width:40%; margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty approvals -->
+    <div class="empty-state" *ngIf="!freelancersLoading && freelancers.length === 0">
+      <div class="empty-icon-wrap">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+      </div>
+      <h3 class="empty-title">All caught up!</h3>
+      <p class="empty-sub">No pending freelancer approvals</p>
+    </div>
+
+    <!-- Freelancer cards -->
+    <div
+      class="freelancer-card"
+      *ngFor="let f of freelancers; let i = index"
+      [style.animation-delay]="(0.25 + i * 0.08) + 's'">
+
+      <div class="freelancer-left">
+        <div class="freelancer-avatar">
+          <span>{{ getInitials(f.name) }}</span>
+        </div>
+        <div class="freelancer-info">
+          <h3 class="freelancer-name">{{ f.name }}</h3>
+          <p class="freelancer-email">{{ f.email }}</p>
+          <div class="freelancer-meta">
+            <span class="meta-chip" *ngIf="f.skills?.length > 0">
+              <ion-icon name="code-slash-outline"></ion-icon>
+              {{ f.skills.slice(0,2).join(', ') }}
+            </span>
+            <span class="meta-chip" *ngIf="f.hourly_rate">
+              <ion-icon name="cash-outline"></ion-icon>
+              ${{ f.hourly_rate }}/hr
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="freelancer-actions">
+        <button
+          class="action-btn approve-btn"
+          [disabled]="f._processing"
+          (click)="approve(f)">
+          <ion-spinner name="crescent" *ngIf="f._processing === 'approve'" class="mini-spinner"></ion-spinner>
+          <ion-icon name="checkmark-outline" *ngIf="f._processing !== 'approve'"></ion-icon>
+        </button>
+        <button
+          class="action-btn reject-btn"
+          [disabled]="f._processing"
+          (click)="reject(f)">
+          <ion-spinner name="crescent" *ngIf="f._processing === 'reject'" class="mini-spinner"></ion-spinner>
+          <ion-icon name="close-outline" *ngIf="f._processing !== 'reject'"></ion-icon>
+        </button>
+      </div>
+
+    </div>
+
+    <div style="height: 32px"></div>
+  </div>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+</ion-content>

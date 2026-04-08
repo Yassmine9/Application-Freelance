@@ -31,18 +31,7 @@
         </div>
       </div>
 
-      <!-- STATUS BADGE -->
-      <div class="status-row">
-        <div class="status-badge" [ngClass]="'status-' + profileStatus">
-          <span class="status-dot"></span>
-          <span class="status-label">{{ statusLabel }}</span>
-        </div>
-        <span *ngIf="isTopRated" class="top-rated-badge">
-          <ion-icon name="star"></ion-icon>
-          Top Rated
-        </span>
-      </div>
-
+  
       <!-- QUICK STATS -->
       <div class="quick-stats">
         <div class="stat">
@@ -62,11 +51,11 @@
 
     <!-- ACTION BUTTONS -->
     <div class="action-buttons-section">
-      <ion-button expand="block" class="hire-btn" (click)="openActionMenu()">
+      <ion-button expand="block" class="hire-btn" >
         <ion-icon name="sparkles-outline" slot="start"></ion-icon>
         Hire Now
       </ion-button>
-      <ion-button expand="block" class="message-btn" fill="outline" (click)="openActionMenu()">
+      <ion-button expand="block" class="message-btn" fill="outline">
         <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
         Send Message
       </ion-button>
@@ -161,7 +150,7 @@
     <div id="services" class="section">
       <div class="portfolio-header">
         <h2 class="section-title">Services</h2>
-        <span class="view-stack-link" (click)="openActionMenu()">VIEW ALL</span>
+        <span class="view-stack-link" (click)="getfreelancersgigs()">VIEW ALL</span>
       </div>
       <div *ngIf="gigs.length === 0" class="empty-text">No services added</div>
       <div *ngFor="let gig of gigs; trackBy: trackByIndex" class="project-card">

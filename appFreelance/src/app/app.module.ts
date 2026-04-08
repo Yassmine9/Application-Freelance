@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 
+
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, SideMenuComponent],

@@ -133,7 +133,7 @@ export class SideBarComponent implements OnInit {
       header: 'Navigation scheme',
       buttons: [
         {
-          text: 'Home (this page)',
+          text: 'Home ',
           icon: 'home-outline',
           handler: () => {
             this.router.navigateByUrl('/home');
@@ -147,10 +147,10 @@ export class SideBarComponent implements OnInit {
           },
         },
         {
-          text: 'Services list',
-          icon: 'grid-outline',
+          text: 'All Gigs',
+          icon: 'briefcase-outline',
           handler: () => {
-            this.router.navigateByUrl('/view-all-services');
+            this.router.navigateByUrl('/gigs');
           },
         },
         {
@@ -174,20 +174,8 @@ export class SideBarComponent implements OnInit {
             this.router.navigateByUrl('/store');
           },
         },
-        {
-          text: 'All Gigs',
-          icon: 'briefcase-outline',
-          handler: () => {
-            this.router.navigateByUrl('/gigs');
-          },
-        },
-        {
-          text: 'Preferences',
-          icon: 'settings-outline',
-          handler: () => {
-            this.router.navigateByUrl('/preferences');
-          },
-        },
+
+
         {
           text: 'Authentication',
           icon: 'log-in-outline',

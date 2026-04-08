@@ -179,6 +179,9 @@ export class ViewFreelancerProfilePage implements OnInit {
 
     await actionSheet.present();
   }
+  async getfreelancersgigs(): Promise<void> {
+    this.router.navigateByUrl(`/gigs?freelancerId=${this.freelancerId}`);
+  }
 
   trackByIndex(index: number): number {
     return index;
