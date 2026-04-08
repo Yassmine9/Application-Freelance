@@ -83,6 +83,7 @@
         <article
           class="freelancer-card"
           *ngFor="let freelancer of filteredFreelancers; trackBy: trackByIndex"
+          (click)="navigateToFreelancerProfile(freelancer.id)"
         >
           <div class="freelancer-avatar">
             <img [src]="freelancer.avatarImage" [alt]="freelancer.name" loading="lazy" />

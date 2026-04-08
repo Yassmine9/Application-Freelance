@@ -53,7 +53,7 @@
       </div>
 
       <div class="freelancer-grid" *ngIf="!isLoading && freelancers.length > 0">
-        <article class="freelancer-card" *ngFor="let freelancer of freelancers; let index = index; trackBy: trackByIndex">
+        <article class="freelancer-card" *ngFor="let freelancer of freelancers; let index = index; trackBy: trackByIndex" (click)="navigateToFreelancerProfile(freelancer.id)">
           <div class="avatar" [ngClass]="getAccentClass(index)">
             {{ getInitials(freelancer.name) }}
           </div>

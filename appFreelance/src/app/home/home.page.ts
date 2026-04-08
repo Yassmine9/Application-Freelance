@@ -11,6 +11,7 @@ interface HomeFeature {
 }
 
 interface HomeFreelancer {
+  id: string;
   name: string;
   icon: string;
   avatarImage: string;
@@ -188,6 +189,7 @@ export class HomePage {
     const category = freelancer.skills?.[0]?.trim() || 'Freelancer';
 
     return {
+      id: freelancer._id,
       name,
       category,
       icon: this.iconForCategory(category),
@@ -296,6 +298,10 @@ export class HomePage {
 
   get showFreelancersSection(): boolean {
     return this.searchScope !== 'services';
+  }
+
+  navigateToFreelancerProfile(freelancerId: string): void {
+    this.router.navigateByUrl(`/view-freelancer-profile/${freelancerId}`);
   }
 
   get showServicesSection(): boolean {

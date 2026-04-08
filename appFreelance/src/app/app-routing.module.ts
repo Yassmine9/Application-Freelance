@@ -100,6 +100,10 @@ const routes: Routes = [
   {
     path: 'search',
     loadChildren: () => import('./pages/search/search-routing.module').then( m => m.SearchPageRoutingModule)
+  },
+  {
+    path: 'view-freelancer-profile/:id',
+    loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewFreelancerProfileRoutingModule)
   }
 ];
 

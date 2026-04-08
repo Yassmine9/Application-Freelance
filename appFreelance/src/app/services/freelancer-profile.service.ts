@@ -18,6 +18,10 @@ export class FreelancerProfileService {
     return this.http.get(`${this.base}/freelancer/myprofile`, this.headers());
   }
 
+  getFreelancerProfile(freelancerId: string): Observable<any> {
+    return this.http.get(`${this.base}/freelancer/${freelancerId}`);
+  }
+
   updateProfile(data: any): Observable<any> {
     return this.http.put(`${this.base}/freelancer/profile`, data, this.headers());
   }

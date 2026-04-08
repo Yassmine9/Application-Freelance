@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 interface FreelancerCard {
+  id: string;
   name: string;
   primarySkill: string;
   skills: string[];
@@ -32,7 +34,7 @@ export class ViewAllFreelancersPage {
   freelancers: FreelancerCard[] = [];
   isLoading = false;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private readonly router: Router) {}
 
   ionViewWillEnter(): void {
     this.loadFreelancers();
@@ -70,6 +72,7 @@ export class ViewAllFreelancersPage {
     const primarySkill = skills[0];
 
     return {
+      id: freelancer._id,
       name,
       primarySkill,
       skills,
@@ -128,5 +131,9 @@ export class ViewAllFreelancersPage {
 
   getAccentClass(index: number): string {
     return `accent-${(index % 6) + 1}`;
+  }
+
+  navigateToFreelancerProfile(freelancerId: string): void {
+    this.router.navigateByUrl(`/view-freelancer-profile/${freelancerId}`);
   }
 }

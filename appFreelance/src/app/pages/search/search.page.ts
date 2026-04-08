@@ -198,7 +198,7 @@ export class SearchPage implements OnInit {
         this.router.navigateByUrl(`/gig-detail/${result.id}`);
         break;
       case 'freelancer':
-        this.router.navigateByUrl(`/freelancer-profile`);
+        this.router.navigateByUrl(`/view-freelancer-profile/${result.id}`);
         break;
       case 'category':
         this.router.navigateByUrl(`/view-all-services`);
