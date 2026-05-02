@@ -1,48 +1,3 @@
-from datetime import timedelta
-
-from flask import Flask
-from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from config import Config
-
-from db.mongo import client  
-
-#import blueprints
-from routes.auth import auth_routes
-from routes.product_routes import product_bp
-from routes.category_routes import category_bp
-from routes.admin_routes import admin_bp
-from routes.freelancer_routes import freelancer_routes
-from routes.gig_routes import gig_routes
-
-
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
-    app.config["JWT_SECRET_KEY"] = Config.JWT_SECRET_KEY
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] =timedelta(hours=2)
-    CORS(app, origins=["http://localhost:8100", "http://127.0.0.1:5000"])
-
-    JWTManager(app)
-
-    # Register blueprints
-    app.register_blueprint(auth_routes, url_prefix="/api")
-    app.register_blueprint(freelancer_routes, url_prefix="/api")
-    app.register_blueprint(gig_routes, url_prefix="/api")
-    app.register_blueprint(product_bp, url_prefix="/products")
-    app.register_blueprint(category_bp, url_prefix="/categories")
-    app.register_blueprint(admin_bp, url_prefix="/admin")
-
-    @app.route("/")
-    def home():
-        return {"message": "API running"}
-
-    return app
-
-
-if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
 from flask import Flask, jsonify, send_from_directory
 import os
 from flask_cors import CORS
@@ -60,6 +15,7 @@ from routes.category_routes import category_bp
 from routes.freelancer_routes import freelancer_routes
 from routes.gig_routes import gig_routes
 from routes.product_routes import product_bp
+from routes.client_routes import client_routes
 from socketio_events import init_socketio
 
 app = Flask(__name__)
@@ -93,6 +49,7 @@ app.register_blueprint(auth_bp, url_prefix="/api/auth")
 app.register_blueprint(offers_bp, url_prefix="/api/offers")
 app.register_blueprint(proposals_bp, url_prefix="/api/proposals")
 app.register_blueprint(messages_bp, url_prefix="/api/messages")
+app.register_blueprint(client_routes, url_prefix="/api")
 
 # Additional modules
 app.register_blueprint(admin_bp, url_prefix="/admin")
@@ -122,7 +79,7 @@ def init_indexes():
     db.offers.create_index("status")
     db.offers.create_index("category")
     db.proposals.create_index("offerId")
-    db.proposals.create_index("freelancerId")
+    db.proposals.create_index("freelancersId")
     db.messages.create_index([("offerId", 1), ("createdAt", 1)])
     db.messages.create_index("offerIdStr")
 

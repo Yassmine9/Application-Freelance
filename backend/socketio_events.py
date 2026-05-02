@@ -25,12 +25,12 @@ def _find_offer(offer_id: str):
 
 
 def _is_participant(user_id: str, offer: dict) -> bool:
-    return offer.get("clientId") == user_id or offer.get("acceptedFreelancerId") == user_id
+    return offer.get("clientId") == user_id or offer.get("acceptedfreelancersId") == user_id
 
 
 def _other_user(offer: dict, user_id: str) -> tuple[str, str]:
     if offer.get("clientId") == user_id:
-        return offer.get("acceptedFreelancerId") or "", "freelancer"
+        return offer.get("acceptedfreelancersId") or "", "freelancer"
     return offer.get("clientId") or "", "client"
 
 

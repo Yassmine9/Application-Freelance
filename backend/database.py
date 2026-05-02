@@ -14,5 +14,5 @@ def init_indexes():
     db.offers.create_index("status")
     db.offers.create_index("category")
     db.proposals.create_index("offerId")
-    db.proposals.create_index("freelancerId")
+    db.proposals.create_index("freelancersId")
     db.messages.create_index([("offerId", 1), ("createdAt", 1)])

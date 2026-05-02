@@ -41,7 +41,7 @@ export class OffersPage implements OnInit {
   isSubmitting = false;
   showCreateModal = false;
   isClient = false;
-  isFreelancer = false;
+  isfreelancers = false;
   searchQuery = '';
   activeFilter = 'all';
   apiUrl = environment.apiUrl.replace(/\/api\/?$/, '');
@@ -78,7 +78,7 @@ export class OffersPage implements OnInit {
 
   ngOnInit() {
     this.isClient = this.auth.isClient();
-    this.isFreelancer = this.auth.isFreelancer();
+    this.isfreelancers = this.auth.isfreelancers();
     this.loadOffers();
 
     this.route.queryParamMap.subscribe((params) => {
@@ -230,7 +230,7 @@ export class OffersPage implements OnInit {
 
   getChatLink(offer: any): any[] {
     if (this.isClient) {
-      return ['/chat', offer._id, offer.acceptedFreelancerId || ''];
+      return ['/chat', offer._id, offer.acceptedfreelancersId || ''];
     }
 
     return ['/chat', offer._id, offer.clientId || ''];

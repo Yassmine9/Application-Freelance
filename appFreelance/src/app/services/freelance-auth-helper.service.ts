@@ -45,8 +45,8 @@ export class FreelanceAuthHelper {
     return this.getRole() === 'client';
   }
 
-  isFreelancer(): boolean {
-    return this.getRole() === 'freelancer';
+  isfreelancers(): boolean {
+    return this.getRole() === 'freelancers';
   }
 
   isAdmin(): boolean {

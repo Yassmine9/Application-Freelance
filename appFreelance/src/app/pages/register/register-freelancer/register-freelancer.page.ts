@@ -45,7 +45,7 @@ export class RegisterPage implements OnInit {
     const loading = await this.loadingCtrl.create({ message: 'Inscription...' });
     await loading.present();
 
-    this.authService.registerFreelancer({
+    this.authService.registerfreelancers({
       email: this.email,
       password: this.password,
       name: `${this.firstName} ${this.lastName}`,

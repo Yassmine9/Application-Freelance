@@ -155,23 +155,23 @@ def get_profile_by_id(user_id):
     return jsonify({"error": "Utilisateur non trouvé"}), 404
 
 
-@auth_bp.route("/freelancer/profile", methods=["GET"])
+@auth_bp.route("/freelancers/profile", methods=["GET"])
 @jwt_required()
-def get_freelancer_profile_alias():
+def get_freelancers_profile_alias():
     return get_profile()
 
 
 @auth_bp.route("/freelancers", methods=["GET"])
 def get_freelancers():
-    freelancers = Freelancer.get_all()
+    freelancers_list = Freelancer.get_all()
     status_filter = (request.args.get("status") or "all").strip().lower()
 
     filtered = []
-    for freelancer in freelancers:
-        if status_filter != "all" and freelancer.get("status", "").lower() != status_filter:
+    for f in freelancers_list:
+        if status_filter != "all" and f.get("status", "").lower() != status_filter:
             continue
-        freelancer.pop("password", None)
-        filtered.append(freelancer)
+        f.pop("password", None)
+        filtered.append(f)
 
     return jsonify({"freelancers": filtered, "count": len(filtered)})
 

@@ -259,7 +259,7 @@ $shadow-soft: 0 20px 44px rgba(6, 0, 171, 0.08);
 }
 
 // =============================================
-// ITEM CARD (GIG / FREELANCER)
+// ITEM CARD (GIG / freelancers)
 // =============================================
 .item-card {
   padding: 16px;
@@ -311,7 +311,7 @@ $shadow-soft: 0 20px 44px rgba(6, 0, 171, 0.08);
     color: $primary;
   }
 
-  &.freelancer {
+  &.freelancers {
     background: rgba(34, 197, 94, 0.15);
     color: #22c55e;
   }

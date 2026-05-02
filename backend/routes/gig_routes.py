@@ -32,10 +32,10 @@ def search_gig():
     if err:
         return jsonify({"error": err[0]}), err[1]
     return jsonify(result) , 200
-# ---- gigs endpoints related to freelancer (get,create,put,delete) ----
+# ---- gigs endpoints related to freelancers (get,create,put,delete) ----
 
-# Get all gigs related to a freelancer by id 
-@gig_routes.route("/freelancer/gigs" , methods=['GET'])
+# Get all gigs related to a freelancers by id 
+@gig_routes.route("/freelancers/gigs" , methods=['GET'])
 @jwt_required()
 def get_my_gigs():
     user_id = get_jwt_identity()
@@ -44,7 +44,7 @@ def get_my_gigs():
         return jsonify({"error": err[0]}), err[1]
     return jsonify(result),200
 # get my gig's details 
-@gig_routes.route("/freelancer/gigs/<gig_id>" , methods=['GET'])
+@gig_routes.route("/freelancers/gigs/<gig_id>" , methods=['GET'])
 @jwt_required()
 def get_my_gig(gig_id):
     user_id = get_jwt_identity()
@@ -54,7 +54,7 @@ def get_my_gig(gig_id):
     return jsonify(result), 200
 
 # Create A gig
-@gig_routes.route("/freelancer/gigs" , methods=['POST'])
+@gig_routes.route("/freelancers/gigs" , methods=['POST'])
 @jwt_required()
 def create_gig():
     user_id = get_jwt_identity()
@@ -68,7 +68,7 @@ def create_gig():
 
 
 # Update a gig
-@gig_routes.route("/freelancer/gigs/<gig_id>" , methods=['PUT'])
+@gig_routes.route("/freelancers/gigs/<gig_id>" , methods=['PUT'])
 @jwt_required()
 def update_gig(gig_id):
     user_id = get_jwt_identity()
@@ -81,7 +81,7 @@ def update_gig(gig_id):
     return jsonify(result), 200
 
 # delete a gig
-@gig_routes.route("/freelancer/gigs/<gig_id>" , methods=['DELETE'])
+@gig_routes.route("/freelancers/gigs/<gig_id>" , methods=['DELETE'])
 @jwt_required()
 def delete_gig(gig_id):
     user_id = get_jwt_identity()

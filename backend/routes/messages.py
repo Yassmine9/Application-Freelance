@@ -37,11 +37,11 @@ def send_message():
 
     current_user = get_jwt_identity()
 
-    # Ensure sender is either the client or the accepted freelancer
+    # Ensure sender is either the client or the accepted freelancers
     is_client = offer["clientId"] == current_user
-    is_freelancer = offer.get("acceptedFreelancerId") == current_user
+    is_freelancers = offer.get("acceptedfreelancersId") == current_user
 
-    if not is_client and not is_freelancer:
+    if not is_client and not is_freelancers:
         return jsonify({"error": "You are not a participant in this conversation"}), 403
 
     message = {
@@ -74,9 +74,9 @@ def get_messages(offer_id):
 
     # Only participants can read messages
     is_client = offer["clientId"] == current_user
-    is_freelancer = offer.get("acceptedFreelancerId") == current_user
+    is_freelancers = offer.get("acceptedfreelancersId") == current_user
 
-    if not is_client and not is_freelancer:
+    if not is_client and not is_freelancers:
         return jsonify({"error": "Unauthorized"}), 403
 
     messages = [serialize_message(m) for m in
@@ -97,11 +97,11 @@ def get_messages(offer_id):
 def get_conversations():
     current_user = get_jwt_identity()
 
-    # Find all offers where the user is client or accepted freelancer
+    # Find all offers where the user is client or accepted freelancers
     offers = list(db.offers.find({
         "$or": [
             {"clientId": current_user},
-            {"acceptedFreelancerId": current_user}
+            {"acceptedfreelancersId": current_user}
         ]
     }))
 
@@ -119,13 +119,13 @@ def get_conversations():
             "read": False
         })
 
-        if not offer.get("acceptedFreelancerId") and not last_msg:
+        if not offer.get("acceptedfreelancersId") and not last_msg:
             continue
 
         other_user_id = ''
         other_role = ''
         if offer.get("clientId") == current_user:
-            other_user_id = offer.get("acceptedFreelancerId") or ''
+            other_user_id = offer.get("acceptedfreelancersId") or ''
             other_role = 'freelancer'
         else:
             other_user_id = offer.get("clientId") or ''

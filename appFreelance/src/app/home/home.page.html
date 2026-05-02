@@ -68,7 +68,7 @@
       </div>
     </section>
 
-    <section class="feature-section" *ngIf="showFreelancersSection">
+    <section class="feature-section" *ngIf="showfreelancersSection">
       <div class="section-heading">
         <div>
           <span class="section-kicker">Top rated freelancers</span>
@@ -76,25 +76,25 @@
         <a routerLink="/view-all-freelancers" class="view-all">View all</a>
       </div>
 
-      <div class="freelancer-strip">
+      <div class="freelancers-strip">
         <article
-          class="freelancer-card"
-          *ngFor="let freelancer of filteredFreelancers; trackBy: trackByIndex"
+          class="freelancers-card"
+          *ngFor="let freelancers of filteredfreelancers; trackBy: trackByIndex" (click)="navigateTofreelancersProfile(freelancers.id)"
         >
-          <div class="freelancer-avatar">
-            <img [src]="freelancer.avatarImage" [alt]="freelancer.name" loading="lazy" />
+          <div class="freelancers-avatar">
+            <img [src]="freelancers.avatarImage" [alt]="freelancers.name" loading="lazy" />
           </div>
-          <div class="freelancer-copy">
-            <h3>{{ freelancer.name }}</h3>
-            <div class="freelancer-tag">
-              <ion-icon [name]="freelancer.icon"></ion-icon>
-              <span>{{ freelancer.category }}</span>
+          <div class="freelancers-copy">
+            <h3>{{ freelancers.name }}</h3>
+            <div class="freelancers-tag">
+              <ion-icon [name]="freelancers.icon"></ion-icon>
+              <span>{{ freelancers.category }}</span>
             </div>
             <p>Fast response and a polished portfolio.</p>
           </div>
         </article>
 
-        <div class="empty-state" *ngIf="filteredFreelancers.length === 0">
+        <div class="empty-state" *ngIf="filteredfreelancers.length === 0">
           No freelancers match your search.
         </div>
       </div>

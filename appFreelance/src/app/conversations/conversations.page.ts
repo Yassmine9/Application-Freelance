@@ -77,7 +77,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   getLastPreview(convo: any): string {
     if (convo?.lastMessage?.content) return convo.lastMessage.content;
-    if (!convo?.otherUserId) return 'Chat available once a freelancer is accepted.';
+    if (!convo?.otherUserId) return 'Chat available once a freelancers is accepted.';
     return 'No messages yet.';
   }
 

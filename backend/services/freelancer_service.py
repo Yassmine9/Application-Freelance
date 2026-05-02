@@ -39,7 +39,7 @@ def get_my_profile(user_id):
     return profile, None
 
 
-def get_public_profile(freelancerId):
+def get_public_profile(freelancer_id):
     """
     Visitor view — a logged-in user visiting someone else's profile.
     Returns only public fields. CV is included since clients can see it.
@@ -47,10 +47,10 @@ def get_public_profile(freelancerId):
 
     Returns: (profile_dict, error_tuple)
     """
-    user = Freelancer.find_by_id(freelancerId)
+    user = Freelancer.find_by_id(freelancer_id)
 
     if not user:
-        return None, ("Freelancer introuvable", 404)
+        return None, ("freelancer introuvable", 404)
 
     """# only approved freelancers are visible to others
     if user.get("status") != "approved":

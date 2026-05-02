@@ -34,7 +34,7 @@ export class DevLoginPage implements OnInit {
     this.currentRole = localStorage.getItem('role') || '';
   }
 
-  loginAs(role: 'client' | 'freelancer') {
+  loginAs(role: 'client' | 'freelancers') {
     this.isLoading = true;
     this.error = '';
     this.http.post<any>(`${environment.apiUrl}/auth/mock-login`, { role }).subscribe({

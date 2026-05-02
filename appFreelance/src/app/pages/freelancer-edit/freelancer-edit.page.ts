@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController, LoadingController } from '@ionic/angular';
-import { FreelancerProfileService } from '../../services/freelancer-profile.service';
+import { freelancersProfileService } from '../../services/freelancer-profile.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -13,12 +13,13 @@ export interface Project {
 }
 
 @Component({
-  selector: 'app-freelancer-edit',
+  selector: 'app-freelancers-edit',
   templateUrl: './freelancer-edit.page.html',
   styleUrls: ['./freelancer-edit.page.scss'],
+  standalone: true,
   imports : [IonicModule,FormsModule,CommonModule],
 })
-export class FreelancerEditPage implements OnInit {
+export class freelancersEditPage implements OnInit {
 
   // ── Profile fields ───────────────────────────────────────
   title: string = '';
@@ -42,7 +43,7 @@ export class FreelancerEditPage implements OnInit {
   isSaving = false;
 
   constructor(
-    private profileService: FreelancerProfileService,
+    private profileService: freelancersProfileService,
     private router: Router,
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController
@@ -56,7 +57,7 @@ export class FreelancerEditPage implements OnInit {
   loadProfile() {
     this.isLoading = true;
     this.profileService.getProfile().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         const u = data.user;
         this.title           = u.title || '';
         this.bio             = u.bio || '';
@@ -160,7 +161,7 @@ export class FreelancerEditPage implements OnInit {
 
         this.isSaving = false;
         await this.showToast('Profile updated successfully', 'success');
-        this.router.navigate(['/freelancer-profile']);  // go back to profile
+        this.router.navigate(['/freelancers-profile']);  // go back to profile
       },
       error: async () => {
         this.isSaving = false;
@@ -181,6 +182,6 @@ export class FreelancerEditPage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/freelancer-profile']);
+    this.router.navigate(['/freelancers-profile']);
   }
 }

@@ -56,7 +56,7 @@ export class AuthService {
     });
   }
 
-  registerFreelancer(data: {
+  registerfreelancers(data: {
     email: string;
     password: string;
     name: string;
@@ -67,7 +67,7 @@ export class AuthService {
   }): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, {
       ...data,
-      role: 'freelancer'
+      role: 'freelancers'
     });
   }
 
@@ -104,8 +104,8 @@ export class AuthService {
     return user?._id || user?.id || localStorage.getItem('userId') || '';
   }
 
-  isFreelancer(): boolean {
-    return this.getUserRole() === 'freelancer';
+  isfreelancers(): boolean {
+    return this.getUserRole() === 'freelancers';
   }
 
   isClient(): boolean {

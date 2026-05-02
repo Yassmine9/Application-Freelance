@@ -70,10 +70,7 @@ export class RegisterClientPage implements OnInit {
 
 
   private validateForm(): boolean {
-    if (!this.companyName.trim()) {
-      console.warn('Company name is required');
-      return false;
-    }
+    
 
     if (!this.contactName.trim()) {
       console.warn('Contact name is required');

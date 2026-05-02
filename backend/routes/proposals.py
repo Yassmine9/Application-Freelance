@@ -14,20 +14,20 @@ def serialize_proposal(p):
         p["createdAt"] = p["createdAt"].isoformat()
     if p.get("coverLetterPath"):
         p["coverLetterUrl"] = f"/uploads/{p['coverLetterPath']}"
-    # attach freelancer profile info if available
+    # attach freelancers profile info if available
     try:
-        user = db.users.find_one({"_id": p["freelancerId"]}) or db.users.find_one({"userId": p["freelancerId"]})
+        user = db.users.find_one({"_id": p["freelancersId"]}) or db.users.find_one({"userId": p["freelancersId"]})
         if user:
-            p["freelancerAvatar"] = user.get("avatar")
+            p["freelancersAvatar"] = user.get("avatar")
             p["avatar"] = user.get("avatar")
-            p["freelancerName"] = user.get("name")
+            p["freelancersName"] = user.get("name")
     except Exception:
         # no users collection or lookup failed — ignore
         pass
     return p
 
 
-# ─── Submit Proposal (Freelancer only) ───────────────────────────────────────
+# ─── Submit Proposal (freelancer only) ───────────────────────────────────────
 @proposals_bp.route("/", methods=["POST"])
 @jwt_required()
 def submit_proposal():
@@ -59,10 +59,10 @@ def submit_proposal():
 
     current_user = get_jwt_identity()
 
-    # Prevent duplicate proposals from same freelancer
+    # Prevent duplicate proposals from same freelancers
     existing = db.proposals.find_one({
         "offerId": ObjectId(offer_id),
-        "freelancerId": current_user
+        "freelancersId": current_user
     })
     if existing:
         return jsonify({"error": "You already submitted a proposal for this offer"}), 400
@@ -82,7 +82,7 @@ def submit_proposal():
 
     proposal = {
         "offerId": ObjectId(offer_id),
-        "freelancerId": current_user,
+        "freelancersId": current_user,
         "amount": amount,
         "coverLetterPath": upload["relative_path"],
         "coverLetterName": upload["filename"],
@@ -112,7 +112,7 @@ def get_proposals(offer_id):
     # Only the offer owner, admin, or the freelancer who submitted can see proposals
     query = {"offerId": ObjectId(offer_id)}
     if claims.get("role") == "freelancer":
-        query["freelancerId"] = current_user   # freelancer sees only their own
+        query["freelancersId"] = current_user   # freelancer sees only their own
 
     proposals = [serialize_proposal(p) for p in db.proposals.find(query).sort("createdAt", -1)]
     return jsonify(proposals), 200
@@ -159,7 +159,7 @@ def accept_proposal(proposal_id):
     # Update offer status to in_progress
     db.offers.update_one(
         {"_id": proposal["offerId"]},
-        {"$set": {"status": "in_progress", "acceptedFreelancerId": proposal["freelancerId"]}}
+        {"$set": {"status": "in_progress", "acceptedfreelancersId": proposal["freelancersId"]}}
     )
 
     return jsonify({"message": "Proposal accepted, offer is now in progress"}), 200
@@ -194,7 +194,7 @@ def reject_proposal(proposal_id):
     return jsonify({"message": "Proposal rejected"}), 200
 
 
-# ─── Get My Proposals (Freelancer dashboard) ──────────────────────────────────
+# ─── Get My Proposals (freelancer dashboard) ──────────────────────────────────
 @proposals_bp.route("/my/proposals", methods=["GET"])
 @jwt_required()
 def get_my_proposals():
@@ -205,5 +205,5 @@ def get_my_proposals():
         return jsonify({"error": "Only freelancers can view their proposals"}), 403
 
     proposals = [serialize_proposal(p) for p in
-                 db.proposals.find({"freelancerId": current_user}).sort("createdAt", -1)]
+                 db.proposals.find({"freelancersId": current_user}).sort("createdAt", -1)]
     return jsonify(proposals), 200

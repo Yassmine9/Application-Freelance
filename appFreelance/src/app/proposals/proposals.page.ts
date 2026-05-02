@@ -37,7 +37,7 @@ export class ProposalsPage implements OnInit {
   isLoading = false;
   isSubmitting = false;
   isClient = false;
-  isFreelancer = false;
+  isfreelancers = false;
   currentUserId = '';
   newProposal = { amount: null as number | null };
   coverLetterFile: File | null = null;
@@ -56,7 +56,7 @@ export class ProposalsPage implements OnInit {
   ngOnInit() {
     this.offerId = this.route.snapshot.paramMap.get('id')!;
     this.isClient = this.auth.isClient();
-    this.isFreelancer = this.auth.isFreelancer();
+    this.isfreelancers = this.auth.isfreelancers();
     this.currentUserId = this.auth.getUserId();
     this.loadOffer();
     this.loadProposals();
@@ -129,16 +129,16 @@ export class ProposalsPage implements OnInit {
   }
 
   get alreadySubmitted(): boolean {
-    return this.proposals.some(p => p.freelancerId === this.currentUserId);
+    return this.proposals.some(p => p.freelancersId === this.currentUserId);
   }
 
   getInitials(id: string): string {
     return id ? id.slice(-2).toUpperCase() : '??';
   }
 
-  getAcceptedFreelancerId(): string {
+  getAcceptedfreelancersId(): string {
     const accepted = this.proposals.find(p => p.status === 'accepted');
-    return accepted?.freelancerId || '';
+    return accepted?.freelancersId || '';
   }
 
   onCoverLetterSelected(event: Event) {

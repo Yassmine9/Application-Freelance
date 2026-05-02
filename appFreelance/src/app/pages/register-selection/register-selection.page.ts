@@ -17,8 +17,8 @@ export class RegisterSelectionPage implements OnInit {
     console.log('Register Selection Page Loaded');
   }
 
-  selectFreelancer() {
-    this.router.navigate(['/register-freelancer']);
+  selectfreelancers() {
+    this.router.navigate(['/register-freelancers']);
   }
 
   selectClient() {

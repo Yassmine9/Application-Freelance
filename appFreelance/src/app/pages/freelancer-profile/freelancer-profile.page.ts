@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonicModule, IonContent } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FreelancerProfileService } from '../../services/freelancer-profile.service';
+import { freelancersProfileService } from '../../services/freelancer-profile.service';
 import { Router } from '@angular/router';
 
 export interface Project {
@@ -17,13 +17,13 @@ export interface Gig {
 export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'blocked';
 
 @Component({
-  selector: 'app-freelancer-profile',
+  selector: 'app-freelancers-profile',
   templateUrl: './freelancer-profile.page.html',
   styleUrls: ['./freelancer-profile.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
 })
-export class FreelancerProfilePage implements OnInit {
+export class freelancersProfilePage implements OnInit {
 
   @ViewChild(IonContent, { static: false }) content!: IonContent;
 
@@ -69,7 +69,7 @@ export class FreelancerProfilePage implements OnInit {
     return labels[this.profileStatus];
   }
 
-  constructor(private profileService: FreelancerProfileService,private router:Router) {}
+  constructor(private profileService: freelancersProfileService,private router:Router) {}
    
   ngOnInit() {
     console.log('PAGE LOADED - name is:', this.name);
@@ -82,7 +82,7 @@ export class FreelancerProfilePage implements OnInit {
   this.isLoading = true;
   console.log("inside the load profile");
   this.profileService.getProfile().subscribe({
-    next: (data) => {
+    next: (data: any) => {
       console.log('DATA FROM API:', data);
       
       this.id = data.user.id
@@ -115,7 +115,7 @@ export class FreelancerProfilePage implements OnInit {
       this.isLoading = false;
       
     },
-    error: (err) => {
+    error: (err: any) => {
       console.error('Failed to load profile', err);
       this.isLoading = false;
     }
@@ -134,7 +134,7 @@ export class FreelancerProfilePage implements OnInit {
   // ---- Edit mode ----
   toggleEdit() {
     //this.editMode = !this.editMode;
-     this.router.navigate(['/freelancer-edit']);
+     this.router.navigate(['/freelancers-edit']);
   }
 
   // ---- CV ----
@@ -192,27 +192,27 @@ getmygigs() {
     };
 
     this.profileService.updateProfile(payload).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.profileStatus = res.status;
         this.editMode = false;
         console.log('Profile saved');
       },
-      error: (err) => console.error('Failed to save profile', err)
+      error: (err: any) => console.error('Failed to save profile', err)
     });
 
     // upload CV if new file selected
     if (this.cvFile) {
       this.profileService.uploadCV(this.cvFile).subscribe({
-        next: (res) => this.cvName = res.cv_filename,
-        error: (err) => console.error('CV upload failed', err)
+        next: (res: any) => this.cvName = res.cv_filename,
+        error: (err: any) => console.error('CV upload failed', err)
       });
     }
 
     // upload avatar if new file selected
     if (this.avatarFile) {
       this.profileService.uploadAvatar(this.avatarFile).subscribe({
-        next: (res) => console.log('Avatar uploaded', res),
-        error: (err) => console.error('Avatar upload failed', err)
+        next: (res: any) => console.log('Avatar uploaded', res),
+        error: (err: any) => console.error('Avatar upload failed', err)
       });
     }
   }

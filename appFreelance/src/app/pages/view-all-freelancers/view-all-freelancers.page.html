@@ -6,7 +6,7 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-title>Freelancers</ion-title>
+    <ion-title>freelancers</ion-title>
 
     <ion-buttons slot="end">
       <ion-button routerLink="/view-all-services" class="toolbar-link">
@@ -43,7 +43,7 @@
     <section class="results-section">
       <div class="section-heading">
         <div>
-          <span class="section-kicker">Freelancers</span>
+          <span class="section-kicker">freelancers</span>
           <h2>Ready to collaborate</h2>
         </div>
       </div>
@@ -52,25 +52,25 @@
         Loading freelancers...
       </div>
 
-      <div class="freelancer-grid" *ngIf="!isLoading && freelancers.length > 0">
-        <article class="freelancer-card" *ngFor="let freelancer of freelancers; let index = index; trackBy: trackByIndex" (click)="navigateToFreelancerProfile(freelancer.id)">
+      <div class="freelancers-grid" *ngIf="!isLoading && freelancers.length > 0">
+        <article class="freelancers-card" *ngFor="let freelancers of freelancers; let index = index; trackBy: trackByIndex" (click)="navigateTofreelancersProfile(freelancers.id)">
           <div class="avatar" [ngClass]="getAccentClass(index)">
-            {{ getInitials(freelancer.name) }}
+            {{ getInitials(freelancers.name) }}
           </div>
           <div class="copy">
             <div class="copy-top">
               <div>
-                <h3>{{ freelancer.name }}</h3>
-                <p>{{ freelancer.primarySkill }}</p>
+                <h3>{{ freelancers.name }}</h3>
+                <p>{{ freelancers.primarySkill }}</p>
                 <div class="skills-row">
-                  <span class="skill-chip" *ngFor="let skill of freelancer.skills">{{ skill }}</span>
+                  <span class="skill-chip" *ngFor="let skill of freelancers.skills">{{ skill }}</span>
                 </div>
               </div>
-              <ion-icon [name]="freelancer.icon"></ion-icon>
+              <ion-icon [name]="freelancers.icon"></ion-icon>
             </div>
             <div class="meta-row">
-              <span>{{ freelancer.location }}</span>
-              <span class="rating">{{ freelancer.rating | number: '1.1-1' }} ★</span>
+              <span>{{ freelancers.location }}</span>
+              <span class="rating">{{ freelancers.rating | number: '1.1-1' }} ★</span>
             </div>
           </div>
         </article>

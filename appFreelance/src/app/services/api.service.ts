@@ -41,10 +41,10 @@ export class ApiService {
   getMyOffers(): Observable<any[]> {
     return this.http.get<any[]>(`${this.base}/offers/my/offers`, { headers: this.headers() });
   }
-  getOffersByFreelancer(freelancerId: string, proposalStatus?: string): Observable<any[]> {
+  getOffersByfreelancers(freelancersId: string, proposalStatus?: string): Observable<any[]> {
     let params = new HttpParams();
     if (proposalStatus) params = params.set('proposalStatus', proposalStatus);
-    return this.http.get<any[]>(`${this.base}/offers/by-freelancer/${freelancerId}`, { headers: this.headers(), params });
+    return this.http.get<any[]>(`${this.base}/offers/by-freelancers/${freelancersId}`, { headers: this.headers(), params });
   }
 
   // Proposals

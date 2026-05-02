@@ -206,8 +206,8 @@ $text-light: #8e8e93;
   box-shadow: 0 3px 10px rgba($primary, 0.35);
 }
 
-// ── Freelancer card ───────────────────────────────────────
-.freelancer-card {
+// ── freelancers card ───────────────────────────────────────
+.freelancers-card {
   background: rgba($white, 0.95);
   border-radius: 20px;
   padding: 16px;
@@ -227,7 +227,7 @@ $text-light: #8e8e93;
   }
 }
 
-.freelancer-left {
+.freelancers-left {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -235,7 +235,7 @@ $text-light: #8e8e93;
   min-width: 0;
 }
 
-.freelancer-avatar {
+.freelancers-avatar {
   width: 48px;
   height: 48px;
   border-radius: 16px;
@@ -253,9 +253,9 @@ $text-light: #8e8e93;
   }
 }
 
-.freelancer-info { flex: 1; min-width: 0; }
+.freelancers-info { flex: 1; min-width: 0; }
 
-.freelancer-name {
+.freelancers-name {
   font-size: 15px;
   font-weight: 700;
   color: $text-dark;
@@ -265,7 +265,7 @@ $text-light: #8e8e93;
   text-overflow: ellipsis;
 }
 
-.freelancer-email {
+.freelancers-email {
   font-size: 12px;
   color: $text-light;
   margin: 0 0 8px;
@@ -274,7 +274,7 @@ $text-light: #8e8e93;
   text-overflow: ellipsis;
 }
 
-.freelancer-meta {
+.freelancers-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -295,7 +295,7 @@ $text-light: #8e8e93;
 }
 
 // ── Action buttons ────────────────────────────────────────
-.freelancer-actions {
+.freelancers-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -396,6 +396,89 @@ $text-light: #8e8e93;
   font-size: 14px;
   color: $text-light;
   margin: 0;
+}
+
+// ── Tab buttons ───────────────────────────────────────────
+.tab-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  animation: fadeInUp 0.55s ease-out both;
+}
+
+.tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 2px solid $border;
+  border-radius: 16px;
+  background: rgba($white, 0.8);
+  color: $text-light;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  ion-icon {
+    font-size: 18px;
+  }
+
+  .tab-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: $white;
+    font-size: 11px;
+    padding: 2px 6px;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  &:hover {
+    border-color: rgba($primary, 0.3);
+    background: rgba($white, 0.95);
+  }
+
+  &.active {
+    border-color: $primary;
+    background: linear-gradient(135deg, rgba($primary, 0.1), rgba($accent, 0.05));
+    color: $primary;
+    box-shadow: 0 4px 12px rgba($primary, 0.2);
+  }
+}
+
+// ── User type badge ───────────────────────────────────────
+.user-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba($primary, 0.12);
+  color: $primary;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+
+  ion-icon {
+    font-size: 14px;
+  }
+
+  &.client-badge {
+    background: rgba(#3498db, 0.12);
+    color: #3498db;
+  }
+}
+
+// ── Client avatar ─────────────────────────────────────────
+.freelancers-avatar.client-avatar {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
 }
 
 // ── Safe area ─────────────────────────────────────────────

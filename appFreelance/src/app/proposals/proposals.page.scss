@@ -213,7 +213,7 @@ ion-header ion-toolbar {
   &.accepted { background: #f1fff6; border: 1px solid #a5d6a7; }
   &.rejected  { opacity: 0.5; }
 
-  /* Freelancer row */
+  /* freelancers row */
   .proposal-top {
     display: flex;
     justify-content: space-between;
@@ -221,7 +221,7 @@ ion-header ion-toolbar {
     margin-bottom: 14px;
   }
 
-  .freelancer-row {
+  .freelancers-row {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -238,7 +238,7 @@ ion-header ion-toolbar {
       margin-left: auto;
     }
 
-    .freelancer-avatar {
+    .freelancers-avatar {
       width: 42px;
       height: 42px;
       border-radius: 50%;
@@ -252,7 +252,7 @@ ion-header ion-toolbar {
       flex-shrink: 0;
     }
 
-    .freelancer-name {
+    .freelancers-name {
       font-size: 0.88rem;
       font-weight: 700;
       color: #111;

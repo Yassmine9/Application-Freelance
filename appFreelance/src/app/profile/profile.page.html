@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/offers"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ role === 'client' ? 'Client' : 'Freelancer' }} Profile</ion-title>
+    <ion-title>{{ role === 'client' ? 'Client' : 'freelancers' }} Profile</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <!-- Skills (freelancer) -->
+    <!-- Skills (freelancers) -->
     <div class="skills-card" *ngIf="profile.skills?.length">
       <h3>Skills</h3>
       <div class="skills-wrap">
@@ -54,8 +54,8 @@
       <ion-button expand="block" (click)="openOfferModal()">Create Offer</ion-button>
     </div>
 
-    <!-- Offers proposed by freelancer -->
-    <div class="offers-card" *ngIf="role === 'freelancer'">
+    <!-- Offers proposed by freelancers -->
+    <div class="offers-card" *ngIf="role === 'freelancers'">
       <h3>Offers Applied</h3>
 
       <div class="offer-filters">
@@ -69,8 +69,8 @@
         <ion-spinner name="crescent" color="primary"></ion-spinner>
       </div>
 
-      <div class="offers-list" *ngIf="!offersLoading && freelancerOffers?.length">
-        <div class="offer-item" *ngFor="let offer of freelancerOffers">
+      <div class="offers-list" *ngIf="!offersLoading && freelancersOffers?.length">
+        <div class="offer-item" *ngFor="let offer of freelancersOffers">
           <div class="offer-header">
             <div class="offer-title">{{ offer.title || 'Untitled offer' }}</div>
             <span class="status-chip" [ngClass]="statusClass(offer.status)">{{ offer.status === 'in_progress' ? 'In Progress' : (offer.status | titlecase) }}</span>
@@ -92,7 +92,7 @@
         </div>
       </div>
 
-      <div class="empty-offers" *ngIf="!offersLoading && (!freelancerOffers || freelancerOffers.length === 0)">
+      <div class="empty-offers" *ngIf="!offersLoading && (!freelancersOffers || freelancersOffers.length === 0)">
         No offers yet
       </div>
     </div>

@@ -7,7 +7,7 @@ import { GigService } from '../../services/gig.service';
 import { SideBarComponent } from '../../components/side-bar/side-bar.component';
 
 interface SearchResult {
-  type: 'gig' | 'freelancer' | 'category';
+  type: 'gig' | 'freelancers' | 'category';
   id: string;
   title: string;
   subtitle?: string;
@@ -131,23 +131,23 @@ export class SearchPage implements OnInit {
     allResults.push(...gigResults);
 
     // Search in freelancers (mock data)
-    const mockFreelancers = [
+    const mockfreelancers = [
       {
-        id: 'freelancer-1',
+        id: 'freelancers-1',
         title: 'John Developer',
         subtitle: 'Full-Stack Developer',
         description: '10+ years experience with React & Node.js',
         rating: 4.9,
       },
       {
-        id: 'freelancer-2',
+        id: 'freelancers-2',
         title: 'Sarah Designer',
         subtitle: 'UI/UX Designer',
         description: 'Specializing in mobile and web design',
         rating: 4.8,
       },
       {
-        id: 'freelancer-3',
+        id: 'freelancers-3',
         title: 'Mike Specialist',
         subtitle: 'Digital Marketing Expert',
         description: 'SEO and content marketing specialist',
@@ -155,21 +155,21 @@ export class SearchPage implements OnInit {
       },
     ];
 
-    const freelancerResults = mockFreelancers
-      .filter(freelancer =>
-        freelancer.title.toLowerCase().includes(query) ||
-        freelancer.subtitle?.toLowerCase().includes(query) ||
-        freelancer.description?.toLowerCase().includes(query)
+    const freelancersResults = mockfreelancers
+      .filter(freelancers =>
+        freelancers.title.toLowerCase().includes(query) ||
+        freelancers.subtitle?.toLowerCase().includes(query) ||
+        freelancers.description?.toLowerCase().includes(query)
       )
-      .map(freelancer => ({
-        type: 'freelancer' as const,
-        id: freelancer.id,
-        title: freelancer.title,
-        subtitle: freelancer.subtitle,
-        description: freelancer.description,
-        rating: freelancer.rating,
+      .map(freelancers => ({
+        type: 'freelancers' as const,
+        id: freelancers.id,
+        title: freelancers.title,
+        subtitle: freelancers.subtitle,
+        description: freelancers.description,
+        rating: freelancers.rating,
       }));
-    allResults.push(...freelancerResults);
+    allResults.push(...freelancersResults);
 
     this.searchResults = allResults.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     this.isLoading = false;
@@ -181,7 +181,7 @@ export class SearchPage implements OnInit {
     }
     const typeMap: Record<string, string> = {
       gigs: 'gig',
-      freelancers: 'freelancer',
+      freelancers: 'freelancers',
       categories: 'category',
     };
     const resultType = typeMap[this.activeTab];
@@ -197,8 +197,8 @@ export class SearchPage implements OnInit {
       case 'gig':
         this.router.navigateByUrl(`/gig-detail/${result.id}`);
         break;
-      case 'freelancer':
-        this.router.navigateByUrl(`/view-freelancer-profile/${result.id}`);
+      case 'freelancers':
+        this.router.navigateByUrl(`/view-freelancers-profile/${result.id}`);
         break;
       case 'category':
         this.router.navigateByUrl(`/view-all-services`);

@@ -34,8 +34,8 @@ export class SocketService {
       transports: ['websocket']
     });
 
-    this.socket.on('message:new', (msg) => this.messageSubject.next(msg));
-    this.socket.on('conversation:update', (payload) => this.conversationSubject.next(payload));
+    this.socket.on('message:new', (msg: any) => this.messageSubject.next(msg));
+    this.socket.on('conversation:update', (payload: any) => this.conversationSubject.next(payload));
   }
 
   disconnect(): void {

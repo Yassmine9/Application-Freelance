@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
-interface FreelancerCard {
+interface freelancersCard {
   id: string;
   name: string;
   primarySkill: string;
@@ -13,15 +13,15 @@ interface FreelancerCard {
   location: string;
 }
 
-interface FreelancerApiItem {
+interface freelancersApiItem {
   _id: string;
   name?: string;
   skills?: string[];
   hourly_rate?: number;
 }
 
-interface FreelancersApiResponse {
-  freelancers: FreelancerApiItem[];
+interface freelancersApiResponse {
+  freelancers: freelancersApiItem[];
 }
 
 @Component({
@@ -30,24 +30,24 @@ interface FreelancersApiResponse {
   styleUrls: ['./view-all-freelancers.page.scss'],
   standalone: false,
 })
-export class ViewAllFreelancersPage {
-  freelancers: FreelancerCard[] = [];
+export class ViewAllfreelancersPage {
+  freelancers: freelancersCard[] = [];
   isLoading = false;
 
   constructor(private readonly http: HttpClient, private readonly router: Router) {}
 
   ionViewWillEnter(): void {
-    this.loadFreelancers();
+    this.loadfreelancers();
   }
 
-  private loadFreelancers(): void {
+  private loadfreelancers(): void {
     this.isLoading = true;
 
-    this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
+    this.http.get<freelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
       next: (response) => {
         this.freelancers = (response.freelancers ?? [])
-          .map((freelancer) => this.mapFreelancer(freelancer))
-          .filter((freelancer): freelancer is FreelancerCard => freelancer !== null);
+          .map((freelancers) => this.mapfreelancers(freelancers))
+          .filter((freelancers): freelancers is freelancersCard => freelancers !== null);
         this.isLoading = false;
       },
       error: () => {
@@ -57,27 +57,27 @@ export class ViewAllFreelancersPage {
     });
   }
 
-  private mapFreelancer(freelancer: FreelancerApiItem): FreelancerCard | null {
-    const name = freelancer.name?.trim();
+  private mapfreelancers(freelancers: freelancersApiItem): freelancersCard | null {
+    const name = freelancers.name?.trim();
 
     if (!name) {
       return null;
     }
 
-    const normalizedSkills = (freelancer.skills ?? [])
+    const normalizedSkills = (freelancers.skills ?? [])
       .map((skill) => skill.trim())
       .filter((skill) => skill.length > 0);
 
-    const skills = normalizedSkills.length > 0 ? normalizedSkills : ['Freelancer'];
+    const skills = normalizedSkills.length > 0 ? normalizedSkills : ['freelancers'];
     const primarySkill = skills[0];
 
     return {
-      id: freelancer._id,
+      id: freelancers._id,
       name,
       primarySkill,
       skills,
       icon: this.iconForRole(primarySkill),
-      rating: this.ratingFromRate(freelancer.hourly_rate),
+      rating: this.ratingFromRate(freelancers.hourly_rate),
       location: 'Tunisia',
     };
   }
@@ -112,7 +112,7 @@ export class ViewAllFreelancersPage {
       return '0.0';
     }
 
-    const total = this.freelancers.reduce((sum, freelancer) => sum + freelancer.rating, 0);
+    const total = this.freelancers.reduce((sum, freelancers) => sum + freelancers.rating, 0);
     return (total / this.freelancers.length).toFixed(1);
   }
 
@@ -133,7 +133,7 @@ export class ViewAllFreelancersPage {
     return `accent-${(index % 6) + 1}`;
   }
 
-  navigateToFreelancerProfile(freelancerId: string): void {
-    this.router.navigateByUrl(`/view-freelancer-profile/${freelancerId}`);
+  navigateTofreelancersProfile(freelancersId: string): void {
+    this.router.navigateByUrl(`/view-freelancers-profile/${freelancersId}`);
   }
 }

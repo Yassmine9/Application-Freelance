@@ -10,7 +10,7 @@ interface HomeFeature {
   icon: string;
 }
 
-interface HomeFreelancer {
+interface Homefreelancers {
   id: string;
   name: string;
   icon: string;
@@ -18,14 +18,14 @@ interface HomeFreelancer {
   category: string;
 }
 
-interface FreelancerApiItem {
+interface freelancersApiItem {
   _id: string;
   name?: string;
   skills?: string[];
 }
 
-interface FreelancersApiResponse {
-  freelancers: FreelancerApiItem[];
+interface freelancersApiResponse {
+  freelancers: freelancersApiItem[];
 }
 
 interface HomeService {
@@ -84,7 +84,7 @@ export class HomePage {
       icon: 'sparkles-outline',
     },
   ];
-  allFreelancers: HomeFreelancer[] = [];
+  allfreelancers: Homefreelancers[] = [];
   readonly allServices: HomeService[] = [
     {
       title: 'Graphic Design',
@@ -161,35 +161,35 @@ export class HomePage {
     }
 
     this.preferredCategories = this.preferencesService.getPreferences().categories;
-    this.loadFreelancers();
+    this.loadfreelancers();
   }
 
-  private loadFreelancers(): void {
-    this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
+  private loadfreelancers(): void {
+    this.http.get<freelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
       next: (response) => {
         const mapped = (response.freelancers ?? [])
-          .map((freelancer) => this.mapFreelancerFromApi(freelancer))
-          .filter((freelancer): freelancer is HomeFreelancer => freelancer !== null);
+          .map((freelancers) => this.mapfreelancersFromApi(freelancers))
+          .filter((freelancers): freelancers is Homefreelancers => freelancers !== null);
 
-        this.allFreelancers = mapped;
+        this.allfreelancers = mapped;
       },
       error: () => {
-        this.allFreelancers = [];
+        this.allfreelancers = [];
       },
     });
   }
 
-  private mapFreelancerFromApi(freelancer: FreelancerApiItem): HomeFreelancer | null {
-    const name = freelancer.name?.trim();
+  private mapfreelancersFromApi(freelancers: freelancersApiItem): Homefreelancers | null {
+    const name = freelancers.name?.trim();
 
     if (!name) {
       return null;
     }
 
-    const category = freelancer.skills?.[0]?.trim() || 'Freelancer';
+    const category = freelancers.skills?.[0]?.trim() || 'freelancers';
 
     return {
-      id: freelancer._id,
+      id: freelancers._id,
       name,
       category,
       icon: this.iconForCategory(category),
@@ -233,11 +233,11 @@ export class HomePage {
     }
   }
 
-  get filteredFreelancers(): HomeFreelancer[] {
+  get filteredfreelancers(): Homefreelancers[] {
     const term = this.searchTerm.trim().toLowerCase();
-    const personalized = this.prioritizeByPreferences(this.allFreelancers, (freelancer) => freelancer.category);
+    const personalized = this.prioritizeByPreferences(this.allfreelancers, (freelancers) => freelancers.category);
 
-    return personalized.filter((freelancer) => {
+    return personalized.filter((freelancers) => {
       if (this.searchScope !== 'all' && this.searchScope !== 'freelancers') {
         return false;
       }
@@ -247,9 +247,9 @@ export class HomePage {
       }
 
       return (
-        freelancer.name.toLowerCase().includes(term) ||
-        freelancer.icon.toLowerCase().includes(term) ||
-        freelancer.category.toLowerCase().includes(term)
+        freelancers.name.toLowerCase().includes(term) ||
+        freelancers.icon.toLowerCase().includes(term) ||
+        freelancers.category.toLowerCase().includes(term)
       );
     });
   }
@@ -296,12 +296,12 @@ export class HomePage {
     return [...selectedItems, ...remainingItems];
   }
 
-  get showFreelancersSection(): boolean {
+  get showfreelancersSection(): boolean {
     return this.searchScope !== 'services';
   }
 
-  navigateToFreelancerProfile(freelancerId: string): void {
-    this.router.navigateByUrl(`/view-freelancer-profile/${freelancerId}`);
+  navigateTofreelancersProfile(freelancersId: string): void {
+    this.router.navigateByUrl(`/view-freelancers-profile/${freelancersId}`);
   }
 
   get showServicesSection(): boolean {
@@ -336,7 +336,7 @@ export class HomePage {
           },
         },
         {
-          text: 'Freelancers',
+          text: 'freelancers',
           handler: () => {
             this.searchScope = 'freelancers';
           },

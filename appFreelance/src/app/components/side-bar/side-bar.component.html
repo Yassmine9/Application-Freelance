@@ -10,17 +10,18 @@
       <ion-icon name="home-outline"></ion-icon>
       <span>Home</span>
     </button>
-
     <button
       type="button"
       class="nav-item"
       [class.active]="activeTab === 'store'"
-      aria-label="Services"
+      aria-label="Store"
       (click)="goToStore()"
     >
       <ion-icon name="storefront-outline"></ion-icon>
-      <span>Services</span>
+      <span>Store</span>
     </button>
+
+    
 
     <button
       type="button"
@@ -34,16 +35,15 @@
       </span>
       <span>Join us</span>
     </button>
-
-    <button
+<button
       type="button"
       class="nav-item"
-      [class.active]="activeTab === 'feedback'"
-      aria-label="Feedback"
-      (click)="goToFeedback()"
+      [class.active]="activeTab === 'store'"
+      aria-label="Services"
+      (click)="seeServices()"
     >
-      <ion-icon name="clipboard-outline"></ion-icon>
-      <span>Feedback</span>
+      <ion-icon name="storefront-outline"></ion-icon>
+      <span>Services</span>
     </button>
 
     <button

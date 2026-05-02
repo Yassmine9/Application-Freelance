@@ -64,7 +64,7 @@ export class ChatPage implements OnInit, OnDestroy, AfterViewChecked {
       this.api.getOffer(this.offerId).subscribe({
         next: (offer) => {
           if (this.auth.isClient()) {
-            this.receiverId = offer?.acceptedFreelancerId || '';
+            this.receiverId = offer?.acceptedfreelancersId || '';
           } else {
             this.receiverId = offer?.clientId || '';
           }

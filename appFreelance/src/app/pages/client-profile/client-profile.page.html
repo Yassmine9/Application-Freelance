@@ -1,0 +1,275 @@
+
+<ion-header class="header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-btn"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">CLIENT PROFILE</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="edit-btn" (click)="toggleEdit()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-content" #content>
+
+  <div *ngIf="isLoading" style="display:flex; justify-content:center; padding-top:40px;">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+
+    <!-- HERO SECTION -->
+    <div class="hero-section">
+      <div class="hero-bg"></div>
+      <div class="hero-inner">
+        <div class="avatar-wrapper">
+          <img [src]="avatarUrl" class="avatar-img" />
+          <div *ngIf="editMode" class="avatar-overlay">
+            <label for="avatar-input" class="upload-btn">
+              <ion-icon name="camera-outline"></ion-icon>
+            </label>
+            <input id="avatar-input" type="file" accept="image/*" (change)="onAvatarSelected($event)" style="display:none;" />
+          </div>
+        </div>
+        <div class="hero-info">
+          <h1 class="hero-name">{{ name }}</h1>
+          <p class="hero-role" *ngIf="company">{{ company }}</p>
+        </div>
+      </div>
+
+      <!-- STATUS BADGE -->
+      <div class="status-row">
+        <div class="status-badge" [ngClass]="'status-' + profileStatus">
+          <span class="status-dot"></span>
+          <span class="status-label">{{ statusLabel }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="quick-actions">
+      <button class="action-btn" (click)="goToMessages()">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        <span>Messages</span>
+        <ion-badge *ngIf="unreadMessages > 0" color="danger">{{ unreadMessages }}</ion-badge>
+      </button>
+      <button class="action-btn" (click)="goToStore()">
+        <ion-icon name="storefront-outline"></ion-icon>
+        <span>Store</span>
+      </button>
+      <button class="action-btn" (click)="createNewProject()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <span>Post Project</span>
+      </button>
+    </div>
+
+    <!-- TAB BUTTONS -->
+    <div class="tab-bar-wrapper">
+      <button class="tab-btn" [class.active]="activeTab === 'bio'" (click)="activeTab = 'bio'">
+        <span>Bio</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'projects'" (click)="activeTab = 'projects'">
+        <span>Projects ({{ openProjectsCount }})</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'requests'" (click)="activeTab = 'requests'">
+        <span>Requests ({{ pendingRequestsCount }})</span>
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'stats'" (click)="activeTab = 'stats'">
+        <span>Stats</span>
+      </button>
+    </div>
+
+    <!-- BIO TAB -->
+    <div *ngIf="activeTab === 'bio'" class="tab-content">
+      <div class="form-section">
+        <div class="form-group">
+          <label>Name</label>
+          <input *ngIf="!editMode" type="text" [value]="name" disabled class="input-view" />
+          <input *ngIf="editMode" type="text" [(ngModel)]="name" class="input-edit" />
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input *ngIf="!editMode" type="email" [value]="email" disabled class="input-view" />
+          <input *ngIf="editMode" type="email" [(ngModel)]="email" class="input-edit" />
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input *ngIf="!editMode" type="tel" [value]="phone" disabled class="input-view" />
+          <input *ngIf="editMode" type="tel" [(ngModel)]="phone" class="input-edit" />
+        </div>
+
+        <div class="form-group">
+          <label>Company</label>
+          <input *ngIf="!editMode" type="text" [value]="company" disabled class="input-view" />
+          <input *ngIf="editMode" type="text" [(ngModel)]="company" class="input-edit" />
+        </div>
+
+        <div class="form-group">
+          <label>Website</label>
+          <input *ngIf="!editMode" type="url" [value]="website" disabled class="input-view" />
+          <input *ngIf="editMode" type="url" [(ngModel)]="website" class="input-edit" />
+        </div>
+
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea *ngIf="!editMode" [value]="bio" disabled class="input-view"></textarea>
+          <textarea *ngIf="editMode" [(ngModel)]="bio" class="input-edit"></textarea>
+        </div>
+
+        <div *ngIf="editMode" class="action-buttons">
+          <ion-button expand="block" color="primary" (click)="saveProfile()" [disabled]="isSaving">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            {{ isSaving ? 'Saving...' : 'Save' }}
+          </ion-button>
+          <ion-button expand="block" color="medium" (click)="cancelEdit()">
+            <ion-icon name="close-outline" slot="start"></ion-icon>
+            Cancel
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS TAB -->
+    <div *ngIf="activeTab === 'projects'" class="tab-content">
+      <div class="projects-section">
+        <div class="section-header">
+          <h3>Your Project Offers</h3>
+          <ion-button size="small" color="primary" (click)="createNewProject()">
+            <ion-icon name="add-outline" slot="start"></ion-icon>
+            New
+          </ion-button>
+        </div>
+
+        <div *ngIf="projectOffers.length === 0" class="empty-state">
+          <ion-icon name="briefcase-outline"></ion-icon>
+          <p>No projects yet</p>
+          <ion-button color="primary" (click)="createNewProject()">Post a Project</ion-button>
+        </div>
+
+        <div *ngFor="let project of projectOffers" class="project-card">
+          <div class="project-header">
+            <div>
+              <h4>{{ project.title }}</h4>
+              <p class="project-description">{{ project.description }}</p>
+            </div>
+            <div class="project-status" [ngClass]="'status-' + project.status">
+              {{ project.status }}
+            </div>
+          </div>
+          
+          <div class="project-details">
+            <div class="detail-item">
+              <span class="label">Budget:</span>
+              <span class="value">${{ project.budget }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Deadline:</span>
+              <span class="value">{{ project.deadline | date: 'short' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Skills:</span>
+              <div class="skills">
+                <span class="skill-tag" *ngFor="let skill of project.skills">{{ skill }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-actions">
+            <ion-button size="small" color="primary" (click)="editProject(project.id)">
+              <ion-icon name="create-outline"></ion-icon>
+              Edit
+            </ion-button>
+            <ion-button size="small" color="danger" (click)="closeProject(project)" *ngIf="project.status === 'open'">
+              <ion-icon name="close-outline"></ion-icon>
+              Close
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- freelancers REQUESTS TAB -->
+    <div *ngIf="activeTab === 'requests'" class="tab-content">
+      <div class="requests-section">
+        <h3>freelancers Requests</h3>
+
+        <div *ngIf="freelancersRequests.length === 0" class="empty-state">
+          <ion-icon name="person-add-outline"></ion-icon>
+          <p>No requests yet</p>
+        </div>
+
+        <div *ngFor="let request of freelancersRequests" class="request-card" [ngClass]="'status-' + request.status">
+          <div class="request-header">
+            <div class="freelancers-info">
+              <img [src]="request.freelancersAvatar" class="freelancers-avatar" />
+              <div>
+                <h4>{{ request.freelancersName }}</h4>
+                <p class="project-title">for "{{ request.projectTitle }}"</p>
+              </div>
+            </div>
+            <div class="request-badge">
+              {{ request.status }}
+            </div>
+          </div>
+
+          <div class="proposal-text">
+            <p>{{ request.proposalText }}</p>
+          </div>
+
+          <div class="proposal-budget">
+            <strong>Proposed Budget:</strong> ${{ request.proposalBudget }}
+          </div>
+
+          <div *ngIf="request.status === 'pending'" class="request-actions">
+            <ion-button expand="block" color="success" (click)="acceptRequest(request)">
+              <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+              Accept
+            </ion-button>
+            <ion-button expand="block" color="danger" (click)="rejectRequest(request)">
+              <ion-icon name="close-outline" slot="start"></ion-icon>
+              Reject
+            </ion-button>
+          </div>
+
+          <ion-button expand="block" color="primary" (click)="viewfreelancersProfile(request.freelancersId)">
+            <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+            View Profile
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS TAB -->
+    <div *ngIf="activeTab === 'stats'" class="tab-content">
+      <div class="stats-section">
+        <h3>Your Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">${{ totalSpent }}</div>
+            <div class="stat-label">Total Spent</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">{{ activeProjects }}</div>
+            <div class="stat-label">Active Projects</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">{{ completedProjects }}</div>
+            <div class="stat-label">Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">{{ freelancersRating }}</div>
+            <div class="stat-label">freelancers Rating</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+</ion-content>
+

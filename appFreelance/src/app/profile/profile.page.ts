@@ -33,11 +33,11 @@ import { environment } from '../../environments/environment';
 })
 export class ProfilePage implements OnInit {
   userId!: string;
-  role!: string;           // 'client' | 'freelancer'
+  role!: string;           // 'client' | 'freelancers'
   profile: any = null;
   isLoading = true;
   offersLoading = false;
-  freelancerOffers: any[] = [];
+  freelancersOffers: any[] = [];
   proposalFilter = 'all';
   isOwnerClient = false;
   showOfferModal = false;
@@ -60,8 +60,8 @@ export class ProfilePage implements OnInit {
     this.role   = this.route.snapshot.paramMap.get('role') || 'client';
     this.isOwnerClient = this.role === 'client' && this.auth.isClient() && this.auth.getUserId() === this.userId;
     this.loadProfile();
-    if (this.role === 'freelancer') {
-      this.loadFreelancerOffers();
+    if (this.role === 'freelancers') {
+      this.loadfreelancersOffers();
     }
   }
 
@@ -82,16 +82,16 @@ export class ProfilePage implements OnInit {
     return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   }
 
-  loadFreelancerOffers() {
+  loadfreelancersOffers() {
     this.offersLoading = true;
     const status = this.proposalFilter === 'all' ? undefined : this.proposalFilter;
-    this.api.getOffersByFreelancer(this.userId, status).subscribe({
+    this.api.getOffersByfreelancers(this.userId, status).subscribe({
       next: (res) => {
-        this.freelancerOffers = res || [];
+        this.freelancersOffers = res || [];
         this.offersLoading = false;
       },
       error: () => {
-        this.freelancerOffers = [];
+        this.freelancersOffers = [];
         this.offersLoading = false;
       }
     });
@@ -99,7 +99,7 @@ export class ProfilePage implements OnInit {
 
   setProposalFilter(filter: string) {
     this.proposalFilter = filter;
-    this.loadFreelancerOffers();
+    this.loadfreelancersOffers();
   }
 
   openOfferModal() {

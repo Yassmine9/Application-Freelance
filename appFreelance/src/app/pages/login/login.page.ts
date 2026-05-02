@@ -52,7 +52,7 @@ export class LoginPage implements OnInit {
           this.router.navigate(['/registration-pending']);
         } else {
           const role = res?.user?.role;
-          this.router.navigate([role === 'freelancer' ? '/offers' : '/home']);
+          this.router.navigate([role === 'freelancers' ? '/offers' : '/home']);
         }
         
       },

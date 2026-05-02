@@ -171,15 +171,15 @@ def get_my_offers():
     return jsonify(offers), 200
 
 
-# ─── Get Offers Proposed By Freelancer ───────────────────────────────────────
-@offers_bp.route("/by-freelancer/<freelancer_id>", methods=["GET"])
+# ─── Get Offers Proposed By freelancers ───────────────────────────────────────
+@offers_bp.route("/by-freelancers/<freelancers_id>", methods=["GET"])
 @jwt_required()
-def get_offers_by_freelancer(freelancer_id):
+def get_offers_by_freelancers(freelancers_id):
     if db is None:
         return jsonify([]), 200
 
     status_filter = request.args.get("proposalStatus")
-    proposal_query = {"freelancerId": freelancer_id}
+    proposal_query = {"freelancersId": freelancers_id}
     if status_filter:
         proposal_query["status"] = status_filter
 

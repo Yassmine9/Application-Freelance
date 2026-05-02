@@ -18,7 +18,8 @@ class BaseUser:
     def create(cls, email, password, name, role, **extra_fields):
         """Crée et enregistre automatiquement dans la collection dédiée"""
         if cls.collection is None:
-            return None
+            print(f"[ERROR] Collection is None for {cls.__name__}")
+            return {"error": f"Collection not initialized for {cls.__name__}"}
 
         if cls.collection.find_one({"email": email}):
             return {"error": "Un utilisateur avec cet email existe déjà"}
@@ -33,10 +34,15 @@ class BaseUser:
             "updated_at": datetime.now(),
             **extra_fields
         }
-        result = cls.collection.insert_one(doc)
-        doc["_id"] = str(result.inserted_id)
-        doc.pop("password")
-        return doc
+        try:
+            result = cls.collection.insert_one(doc)
+            doc["_id"] = str(result.inserted_id)
+            doc.pop("password")
+            print(f"[SUCCESS] Created {role} user: {email}")
+            return doc
+        except Exception as e:
+            print(f"[ERROR] Failed to create user: {e}")
+            return {"error": str(e)}
 
     @classmethod
     def find_by_email(cls, email):

@@ -8,10 +8,10 @@ Monorepo containing:
 
 Implemented features right now:
 - Authentication API (register, login, profile)
-- Roles: `client`, `freelancer`, `admin`
-- Registration workflow with `pending` status for client/freelancer accounts
+- Roles: `client`, `freelancers`, `admin`
+- Registration workflow with `pending` status for client/freelancers accounts
 - Admin validation endpoints for pending accounts
-- Frontend pages for login, register selection, register client, register freelancer, and registration pending
+- Frontend pages for login, register selection, register client, register freelancers, and registration pending
 
 ## Repository Structure
 
@@ -69,7 +69,7 @@ python utils/seed.py
 Seeded accounts:
 - Admin: `admin@test.com` / `admin1234`
 - Clients: `client@test.com`, `client2@test.com` (password `1234`)
-- Freelancers: `freelancer@test.com`, `freelancer2@test.com` (password `1234`)
+- freelancers: `freelancers@test.com`, `freelancers2@test.com` (password `1234`)
 
 ## 2) Frontend Setup (Ionic Angular)
 
@@ -152,13 +152,13 @@ Authorization: Bearer <JWT_TOKEN>
 - `/login`
 - `/register`
 - `/register-client`
-- `/register-freelancer`
+- `/register-freelancers`
 - `/registration-pending`
 - `/home`
 
 ## Notes
 
-- New `client` and `freelancer` accounts are created with status `pending`.
+- New `client` and `freelancers` accounts are created with status `pending`.
 - `admin` accounts are created with status `active`.
 - Passwords are hashed in the backend using Werkzeug security helpers.
 - CORS is enabled in the backend app.

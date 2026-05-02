@@ -47,7 +47,7 @@ export class MyProposalsPage implements OnInit {
       return;
     }
 
-    if (!this.auth.isFreelancer()) {
+    if (!this.auth.isfreelancers()) {
       this.router.navigateByUrl('/offers');
       return;
     }

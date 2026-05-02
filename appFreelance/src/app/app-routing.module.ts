@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { FreelancerProfilePage } from './pages/freelancer-profile/freelancer-profile.page';
 import { FreelancerGuard } from './guards/freelancer.guard';
 
 const routes: Routes = [
@@ -17,7 +16,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/register-selection/register-selection.module').then(m => m.RegisterSelectionPageModule)
   },
   {
-    path: 'register-freelancer',
+    path: 'register-freelancers',
     loadChildren: () => import('./pages/register/register-freelancer/register-freelancer.module').then(m => m.RegisterPageModule)
   },
   {
@@ -38,7 +37,7 @@ const routes: Routes = [
   },
   {
     path: 'view-all-freelancers',
-    loadChildren: () => import('./pages/view-all-freelancers/view-all-freelancers.module').then(m => m.ViewAllFreelancersPageModule)
+    loadChildren: () => import('./pages/view-all-freelancers/view-all-freelancers.module').then(m => m.ViewAllfreelancersPageModule)
   },
   {
     path: 'view-all-services',
@@ -107,9 +106,13 @@ const routes: Routes = [
   },
   { path: 'admin', loadComponent: () => import('./pages/admin-panel/admin-panel.page').then(m => m.AdminPanelPage) },
   {
-    path: 'freelancer-profile',
-    component: FreelancerProfilePage,
+    path: 'freelancers-profile',
+    loadChildren: () => import('./pages/freelancer-profile/freelancer-profile.module').then(m => m.freelancersProfilePageModule),
     canActivate: [FreelancerGuard]
+  },
+  {
+    path: 'client-profile',
+    loadChildren: () => import('./pages/client-profile/client-profile.module').then(m => m.ClientProfilePageModule)
   },
   {
     path: 'gigs',
@@ -135,16 +138,16 @@ const routes: Routes = [
     canActivate: [FreelancerGuard]
   },
   {
-    path: 'freelancer-edit',
-    loadChildren: () => import('./pages/freelancer-edit/freelancer-edit.module').then(m => m.FreelancerEditPageModule)
+    path: 'freelancers-edit',
+    loadChildren: () => import('./pages/freelancer-edit/freelancer-edit.module').then(m => m.freelancersEditPageModule)
   },
   {
     path: 'search',
     loadChildren: () => import('./pages/search/search-routing.module').then( m => m.SearchPageRoutingModule)
   },
   {
-    path: 'view-freelancer-profile/:id',
-    loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewFreelancerProfileRoutingModule)
+    path: 'view-freelancers-profile/:id',
+    loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewfreelancersProfileRoutingModule)
   }
 ];
 

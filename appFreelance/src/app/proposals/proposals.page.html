@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>Job Details</ion-title>
     <ion-buttons slot="end" *ngIf="offer?.status === 'in_progress'">
-      <ion-button [routerLink]="['/chat', offerId, getAcceptedFreelancerId()]" fill="clear">
+      <ion-button [routerLink]="['/chat', offerId, getAcceptedfreelancersId()]" fill="clear">
         <ion-icon name="chatbubbles-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -51,8 +51,8 @@
     </div>
   </div>
 
-  <!-- Submit proposal (freelancer, offer open, not yet submitted) -->
-  <div class="section" *ngIf="isFreelancer && !alreadySubmitted && offer?.status === 'open'">
+  <!-- Submit proposal (freelancers, offer open, not yet submitted) -->
+  <div class="section" *ngIf="isfreelancers && !alreadySubmitted && offer?.status === 'open'">
     <div class="app-card submit-card">
       <h3 class="card-title">Submit Proposal</h3>
 
@@ -79,7 +79,7 @@
   </div>
 
   <!-- Already submitted -->
-  <div class="notice-submitted" *ngIf="isFreelancer && alreadySubmitted">
+  <div class="notice-submitted" *ngIf="isfreelancers && alreadySubmitted">
     <ion-icon name="checkmark-circle-outline"></ion-icon>
     <p>You already submitted a proposal for this job.</p>
   </div>
@@ -102,11 +102,11 @@
     <div class="proposal-card {{ p.status }}" *ngFor="let p of proposals">
 
       <div class="proposal-top">
-        <div class="freelancer-row"
-             [routerLink]="['/profile/freelancer', p.freelancerId]">
-          <div class="freelancer-avatar">{{ getInitials(p.freelancerId) }}</div>
+        <div class="freelancers-row"
+             [routerLink]="['/profile/freelancers', p.freelancersId]">
+          <div class="freelancers-avatar">{{ getInitials(p.freelancersId) }}</div>
           <div>
-            <span class="freelancer-name">Freelancer #{{ p.freelancerId?.slice(-6) }}</span>
+            <span class="freelancers-name">freelancers #{{ p.freelancersId?.slice(-6) }}</span>
             <span class="proposal-date">{{ p.createdAt | date:'MMM d, h:mm a' }}</span>
           </div>
           <ion-icon name="chevron-forward-outline" class="chevron-fwd"></ion-icon>
@@ -137,7 +137,7 @@
           size="small"
           fill="solid"
           color="primary"
-          [routerLink]="['/chat', offerId, isClient ? p.freelancerId : offer?.clientId]">
+          [routerLink]="['/chat', offerId, isClient ? p.freelancersId : offer?.clientId]">
           <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
           Open Chat
         </ion-button>

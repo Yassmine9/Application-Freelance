@@ -30,7 +30,7 @@ def seed_database():
     )
 
     Freelancer.create(
-        email="freelancer@test.com",
+        email="freelancers@test.com",
         password="1234",
         name="Youssef Dev",
         skills=["Python", "Flask", "MongoDB"],
@@ -39,7 +39,7 @@ def seed_database():
         phone="0600000003"
     )
     Freelancer.create(
-        email="freelancer2@test.com",
+        email="freelancers2@test.com",
         password="1234",
         name="Fatima Designer",
         skills=["UI/UX", "Figma", "React"],

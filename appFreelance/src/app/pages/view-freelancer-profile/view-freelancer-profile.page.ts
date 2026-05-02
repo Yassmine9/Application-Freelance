@@ -3,7 +3,7 @@ import { IonicModule, IonContent, ActionSheetController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FreelancerProfileService } from '../../services/freelancer-profile.service';
+import { freelancersProfileService } from '../../services/freelancer-profile.service';
 
 export interface Project {
   title: string;
@@ -18,13 +18,13 @@ export interface Gig {
 export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'blocked';
 
 @Component({
-  selector: 'app-view-freelancer-profile',
+  selector: 'app-view-freelancers-profile',
   templateUrl: './view-freelancer-profile.page.html',
   styleUrls: ['./view-freelancer-profile.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
 })
-export class ViewFreelancerProfilePage implements OnInit {
+export class ViewfreelancersProfilePage implements OnInit {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
 
   // ---- Profile fields ----
@@ -49,7 +49,7 @@ export class ViewFreelancerProfilePage implements OnInit {
   // ---- UI state ----
   activeTab: string = 'bio';
   isLoading = true;
-  freelancerId: string = '';
+  freelancersId: string = '';
   original_cv_name: string = '';
 
   get isTopRated(): boolean {
@@ -69,29 +69,29 @@ export class ViewFreelancerProfilePage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private profileService: FreelancerProfileService,
+    private profileService: freelancersProfileService,
     private router: Router,
     private actionSheetController: ActionSheetController,
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      this.freelancerId = params.get('id') || '';
-      if (this.freelancerId) {
-        this.loadFreelancerProfile(this.freelancerId);
+      this.freelancersId = params.get('id') || '';
+      if (this.freelancersId) {
+        this.loadfreelancersProfile(this.freelancersId);
       } else {
         this.isLoading = false;
       }
     });
   }
 
-  loadFreelancerProfile(id: string): void {
+  loadfreelancersProfile(id: string): void {
     this.isLoading = true;
-    console.log('Loading freelancer profile for ID:', id);
+    console.log('Loading freelancers profile for ID:', id);
 
-    this.profileService.getFreelancerProfile(id).subscribe({
-      next: (data) => {
-        console.log('Freelancer profile data:', data);
+    this.profileService.getfreelancersProfile(id).subscribe({
+      next: (data: any) => {
+        console.log('freelancers profile data:', data);
 
         this.id = data.user.id;
         this.name = data.user.name || '';
@@ -121,8 +121,8 @@ export class ViewFreelancerProfilePage implements OnInit {
 
         this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Failed to load freelancer profile', err);
+      error: (err: any) => {
+        console.error('Failed to load freelancers profile', err);
         this.isLoading = false;
       },
     });
@@ -146,28 +146,28 @@ export class ViewFreelancerProfilePage implements OnInit {
           text: 'Send Message',
           icon: 'chatbubble-outline',
           handler: () => {
-            this.router.navigateByUrl(`/messages/${this.freelancerId}`);
+            this.router.navigateByUrl(`/messages/${this.freelancersId}`);
           },
         },
         {
           text: 'View All Gigs',
           icon: 'briefcase-outline',
           handler: () => {
-            this.router.navigateByUrl(`/freelancer-gigs/${this.freelancerId}`);
+            this.router.navigateByUrl(`/freelancers-gigs/${this.freelancersId}`);
           },
         },
         {
           text: 'Hire Now',
           icon: 'checkmark-circle-outline',
           handler: () => {
-            this.router.navigateByUrl(`/create-project/${this.freelancerId}`);
+            this.router.navigateByUrl(`/create-project/${this.freelancersId}`);
           },
         },
         {
           text: 'Report',
           icon: 'flag-outline',
           handler: () => {
-            this.router.navigateByUrl(`/report/${this.freelancerId}`);
+            this.router.navigateByUrl(`/report/${this.freelancersId}`);
           },
         },
         {
@@ -180,7 +180,7 @@ export class ViewFreelancerProfilePage implements OnInit {
     await actionSheet.present();
   }
   async getfreelancersgigs(): Promise<void> {
-    this.router.navigateByUrl(`/gigs?freelancerId=${this.freelancerId}`);
+    this.router.navigateByUrl(`/gigs?freelancersId=${this.freelancersId}`);
   }
 
   trackByIndex(index: number): number {

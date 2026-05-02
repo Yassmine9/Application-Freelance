@@ -48,7 +48,7 @@
         <div class="stat-info">
           <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_freelancers }}</span>
           <div class="skeleton-val" *ngIf="statsLoading"></div>
-          <span class="stat-label">Freelancers</span>
+          <span class="stat-label">freelancers</span>
         </div>
       </div>
 
@@ -81,12 +81,32 @@
         <ion-icon name="hourglass-outline" class="section-icon"></ion-icon>
         <h2 class="section-title">Pending Approvals</h2>
       </div>
-      <span class="badge-count" *ngIf="freelancers.length > 0">{{ freelancers.length }}</span>
+      <span class="badge-count" *ngIf="getTotalPending() > 0">{{ getTotalPending() }}</span>
     </div>
 
-    <!-- Freelancer list loading -->
-    <div *ngIf="freelancersLoading">
-      <div class="freelancer-card skeleton-card" *ngFor="let s of [1,2,3]">
+    <!-- Tab buttons -->
+    <div class="tab-buttons" style="animation-delay: 0.26s">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'freelancers'"
+        (click)="switchTab('freelancers')">
+        <ion-icon name="briefcase-outline"></ion-icon>
+        freelancers
+        <ion-badge *ngIf="freelancers.length > 0" class="tab-badge">{{ freelancers.length }}</ion-badge>
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'clients'"
+        (click)="switchTab('clients')">
+        <ion-icon name="store-outline"></ion-icon>
+        Clients
+        <ion-badge *ngIf="clients.length > 0" class="tab-badge">{{ clients.length }}</ion-badge>
+      </button>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div *ngIf="usersLoading">
+      <div class="freelancers-card skeleton-card" *ngFor="let s of [1,2,3]">
         <div class="skeleton-avatar"></div>
         <div class="skeleton-lines">
           <div class="skeleton-line" style="width:55%"></div>
@@ -95,58 +115,128 @@
       </div>
     </div>
 
-    <!-- Empty approvals -->
-    <div class="empty-state" *ngIf="!freelancersLoading && freelancers.length === 0">
-      <div class="empty-icon-wrap">
-        <ion-icon name="checkmark-done-outline"></ion-icon>
-      </div>
-      <h3 class="empty-title">All caught up!</h3>
-      <p class="empty-sub">No pending freelancer approvals</p>
-    </div>
-
-    <!-- Freelancer cards -->
-    <div
-      class="freelancer-card"
-      *ngFor="let f of freelancers; let i = index"
-      [style.animation-delay]="(0.25 + i * 0.08) + 's'">
-
-      <div class="freelancer-left">
-        <div class="freelancer-avatar">
-          <span>{{ getInitials(f.name) }}</span>
+    <!-- freelancers TAB -->
+    <div *ngIf="!usersLoading && activeTab === 'freelancers'">
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="freelancers.length === 0">
+        <div class="empty-icon-wrap">
+          <ion-icon name="checkmark-done-outline"></ion-icon>
         </div>
-        <div class="freelancer-info">
-          <h3 class="freelancer-name">{{ f.name }}</h3>
-          <p class="freelancer-email">{{ f.email }}</p>
-          <div class="freelancer-meta">
-            <span class="meta-chip" *ngIf="f.skills?.length > 0">
-              <ion-icon name="code-slash-outline"></ion-icon>
-              {{ f.skills.slice(0,2).join(', ') }}
-            </span>
-            <span class="meta-chip" *ngIf="f.hourly_rate">
-              <ion-icon name="cash-outline"></ion-icon>
-              ${{ f.hourly_rate }}/hr
-            </span>
+        <h3 class="empty-title">All caught up!</h3>
+        <p class="empty-sub">No pending freelancers approvals</p>
+      </div>
+
+      <!-- freelancers cards -->
+      <div
+        class="freelancers-card"
+        *ngFor="let f of freelancers; let i = index"
+        [style.animation-delay]="(0.27 + i * 0.08) + 's'">
+
+        <div class="freelancers-left">
+          <div class="freelancers-avatar">
+            <span>{{ getInitials(f.name) }}</span>
+          </div>
+          <div class="freelancers-info">
+            <h3 class="freelancers-name">{{ f.name }}</h3>
+            <p class="freelancers-email">{{ f.email }}</p>
+            <div class="user-type-badge">
+              <ion-icon [name]="getUserTypeIcon(f)"></ion-icon>
+              {{ getUserTypeLabel(f) }}
+            </div>
+            <div class="freelancers-meta">
+              <span class="meta-chip" *ngIf="f.skills?.length > 0">
+                <ion-icon name="code-slash-outline"></ion-icon>
+                {{ f.skills.slice(0,2).join(', ') }}
+              </span>
+              <span class="meta-chip" *ngIf="f.hourly_rate">
+                <ion-icon name="cash-outline"></ion-icon>
+                ${{ f.hourly_rate }}/hr
+              </span>
+            </div>
           </div>
         </div>
+
+        <div class="freelancers-actions">
+          <button
+            class="action-btn approve-btn"
+            [disabled]="f._processing"
+            (click)="approve(f)"
+            title="Approve">
+            <ion-spinner name="crescent" *ngIf="f._processing === 'approve'" class="mini-spinner"></ion-spinner>
+            <ion-icon name="checkmark-outline" *ngIf="f._processing !== 'approve'"></ion-icon>
+          </button>
+          <button
+            class="action-btn reject-btn"
+            [disabled]="f._processing"
+            (click)="reject(f)"
+            title="Reject">
+            <ion-spinner name="crescent" *ngIf="f._processing === 'reject'" class="mini-spinner"></ion-spinner>
+            <ion-icon name="close-outline" *ngIf="f._processing !== 'reject'"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTS TAB -->
+    <div *ngIf="!usersLoading && activeTab === 'clients'">
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="clients.length === 0">
+        <div class="empty-icon-wrap">
+          <ion-icon name="checkmark-done-outline"></ion-icon>
+        </div>
+        <h3 class="empty-title">All caught up!</h3>
+        <p class="empty-sub">No pending client approvals</p>
       </div>
 
-      <div class="freelancer-actions">
-        <button
-          class="action-btn approve-btn"
-          [disabled]="f._processing"
-          (click)="approve(f)">
-          <ion-spinner name="crescent" *ngIf="f._processing === 'approve'" class="mini-spinner"></ion-spinner>
-          <ion-icon name="checkmark-outline" *ngIf="f._processing !== 'approve'"></ion-icon>
-        </button>
-        <button
-          class="action-btn reject-btn"
-          [disabled]="f._processing"
-          (click)="reject(f)">
-          <ion-spinner name="crescent" *ngIf="f._processing === 'reject'" class="mini-spinner"></ion-spinner>
-          <ion-icon name="close-outline" *ngIf="f._processing !== 'reject'"></ion-icon>
-        </button>
-      </div>
+      <!-- Client cards -->
+      <div
+        class="freelancers-card"
+        *ngFor="let c of clients; let i = index"
+        [style.animation-delay]="(0.27 + i * 0.08) + 's'">
 
+        <div class="freelancers-left">
+          <div class="freelancers-avatar client-avatar">
+            <span>{{ getInitials(c.name) }}</span>
+          </div>
+          <div class="freelancers-info">
+            <h3 class="freelancers-name">{{ c.name }}</h3>
+            <p class="freelancers-email">{{ c.email }}</p>
+            <div class="user-type-badge client-badge">
+              <ion-icon name="store-outline"></ion-icon>
+              Client
+            </div>
+            <div class="freelancers-meta">
+              <span class="meta-chip" *ngIf="c.company_name">
+                <ion-icon name="business-outline"></ion-icon>
+                {{ c.company_name }}
+              </span>
+              <span class="meta-chip" *ngIf="c.phone">
+                <ion-icon name="call-outline"></ion-icon>
+                {{ c.phone }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="freelancers-actions">
+          <button
+            class="action-btn approve-btn"
+            [disabled]="c._processing"
+            (click)="approve(c)"
+            title="Approve">
+            <ion-spinner name="crescent" *ngIf="c._processing === 'approve'" class="mini-spinner"></ion-spinner>
+            <ion-icon name="checkmark-outline" *ngIf="c._processing !== 'approve'"></ion-icon>
+          </button>
+          <button
+            class="action-btn reject-btn"
+            [disabled]="c._processing"
+            (click)="reject(c)"
+            title="Reject">
+            <ion-spinner name="crescent" *ngIf="c._processing === 'reject'" class="mini-spinner"></ion-spinner>
+            <ion-icon name="close-outline" *ngIf="c._processing !== 'reject'"></ion-icon>
+          </button>
+        </div>
+      </div>
     </div>
 
     <div style="height: 32px"></div>

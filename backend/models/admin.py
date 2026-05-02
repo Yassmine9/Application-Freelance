@@ -40,8 +40,17 @@ class Admin(BaseUser):
         """Récupère tous les comptes en attente de validation"""
         pending = []
         for model in (Client, Freelancer):
-            if model.collection is not None:
-                pending += [model._serialize(u) for u in model.collection.find({"status": "pending"})]
+            try:
+                if model.collection is not None:
+                    users = list(model.collection.find({"status": "pending"}))
+                    serialized = [model._serialize(u) for u in users]
+                    print(f"[DEBUG] Found {len(serialized)} pending {model.__name__} users")
+                    pending += serialized
+                else:
+                    print(f"[WARNING] Collection is None for {model.__name__}")
+            except Exception as e:
+                print(f"[ERROR] Error fetching pending users from {model.__name__}: {e}")
+        
         for u in pending:
             u.pop("password", None)
         return pending
