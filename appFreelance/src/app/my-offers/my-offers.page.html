@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Offers</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="center-box" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="!isLoading && offers.length">
+    <ion-item *ngFor="let offer of offers" [routerLink]="['/proposals', offer._id]" detail="true">
+      <ion-icon name="briefcase-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ offer.title || 'Untitled offer' }}</h2>
+        <p>{{ offer.description }}</p>
+        <p class="meta">Budget ${{ offer.budget | number }} · {{ offer.status | titlecase }}</p>
+      </ion-label>
+      <ion-badge color="medium" slot="end">{{ offer.proposalCount || 0 }}</ion-badge>
+    </ion-item>
+  </ion-list>
+
+  <div class="empty-state" *ngIf="!isLoading && offers.length === 0">
+    <ion-icon name="briefcase-outline"></ion-icon>
+    <p>No offers yet</p>
+    <span>Create your first offer from the Post button.</span>
+  </div>
+</ion-content>
+
+<app-side-bar activeTab="offers"></app-side-bar>

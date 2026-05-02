@@ -51,7 +51,8 @@ export class LoginPage implements OnInit {
         if (res.status === 'pending') {
           this.router.navigate(['/registration-pending']);
         } else {
-          this.router.navigate(['/home']);
+          const role = res?.user?.role;
+          this.router.navigate([role === 'freelancer' ? '/offers' : '/home']);
         }
         
       },

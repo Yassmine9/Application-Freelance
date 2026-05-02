@@ -1,12 +1,10 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime, timezone
-from db.mongo import db
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from db.mongo import test_connection
+from db.mongo import db, test_connection
 from models import Client, Freelancer, Admin, find_user_by_email, find_user_by_id, authenticate_user
 
-auth_routes = Blueprint("auth_routes", __name__)
-
+auth_bp = Blueprint("auth_bp", __name__)
 
 if test_connection():
     print(" Succès de la connexion ")
@@ -14,8 +12,7 @@ else:
     print(" échec de la connexion ")
 
 
-
-@auth_routes.route("/login", methods=["POST"])
+@auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
 
@@ -26,25 +23,28 @@ def login():
     password = data.get("password")
 
     if not email or not password:
-        return jsonify({"error": "Email and password are required"}), 400
+        return jsonify({"error": "Email et mot de passe requis"}), 400
 
     user = authenticate_user(email, password)
 
-    if not user:
-        return jsonify({"error": "Email or password is incorrect"}), 401
+    if user and user.get("is_blocked"):
+        return jsonify({"error": "Compte bloque"}), 403
 
-    if user.get("is_blocked"):
-        return jsonify({"error": "Your account is blocked"}), 403
+    if user:
+        token = create_access_token(
+            identity=user["_id"],
+            additional_claims={"role": user.get("role")}
+        )
+        return jsonify({
+            "token": token,
+            "user": user,
+            "status": user.get("status", "active")
+        })
 
-    token = create_access_token(identity=str(user["_id"]))
-    return jsonify({
-        "token": token,
-        "user": user,
-        "status": user.get("status", "active")
-    })
+    return jsonify({"error": "Email ou mot de passe incorrect"}), 401
 
 
-@auth_routes.route("/register", methods=["POST"])
+@auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
 
@@ -57,12 +57,11 @@ def register():
     role = data.get("role", "client")
 
     if not email or not password or not name:
-        return jsonify({"error": "Email, password and name are required"}), 400
+        return jsonify({"error": "Email, mot de passe et nom sont requis"}), 400
 
-    # Vérifier si l'email existe dans n'importe quelle collection
     existing_user = find_user_by_email(email)
     if existing_user:
-        return jsonify({"error": "A user with this email already exists"}), 400
+        return jsonify({"error": "Un utilisateur avec cet email existe déjà"}), 400
 
     new_user = None
 
@@ -79,6 +78,9 @@ def register():
             email=email,
             password=password,
             name=name,
+            skills=data.get("skills", []),
+            hourly_rate=data.get("hourly_rate", 0),
+            bio=data.get("bio", ""),
             phone=data.get("phone", "")
         )
     elif role == "admin":
@@ -102,7 +104,7 @@ def register():
         return jsonify({"error": "Erreur base de données"}), 500
 
 
-@auth_routes.route("/feedback", methods=["POST"])
+@auth_bp.route("/feedback", methods=["POST"])
 def create_feedback():
     if db is None:
         return jsonify({"error": "Database unavailable"}), 503
@@ -132,8 +134,7 @@ def create_feedback():
     }), 201
 
 
-# ─── PROFIL ───────────────────────────────────────────────────────────────────
-@auth_routes.route("/freelancer/profile", methods=["GET"])
+@auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
 def get_profile():
     user_id = get_jwt_identity()
@@ -144,25 +145,38 @@ def get_profile():
     return jsonify({"error": "Utilisateur non trouvé"}), 404
 
 
-@auth_routes.route("/freelancers", methods=["GET"])
+@auth_bp.route("/profile/<user_id>", methods=["GET"])
+@jwt_required()
+def get_profile_by_id(user_id):
+    user = find_user_by_id(user_id)
+    if user:
+        user.pop("password", None)
+        return jsonify(user)
+    return jsonify({"error": "Utilisateur non trouvé"}), 404
+
+
+@auth_bp.route("/freelancer/profile", methods=["GET"])
+@jwt_required()
+def get_freelancer_profile_alias():
+    return get_profile()
+
+
+@auth_bp.route("/freelancers", methods=["GET"])
 def get_freelancers():
     freelancers = Freelancer.get_all()
     status_filter = (request.args.get("status") or "all").strip().lower()
 
-    filtered_freelancers = []
+    filtered = []
     for freelancer in freelancers:
         if status_filter != "all" and freelancer.get("status", "").lower() != status_filter:
             continue
-
         freelancer.pop("password", None)
-        filtered_freelancers.append(freelancer)
+        filtered.append(freelancer)
 
-    return jsonify({"freelancers": filtered_freelancers, "count": len(filtered_freelancers)})
+    return jsonify({"freelancers": filtered, "count": len(filtered)})
 
 
-# ─── ADMIN : Comptes en attente ────────────────────────────────────────────────
-
-@auth_routes.route("/admin/pending", methods=["GET"])
+@auth_bp.route("/admin/pending", methods=["GET"])
 @jwt_required()
 def get_pending_users():
     admin_id = get_jwt_identity()
@@ -174,7 +188,7 @@ def get_pending_users():
     return jsonify({"pending_users": pending, "count": len(pending)})
 
 
-@auth_routes.route("/admin/validate", methods=["POST"])
+@auth_bp.route("/admin/validate", methods=["POST"])
 @jwt_required()
 def validate_user():
     admin_id = get_jwt_identity()
@@ -194,7 +208,7 @@ def validate_user():
     return jsonify({"error": "Utilisateur non trouvé"}), 404
 
 
-@auth_routes.route("/admin/reject", methods=["POST"])
+@auth_bp.route("/admin/reject", methods=["POST"])
 @jwt_required()
 def reject_user():
     admin_id = get_jwt_identity()

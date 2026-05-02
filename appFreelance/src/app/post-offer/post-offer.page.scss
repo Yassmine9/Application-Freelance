@@ -1,0 +1,74 @@
+ion-content.page-content {
+  --background: #f4f5f7;
+}
+
+ion-content::part(scroll) {
+  padding-bottom: 110px;
+}
+
+.form-shell {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #1e2a78;
+}
+
+.required {
+  color: #c0392b;
+}
+
+.form-input {
+  --background: #ffffff;
+  --border-radius: 12px;
+  --border-color: #edf0f7;
+  --border-width: 1px;
+  --highlight-color-focused: #1e2a78;
+}
+
+.file-input {
+  width: 100%;
+  border: 1.5px dashed #d0d5e8;
+  background: #fafbff;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.category-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cat-btn {
+  border: 1px solid #e0e5f6;
+  background: #fff;
+  color: #1e2a78;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.cat-btn.selected {
+  background: #1e2a78;
+  color: #fff;
+  border-color: #1e2a78;
+}
+
+.submit-btn {
+  margin-top: 4px;
+}

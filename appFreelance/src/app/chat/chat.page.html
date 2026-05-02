@@ -1,0 +1,105 @@
+<ion-header class="ion-no-border chat-header">
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/offers"></ion-back-button>
+    </ion-buttons>
+
+    <div class="chat-header-content">
+      <span class="chat-title">Project Chat</span>
+      <span class="chat-subtitle">Online</span>
+    </div>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="chat-content" #ionContent [fullscreen]="true">
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading messages...</p>
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="!isLoading && messages.length === 0">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <h3>Start the conversation</h3>
+    <p>Send a message to begin discussing the project.</p>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages-container" *ngIf="!isLoading && messages.length > 0">
+
+    <ng-container *ngFor="let msg of messages; let i = index">
+
+      <!-- Date Divider -->
+      <div class="date-divider"
+           *ngIf="isDifferentDay(msg, messages[i - 1])">
+        <span>{{ msg.createdAt | date:'MMMM d, y' }}</span>
+      </div>
+
+      <!-- Message -->
+      <div class="message-row"
+           [class.sent]="isMyMessage(msg)"
+           [class.received]="!isMyMessage(msg)">
+
+        <div class="message-bubble">
+
+          <p class="message-text">
+            {{ msg.content }}
+          </p>
+
+          <div class="message-meta">
+            <span class="message-time">
+              {{ msg.createdAt | date:'h:mm a' }}
+            </span>
+
+            <ion-icon *ngIf="isMyMessage(msg)"
+                      name="checkmark-done-outline"
+                      class="read-icon">
+            </ion-icon>
+          </div>
+
+        </div>
+      </div>
+
+    </ng-container>
+
+  </div>
+
+</ion-content>
+
+<!-- Footer -->
+<ion-footer class="chat-footer">
+
+  <div class="input-container">
+
+    <ion-input
+      [(ngModel)]="newMessage"
+      placeholder="Type a message..."
+      (keydown)="onEnterKey($event)"
+      class="message-input">
+    </ion-input>
+
+    <ion-button
+      (click)="sendMessage()"
+      [disabled]="!newMessage.trim() || isSending"
+      class="send-button"
+      fill="solid">
+
+      <ion-spinner *ngIf="isSending"
+                   name="crescent"
+                   slot="icon-only">
+      </ion-spinner>
+
+      <ion-icon *ngIf="!isSending"
+                name="send"
+                slot="icon-only">
+      </ion-icon>
+
+    </ion-button>
+
+  </div>
+
+</ion-footer>

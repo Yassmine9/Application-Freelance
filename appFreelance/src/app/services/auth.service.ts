@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { SocketService } from './socket.service';
 
 export interface AuthResponse {
   token: string;
@@ -19,28 +20,28 @@ export interface RegisterResponse {
   providedIn: 'root'
 })
 export class AuthService {
-
   private apiUrl = environment.apiUrl;
   private tokenKey = 'auth_token';
   private userKey = 'auth_user';
 
   private currentUser$ = new BehaviorSubject<any>(this.getStoredUser());
 
-  constructor(private http: HttpClient) {}
-
-  // ─── LOGIN ──────────────────────────────────────────────────────
+  constructor(
+    private http: HttpClient,
+    private socketService: SocketService
+  ) {}
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
       tap(res => {
         localStorage.setItem(this.tokenKey, res.token);
         localStorage.setItem(this.userKey, JSON.stringify(res.user));
+        localStorage.setItem('role', res.user?.role || '');
+        localStorage.setItem('userId', res.user?._id || res.user?.id || '');
         this.currentUser$.next(res.user);
       })
     );
   }
-
-  // ─── REGISTER CLIENT ───────────────────────────────────────────
 
   registerClient(data: {
     email: string;
@@ -49,13 +50,11 @@ export class AuthService {
     company_name?: string;
     phone?: string;
   }): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, {
       ...data,
       role: 'client'
     });
   }
-
-  // ─── REGISTER FREELANCER ───────────────────────────────────────
 
   registerFreelancer(data: {
     email: string;
@@ -66,21 +65,17 @@ export class AuthService {
     bio?: string;
     phone?: string;
   }): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, {
       ...data,
       role: 'freelancer'
     });
   }
 
-  // ─── PROFILE ───────────────────────────────────────────────────
-
   getProfile(): Observable<{ user: any }> {
-    return this.http.get<{ user: any }>(`${this.apiUrl}/freelancer/profile`, {
+    return this.http.get<{ user: any }>(`${this.apiUrl}/auth/profile`, {
       headers: this.getAuthHeaders()
     });
   }
-
-  // ─── TOKEN & SESSION ──────────────────────────────────────────
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
@@ -101,21 +96,30 @@ export class AuthService {
 
   getUserRole(): string | null {
     const user = this.getStoredUser();
-    return user?.role || null;
+    return user?.role || localStorage.getItem('role') || null;
+  }
+
+  getUserId(): string {
+    const user = this.getStoredUser();
+    return user?._id || user?.id || localStorage.getItem('userId') || '';
   }
 
   isFreelancer(): boolean {
-    const user = this.getStoredUser();
-    return user && user.role === 'freelancer';
+    return this.getUserRole() === 'freelancer';
+  }
+
+  isClient(): boolean {
+    return this.getUserRole() === 'client';
   }
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
+    localStorage.removeItem('role');
+    localStorage.removeItem('userId');
     this.currentUser$.next(null);
+    this.socketService.disconnect();
   }
-
-  // ─── HELPERS ──────────────────────────────────────────────────
 
   private getAuthHeaders(): HttpHeaders {
     const token = this.getToken();

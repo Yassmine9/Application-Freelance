@@ -1,0 +1,327 @@
+/* ============================================
+   PROPOSALS PAGE - Matches Offers Page Style
+============================================ */
+
+ion-content {
+  --background: #f4f5f7;
+}
+
+/* ===== Header ===== */
+ion-header ion-toolbar {
+  --background: linear-gradient(135deg, #0f1c4d, #1e2a78);
+  --color: #ffffff;
+  --border-width: 0;
+
+  ion-title { font-weight: 700; font-size: 1.1rem; }
+  ion-back-button { --color: #ffffff; }
+  ion-button { --color: #ffffff; }
+}
+
+/* ===== Shared layout ===== */
+.app-content { --background: #f4f5f7; }
+
+.section { padding: 16px 16px 0; }
+
+.app-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+}
+
+/* ===== Job summary card ===== */
+.job-card {
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .status-chip {
+    padding: 5px 12px;
+    border-radius: 14px;
+    font-size: 0.7rem;
+    font-weight: 700;
+
+    &.open        { background: #e6f4ea; color: #1a7f37; }
+    &.in-progress { background: #fff4e5; color: #b26a00; }
+    &.closed      { background: #f3f3f3; color: #888; }
+  }
+
+  .post-date { font-size: 0.7rem; color: #999; }
+
+  .job-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #111;
+    margin: 10px 0 14px;
+    line-height: 1.3;
+  }
+
+  .job-meta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 14px;
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+
+      .label {
+        font-size: 0.68rem;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+      }
+
+      .value {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #1e2a78;
+      }
+    }
+  }
+
+  .job-desc {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .file-row {
+    margin-top: 8px;
+  }
+}
+
+/* ===== Submit proposal card ===== */
+.submit-card {
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 16px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #1e2a78;
+    }
+
+    ion-input, ion-textarea {
+      --background: #f4f5f7;
+      --color: #111;
+      --placeholder-color: #aaa;
+      --border-radius: 10px;
+      --border-color: #d0d5e8;
+      --border-width: 1.5px;
+      font-size: 0.92rem;
+    }
+
+    .file-input {
+      width: 100%;
+      border: 1.5px dashed #d0d5e8;
+      background: #fafbff;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 0.85rem;
+      color: #333;
+    }
+  }
+
+  ion-button {
+    --background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+    --border-radius: 12px;
+    --box-shadow: 0 4px 15px rgba(30, 42, 120, 0.3);
+    font-weight: 700;
+    font-size: 0.95rem;
+    height: 50px;
+  }
+}
+
+/* ===== Already submitted notice ===== */
+.notice-submitted {
+  margin: 0 16px 0;
+  padding: 12px 16px;
+  background: #e6f4ea;
+  border-radius: 14px;
+  border: 1px solid #a5d6a7;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a7f37;
+
+  ion-icon { font-size: 1.1rem; flex-shrink: 0; }
+  p { margin: 0; }
+}
+
+/* ===== Section title ===== */
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #111;
+  margin: 20px 16px 10px;
+}
+
+/* ===== Loading / Empty ===== */
+.center-box {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 8px;
+  color: #aaa;
+  text-align: center;
+
+  ion-icon { font-size: 3rem; color: #d0d5e8; }
+  p { font-size: 0.95rem; font-weight: 600; color: #555; margin: 0; }
+}
+
+/* ===== Proposal cards ===== */
+.proposals-list {
+  padding: 0 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.proposal-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: 0.2s ease;
+
+  &.accepted { background: #f1fff6; border: 1px solid #a5d6a7; }
+  &.rejected  { opacity: 0.5; }
+
+  /* Freelancer row */
+  .proposal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .freelancer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 4px 6px 4px 0;
+    transition: background 0.15s;
+
+    &:active { background: #f0f2f6; }
+
+    .chevron-fwd {
+      color: #bbb;
+      font-size: 1rem;
+      margin-left: auto;
+    }
+
+    .freelancer-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .freelancer-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #111;
+      display: block;
+    }
+
+    .proposal-date {
+      font-size: 0.7rem;
+      color: #999;
+      display: block;
+      margin-top: 2px;
+    }
+  }
+
+  .status-chip {
+    padding: 5px 12px;
+    border-radius: 14px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    flex-shrink: 0;
+
+    &.pending  { background: #fff4e5; color: #b26a00; }
+    &.accepted { background: #e6f4ea; color: #1a7f37; }
+    &.rejected { background: #f3f3f3; color: #888; }
+  }
+
+  /* Bid */
+  .proposal-bid {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e2a78;
+    margin-bottom: 10px;
+
+    span { font-size: 0.85rem; color: #999; font-weight: 400; }
+  }
+
+  /* Message */
+  .proposal-message {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.6;
+    margin: 0 0 14px;
+  }
+
+  .proposal-file {
+    margin: 0 0 14px;
+  }
+
+
+.file-link {
+  color: #1e2a78;
+  font-weight: 600;
+  text-decoration: none;
+}
+  /* Actions */
+  .actions {
+    display: flex;
+    gap: 10px;
+
+    ion-button {
+      flex: 1;
+      --border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.85rem;
+
+      &[color="success"] {
+        --background: linear-gradient(135deg, #1a7f37, #2e9d4f);
+        --box-shadow: 0 4px 12px rgba(26,127,55,0.25);
+      }
+    }
+  }
+}

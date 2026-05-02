@@ -1,33 +1,5 @@
 <div class="custom-navbar">
-  <!-- When logged in: show role-based menu -->
-  <ng-container *ngIf="isLoggedIn">
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'home'"
-      aria-label="Home"
-      (click)="goHome()"
-    >
-      <ion-icon name="home-outline"></ion-icon>
-      <span>Home</span>
-    </button>
-
-    <!-- Role-specific options -->
-    <button
-      type="button"
-      class="nav-item"
-      *ngFor="let option of menuOptions"
-      [class.active]="activeTab === option.label.toLowerCase().replace(' ', '-')"
-      [attr.aria-label]="option.label"
-      (click)="handleMenuAction(option)"
-    >
-      <ion-icon [name]="option.icon"></ion-icon>
-      <span>{{ option.label }}</span>
-    </button>
-  </ng-container>
-
-  <!-- When NOT logged in: show original navigation -->
-  <ng-container *ngIf="!isLoggedIn">
+  <ng-container *ngIf="!isLoggedIn; else loggedInNav">
     <button
       type="button"
       class="nav-item"
@@ -43,11 +15,11 @@
       type="button"
       class="nav-item"
       [class.active]="activeTab === 'store'"
-      aria-label="Store"
+      aria-label="Services"
       (click)="goToStore()"
     >
       <ion-icon name="storefront-outline"></ion-icon>
-      <span>Store</span>
+      <span>Services</span>
     </button>
 
     <button
@@ -66,12 +38,12 @@
     <button
       type="button"
       class="nav-item"
-      [class.active]="activeTab === 'search'"
-      aria-label="Search"
-      (click)="openSearch()"
+      [class.active]="activeTab === 'feedback'"
+      aria-label="Feedback"
+      (click)="goToFeedback()"
     >
-      <ion-icon name="search-outline"></ion-icon>
-      <span>Search</span>
+      <ion-icon name="clipboard-outline"></ion-icon>
+      <span>Feedback</span>
     </button>
 
     <button
@@ -85,4 +57,63 @@
       <span>Nav map</span>
     </button>
   </ng-container>
+
+  <ng-template #loggedInNav>
+    <button
+      type="button"
+      class="nav-item"
+      [class.active]="activeTab === 'home'"
+      aria-label="Home"
+      (click)="goHome()"
+    >
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Home</span>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      [class.active]="activeTab === 'offers'"
+      aria-label="Offers"
+      (click)="goToOffers()"
+    >
+      <ion-icon name="briefcase-outline"></ion-icon>
+      <span>{{ offersLabel }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item nav-item-center"
+      [class.active]="activeTab === 'action'"
+      aria-label="Action"
+      (click)="goToAction()"
+    >
+      <span class="center-chip">
+        <ion-icon [name]="actionIcon"></ion-icon>
+      </span>
+      <span>{{ actionLabel }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      [class.active]="activeTab === 'messages'"
+      aria-label="Messages"
+      (click)="goToMessages()"
+    >
+      <ion-icon name="chatbubbles-outline"></ion-icon>
+      <span>Messages</span>
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      [class.active]="activeTab === 'profile'"
+      aria-label="Profile"
+      (click)="goToProfile()"
+    >
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <span>Profile</span>
+    </button>
+  </ng-template>
 </div>

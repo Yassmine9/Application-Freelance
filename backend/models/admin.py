@@ -52,3 +52,11 @@ class Admin(BaseUser):
             if user:
                 return model.update(email, is_blocked=True)
         return None
+
+    @classmethod
+    def unblock_user(cls, email):
+        for model in (Client, Freelancer):
+            user = model.find_by_email(email)
+            if user:
+                return model.update(email, is_blocked=False)
+        return None

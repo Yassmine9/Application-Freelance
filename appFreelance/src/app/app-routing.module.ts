@@ -5,32 +5,36 @@ import { FreelancerGuard } from './guards/freelancer.guard';
 
 const routes: Routes = [
   {
-    path: 'preferences',
-    loadChildren: () => import('./pages/preferences/preferences.module').then( m => m.PreferencesPageModule)
-  },
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    path: 'dev-login',
+    loadComponent: () => import('./dev-login/dev-login.page').then(m => m.DevLoginPage)
   },
   {
     path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+    loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage)
   },
   {
     path: 'register',
-    loadChildren: () => import('./pages/register-selection/register-selection.module').then( m => m.RegisterSelectionPageModule)
+    loadChildren: () => import('./pages/register-selection/register-selection.module').then(m => m.RegisterSelectionPageModule)
   },
   {
     path: 'register-freelancer',
-    loadChildren: () => import('./pages/register/register-freelancer/register-freelancer.module').then( m => m.RegisterPageModule)
+    loadChildren: () => import('./pages/register/register-freelancer/register-freelancer.module').then(m => m.RegisterPageModule)
   },
   {
     path: 'register-client',
-    loadChildren: () => import('./pages/register/register-client/register-client.module').then( m => m.RegisterClientPageModule)
+    loadChildren: () => import('./pages/register/register-client/register-client.module').then(m => m.RegisterClientPageModule)
   },
   {
     path: 'registration-pending',
-    loadChildren: () => import('./pages/registration-pending/registration-pending.module').then( m => m.RegistrationPendingPageModule)
+    loadChildren: () => import('./pages/registration-pending/registration-pending.module').then(m => m.RegistrationPendingPageModule)
+  },
+  {
+    path: 'preferences',
+    loadChildren: () => import('./pages/preferences/preferences.module').then(m => m.PreferencesPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
   {
     path: 'view-all-freelancers',
@@ -41,33 +45,57 @@ const routes: Routes = [
     loadChildren: () => import('./pages/view-all-services/view-all-services.module').then(m => m.ViewAllServicesPageModule)
   },
   {
+    path: 'offers',
+    loadChildren: () => import('./offers/offers.module').then(m => m.OffersPageModule)
+  },
+  {
+    path: 'my-offers',
+    loadChildren: () => import('./my-offers/my-offers.module').then(m => m.MyOffersPageModule)
+  },
+  {
+    path: 'my-proposals',
+    loadChildren: () => import('./my-proposals/my-proposals.module').then(m => m.MyProposalsPageModule)
+  },
+  {
+    path: 'post-offer',
+    loadChildren: () => import('./post-offer/post-offer.module').then(m => m.PostOfferPageModule)
+  },
+  {
+    path: 'conversations',
+    loadChildren: () => import('./conversations/conversations.module').then(m => m.ConversationsPageModule)
+  },
+  {
+    path: 'proposals/:id',
+    loadChildren: () => import('./proposals/proposals.module').then(m => m.ProposalsPageModule)
+  },
+  {
+    path: 'chat/:offerId/:receiverId',
+    loadChildren: () => import('./chat/chat.module').then(m => m.ChatPageModule)
+  },
+  {
+    path: 'chat/:offerId',
+    loadChildren: () => import('./chat/chat.module').then(m => m.ChatPageModule)
+  },
+  {
+    path: 'profile/:role/:id',
+    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
     path: 'feedback',
     loadChildren: () => import('./pages/feedback/feedback.module').then(m => m.FeedbackPageModule)
   },
   {
     path: 'store',
-    loadChildren: () => import('./pages/store/store.module').then( m => m.StorePageModule)
+    loadChildren: () => import('./pages/store/store.module').then(m => m.StorePageModule)
   },
   {
     path: 'product-detail',
-    loadChildren: () => import('./pages/product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
+    loadChildren: () => import('./pages/product-detail/product-detail.module').then(m => m.ProductDetailPageModule)
   },
   {
     path: 'product/:id',
     loadChildren: () => import('./pages/product-detail/product-detail.module').then(m => m.ProductDetailPageModule)
-  },
-  {
-    path: 'store',
-    loadChildren: () => import('./pages/store/store.module').then( m => m.StorePageModule)
-  },
-  {
-    path: 'product-detail',
-    loadChildren: () => import('./pages/product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
-  },
-  {
-  path: 'product/:id',
-  loadChildren: () => import('./pages/product-detail/product-detail.module')
-    .then(m => m.ProductDetailPageModule)
   },
   {
     path: 'view-all-categories',
@@ -75,14 +103,9 @@ const routes: Routes = [
   },
   {
     path: 'admin-panel',
-    loadChildren: () => import('./pages/admin-panel/admin-panel.module').then( m => m.AdminPanelPageModule)
+    loadChildren: () => import('./pages/admin-panel/admin-panel.module').then(m => m.AdminPanelPageModule)
   },
   { path: 'admin', loadComponent: () => import('./pages/admin-panel/admin-panel.page').then(m => m.AdminPanelPage) },
-  {
-    path: '',
-    redirectTo: 'preferences',
-    pathMatch: 'full'
-  },
   {
     path: 'freelancer-profile',
     component: FreelancerProfilePage,
@@ -90,30 +113,30 @@ const routes: Routes = [
   },
   {
     path: 'gigs',
-    loadChildren: () => import('./pages/gigs/gigs.module').then( m => m.GigsPageModule),
+    loadChildren: () => import('./pages/gigs/gigs.module').then(m => m.GigsPageModule),
   },
   {
     path: 'gig-detail',
-    loadChildren: () => import('./pages/gig-detail/gig-detail.module').then( m => m.GigDetailPageModule),
+    loadChildren: () => import('./pages/gig-detail/gig-detail.module').then(m => m.GigDetailPageModule),
   },
   {
     path: 'my-gigs',
-    loadChildren: () => import('./pages/my-gigs/my-gigs.module').then( m => m.MyGigsPageModule),
+    loadChildren: () => import('./pages/my-gigs/my-gigs.module').then(m => m.MyGigsPageModule),
     canActivate: [FreelancerGuard]
   },
   {
     path: 'create-gig',
-    loadChildren: () => import('./pages/create-gig/create-gig-routing.module').then( m => m.CreateGigPageModule),
+    loadChildren: () => import('./pages/create-gig/create-gig-routing.module').then(m => m.CreateGigPageModule),
     canActivate: [FreelancerGuard]
   },
   {
     path: 'edit-gig/:id',
-    loadChildren: () => import('./pages/edit-gig/edit-gig-routing.module').then( m => m.EditGigPageModule),
+    loadChildren: () => import('./pages/edit-gig/edit-gig-routing.module').then(m => m.EditGigPageModule),
     canActivate: [FreelancerGuard]
   },
   {
     path: 'freelancer-edit',
-    loadChildren: () => import('./pages/freelancer-edit/freelancer-edit.module').then( m => m.FreelancerEditPageModule)
+    loadChildren: () => import('./pages/freelancer-edit/freelancer-edit.module').then(m => m.FreelancerEditPageModule)
   },
   {
     path: 'search',
@@ -126,9 +149,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
-  ],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
