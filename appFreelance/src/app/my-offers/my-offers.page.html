@@ -5,44 +5,78 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="offers-content">
+<ion-content class="offers-content" [fullscreen]="true" [forceOverscroll]="false">
+
+  <!-- Loading -->
   <div class="center-box" *ngIf="isLoading">
-    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <ion-spinner name="crescent"></ion-spinner>
   </div>
 
-  <div class="offer-shell" *ngIf="!isLoading && offers.length">
-    <div class="offer-card" *ngFor="let offer of offers" [routerLink]="['/proposals', offer._id]">
-      <div class="offer-icon">
-        <ion-icon name="briefcase-outline"></ion-icon>
-      </div>
-      <div class="offer-body">
-        <h2>{{ offer.title || 'Untitled offer' }}</h2>
-        <p>{{ offer.description || 'Offer details will show here.' }}</p>
-        <div class="meta-row">
-          <span>Budget ${{ offer.budget | number }}</span>
-          <span class="status" [class.status-open]="offer.status === 'open'" [class.status-in_progress]="offer.status === 'in_progress'" [class.status-closed]="offer.status === 'closed'">
-            {{ offer.status | titlecase }}
-          </span>
+  <!-- Offer list -->
+  <div class="page-shell" *ngIf="!isLoading && offers.length">
+    <div class="section-heading">
+      <span class="section-kicker">Active Offers</span>
+      <span class="results-count">{{ offers.length }} posted</span>
+    </div>
+
+    <div class="offer-shell">
+      <article
+        class="offer-card"
+        *ngFor="let offer of offers"
+        [routerLink]="['/proposals', offer._id]">
+
+        <div class="offer-icon">
+          <ion-icon name="briefcase-outline"></ion-icon>
         </div>
-      </div>
-      <div class="offer-badge">
-        <ion-badge [color]="offer.pendingProposals > 0 ? 'danger' : 'medium'">
-          {{ offer.proposalCount || 0 }}
-        </ion-badge>
-        <span *ngIf="offer.pendingProposals > 0" class="pending-text">{{ offer.pendingProposals }} pending</span>
-        <span *ngIf="!offer.pendingProposals">Proposals</span>
-      </div>
-      <div class="chevron">
-        <ion-icon name="chevron-forward-outline" color="medium"></ion-icon>
-      </div>
+
+        <div class="offer-body">
+          <h2>{{ offer.title || 'Untitled offer' }}</h2>
+          <p>{{ offer.description || 'Offer details will show here.' }}</p>
+
+          <div class="meta-row">
+            <span class="budget">Budget ${{ offer.budget | number }}</span>
+            <span
+              class="status"
+              [class.status-open]="offer.status === 'open'"
+              [class.status-in_progress]="offer.status === 'in_progress'"
+              [class.status-closed]="offer.status === 'closed'">
+              {{ offer.status | titlecase }}
+            </span>
+          </div>
+        </div>
+
+        <div class="offer-badge">
+          <span class="badge-count" [class.has-pending]="offer.pendingProposals > 0">
+            {{ offer.proposalCount || 0 }}
+          </span>
+          <span class="badge-label" *ngIf="offer.pendingProposals > 0">
+            {{ offer.pendingProposals }} pending
+          </span>
+          <span class="badge-label" *ngIf="!offer.pendingProposals">Proposals</span>
+        </div>
+
+        <div class="chevron">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </article>
     </div>
   </div>
 
+  <!-- Empty state -->
   <div class="empty-state" *ngIf="!isLoading && offers.length === 0">
     <ion-icon name="briefcase-outline"></ion-icon>
     <p>No offers yet</p>
-    <span>Create your first offer from the Post button.</span>
+    <span>Create your first offer from the button below.</span>
   </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="app-fab" (click)="createOffer()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 
+
+
+
+<!-- Toolbar -->
 <app-toolbar activeTab="offers"></app-toolbar>

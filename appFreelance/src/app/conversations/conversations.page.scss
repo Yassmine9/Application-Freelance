@@ -1,43 +1,73 @@
-.messages-header ion-toolbar {
-  --background: linear-gradient(135deg, #0f1c4d, #1e2a78);
-  --color: #ffffff;
-  --border-width: 0;
-  padding-bottom: 6px;
+:host {
+  display: block;
+  --text-primary: #1a1f36;
+  --text-secondary: #6b7a99;
+  --card-border: #e3e7f2;
 }
 
-.messages-header ion-title {
-  font-weight: 800;
-  letter-spacing: 0.02em;
+// =============================================
+// HEADER
+// =============================================
+.messages-header {
+  ion-toolbar {
+    --background: #ffffff;
+    --color: var(--text-primary);
+    --border-width: 0;
+    border-bottom: 1px solid var(--card-border);
+    padding: 4px 8px;
+  }
+
+  ion-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    padding-inline: 0;
+  }
+
+  .header-subtitle {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 0 16px 8px;
+    line-height: 1.4;
+  }
 }
 
-.header-subtitle {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  padding: 0 16px 8px;
-}
-
+// =============================================
+// CONTENT
+// =============================================
 .messages-content {
-  --background: #f4f5f7;
+  --background: #f4f6fb;
 }
 
 .messages-content::part(scroll) {
-  padding-bottom: 120px;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom));
 }
 
+// =============================================
+// LOADING
+// =============================================
 .center-box {
   display: flex;
   justify-content: center;
   padding: 60px 20px;
 }
 
+// =============================================
+// LIST
+// =============================================
 .messages-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 12px 16px 0;
+  padding: 16px 16px 0;
 }
 
+// =============================================
+// MESSAGE CARD
+// =============================================
 .message-card {
   appearance: none;
   border: none;
@@ -48,34 +78,40 @@
   grid-template-columns: auto 1fr auto;
   gap: 12px;
   align-items: center;
-  box-shadow: 0 10px 24px rgba(15, 28, 77, 0.08);
-  border: 1px solid rgba(226, 232, 250, 0.9);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
   text-align: left;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+  cursor: pointer;
 
-.message-card:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 
-.message-card:not(:disabled):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 26px rgba(15, 28, 77, 0.12);
+  &:not(:disabled):active {
+    transform: scale(0.98);
+  }
 }
 
 .avatar {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+  background: linear-gradient(145deg, #1e2a78 0%, #0f1c4d 100%);
   color: #fff;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.message-body {
+  min-width: 0;
 }
 
 .message-title {
@@ -83,49 +119,118 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-}
+  margin-bottom: 2px;
 
-.message-title h3 {
-  margin: 0;
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: #1a1f36;
+  h3 {
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .message-body p {
-  margin: 4px 0 0;
-  font-size: 0.85rem;
-  color: #556083;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.time {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .message-meta {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #8a94b8;
-}
-
-.time {
-  font-size: 0.72rem;
-  color: #7a86a8;
-}
-
-.empty-state {
-  margin: 60px 16px;
-  text-align: center;
-  color: #7b7f9a;
+  color: var(--text-secondary);
+  flex-shrink: 0;
 
   ion-icon {
-    font-size: 2.4rem;
-    color: #c9cde0;
+    font-size: 1.1rem;
+    color: #b0b8d0;
+  }
+
+  ion-badge {
+    --background: #1e2a78;
+    --color: #ffffff;
+    --padding-start: 6px;
+    --padding-end: 6px;
+    --padding-top: 2px;
+    --padding-bottom: 2px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    min-width: 18px;
+  }
+}
+
+// =============================================
+// EMPTY STATE
+// =============================================
+.empty-state {
+  margin: 60px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--text-secondary);
+  gap: 8px;
+
+  ion-icon {
+    font-size: 2.5rem;
+    color: #d0d5e8;
   }
 
   p {
-    margin: 12px 0 4px;
+    margin: 0;
+    font-size: 0.95rem;
     font-weight: 700;
+    color: var(--text-primary);
   }
 
   span {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    max-width: 260px;
+    line-height: 1.4;
   }
+}
+
+// =============================================
+// SKELETON (ready for future use)
+// =============================================
+@keyframes shimmer {
+  0%   { background-position: -800px 0; }
+  100% { background-position: 800px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  height: 11px;
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 4px;
+  margin-top: 8px;
+
+  &:first-child { margin-top: 0; }
 }

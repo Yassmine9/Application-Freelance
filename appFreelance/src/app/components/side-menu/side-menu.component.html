@@ -1,47 +1,81 @@
+<!-- Add this right after .menu-hero opens -->
 <div class="menu-hero">
-  <div class="menu-brand">Freelance Hub</div>
+  <div class="menu-hero-top">
+    <div class="menu-brand">
+      <ion-icon name="briefcase-outline" class="brand-icon"></ion-icon>
+      FreelanceHub
+    </div>
+    <ion-menu-toggle autoHide="false">
+      <button class="menu-close-btn" aria-label="Close menu">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </ion-menu-toggle>
+  </div>
+
+  <div class="menu-user" *ngIf="isLoggedIn">
+    <div class="menu-avatar">{{ userInitials }}</div>
+    <div class="menu-user-info">
+      <span class="menu-user-name">{{ userName }}</span>
+      <span class="menu-user-role">{{ userRole | titlecase }}</span>
+    </div>
+  </div>
+
+  <div class="menu-guest" *ngIf="!isLoggedIn">
+    <p>Welcome to FreelanceHub</p>
+  </div>
 </div>
 
 <ion-list lines="none" class="menu-list">
   <ion-menu-toggle autoHide="false">
-    <ion-item detail="false" button (click)="navigateTo('/home')">
+
+    <div class="menu-section-label">Explore</div>
+
+    <ion-item detail="false" button (click)="navigateTo('/home')" [class.active-item]="activeRoute === '/home'">
       <ion-icon slot="start" name="home-outline"></ion-icon>
       <ion-label>Home</ion-label>
     </ion-item>
+
     <ion-item detail="false" button (click)="navigateTo('/view-all-freelancers')">
       <ion-icon slot="start" name="people-outline"></ion-icon>
       <ion-label>Freelancers</ion-label>
     </ion-item>
-    <ion-item detail="false" button (click)="navigateTo('/view-all-services')">
-      <ion-icon slot="start" name="briefcase-outline"></ion-icon>
-      <ion-label>Services</ion-label>
+
+    <ion-item detail="false" button (click)="navigateTo('/gigs')">
+      <ion-icon slot="start" name="layers-outline"></ion-icon>
+      <ion-label>Gigs</ion-label>
     </ion-item>
+
+    <ion-item detail="false" button (click)="navigateTo('/store')">
+      <ion-icon slot="start" name="storefront-outline"></ion-icon>
+      <ion-label>Store</ion-label>
+    </ion-item>
+
+    <div class="menu-section-label">Account</div>
 
     <ion-item detail="false" button (click)="navigateTo('/preferences')">
       <ion-icon slot="start" name="options-outline"></ion-icon>
       <ion-label>Preferences</ion-label>
     </ion-item>
 
-    
-    <ion-item  detail="false" button (click)="navigateTo('/feedback')">
-      <ion-icon slot="start" name="person-add-outline"></ion-icon>
+    <ion-item detail="false" button (click)="navigateTo('/feedback')">
+      <ion-icon slot="start" name="chatbox-ellipses-outline"></ion-icon>
       <ion-label>Feedback</ion-label>
     </ion-item>
 
     <ion-item *ngIf="!isLoggedIn" detail="false" button (click)="navigateTo('/login')">
       <ion-icon slot="start" name="log-in-outline"></ion-icon>
-      <ion-label>Login</ion-label>
+      <ion-label>Log in</ion-label>
     </ion-item>
-
 
     <ion-item *ngIf="!isLoggedIn" detail="false" button (click)="navigateTo('/register')">
       <ion-icon slot="start" name="person-add-outline"></ion-icon>
       <ion-label>Register</ion-label>
     </ion-item>
 
-    <ion-item *ngIf="isLoggedIn" detail="false" button (click)="onLogout()">
+    <ion-item *ngIf="isLoggedIn" detail="false" button class="logout-item" (click)="onLogout()">
       <ion-icon slot="start" name="log-out-outline"></ion-icon>
-      <ion-label>Logout</ion-label>
+      <ion-label>Log out</ion-label>
     </ion-item>
+
   </ion-menu-toggle>
 </ion-list>

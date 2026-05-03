@@ -134,30 +134,31 @@ export class OffersPage implements OnInit {
       }
     });
   }
+applyFilter() {
+  let result = [...this.offers];
 
-  applyFilter() {
-    let result = [...this.offers];
-
-    // Search: match title
-    const q = this.searchQuery.trim().toLowerCase();
-    if (q) {
-      result = result.filter(o =>
-        (o.title || '').toLowerCase().includes(q)
-      );
-    }
-
-    // Category filter
-    if (this.selectedCategory && this.selectedCategory !== 'All') {
-      const cat = this.selectedCategory.toLowerCase();
-      result = result.filter(o =>
-        (o.category || '').toLowerCase() === cat ||
-        (o.title || '').toLowerCase().includes(cat)
-      );
-    }
-
-    this.filteredOffers = result;
+  // Search: match title or description
+  const q = this.searchQuery.trim().toLowerCase();
+  if (q) {
+    result = result.filter(o =>
+      (o.title || '').toLowerCase().includes(q) ||
+      (o.description || '').toLowerCase().includes(q)
+    );
   }
 
+  // Category filter — match exact category, or fallback to title contains
+  if (this.selectedCategory && this.selectedCategory !== 'All') {
+    const cat = this.selectedCategory.toLowerCase();
+    result = result.filter(o => {
+      const offerCat = (o.category || '').toLowerCase();
+      const offerTitle = (o.title || '').toLowerCase();
+      // Exact category match OR title contains category name
+      return offerCat === cat || offerTitle.includes(cat);
+    });
+  }
+
+  this.filteredOffers = result;
+}
   clearFilters() {
     this.selectedCategory = 'All';
     this.searchQuery = '';

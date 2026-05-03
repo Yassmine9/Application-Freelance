@@ -23,14 +23,18 @@
 
 // Consistent toolbar styling
 ion-toolbar {
-  --border-width: 0;
-  --padding-start: 16px;
-  --padding-end: 16px;
+  --background: #ffffff;
+  --color: #1a1f36;
+  --border-width: 0 0 1px 0;
+  --border-color: #e3e7f2;
+  --padding-start: 8px;
+  --padding-end: 8px;
 
   ion-title {
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-weight: 700;
+    font-size: 1rem;
     letter-spacing: -0.02em;
+    color: #1a1f36;
   }
 }
 
@@ -86,10 +90,18 @@ ion-item {
 }
 
 ion-content::part(scroll) {
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
+  padding-bottom: calc(68px + env(safe-area-inset-bottom) + 16px) !important;
+}
+ion-back-button {
+  --color: #1e2a78;
+  --icon-font-size: 22px;
+  --min-width: 40px;
 }
 
+// ── Page transition smoothing ─────────────────────────────────
+ion-router-outlet {
+  animation: none;
+}
 // Avatar styling
 .avatar {
   width: 44px;

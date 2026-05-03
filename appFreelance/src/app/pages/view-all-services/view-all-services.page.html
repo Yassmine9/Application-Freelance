@@ -1,9 +1,7 @@
 <ion-header>
   <ion-toolbar class="page-toolbar">
     <ion-buttons slot="start">
-      <ion-button routerLink="/home" class="back-button">
-        <ion-icon name="chevron-back-outline"></ion-icon>
-      </ion-button>
+      <ion-back-button defaultHref="/home" class="back-button"></ion-back-button>
     </ion-buttons>
 
     <ion-title>Services</ion-title>
@@ -18,12 +16,11 @@
 
 <ion-content class="page-content" [fullscreen]="true" [forceOverscroll]="false">
   <div class="page-shell">
+
     <section class="hero-card">
       <div class="hero-badge">Service catalog</div>
       <h1>All services with sharper positioning</h1>
-      <p>
-        Browse the most requested skills in a cleaner layout, with timeline and budget signals.
-      </p>
+      <p>Browse the most requested skills in a cleaner layout, with timeline and budget signals.</p>
       <div class="hero-stats">
         <div>
           <strong>06</strong>
@@ -42,24 +39,20 @@
 
     <section class="results-section">
       <div class="section-heading">
-        <div>
-          <span class="section-kicker">Services</span>
-          <h2>High-value offers</h2>
-        </div>
+        <span class="section-kicker">Services</span>
+        <h2>High-value offers</h2>
       </div>
 
       <div class="service-grid">
-        <article class="service-card" *ngFor="let service of services; let index = index; trackBy: trackByIndex">
+        <article
+          class="service-card"
+          *ngFor="let service of services; let index = index; trackBy: trackByIndex">
           <div class="service-icon" [ngClass]="'accent-' + ((index % 6) + 1)">
             <ion-icon [name]="service.icon"></ion-icon>
           </div>
           <div class="service-copy">
-            <div class="service-top">
-              <div>
-                <h3>{{ service.title }}</h3>
-                <p>{{ service.description }}</p>
-              </div>
-            </div>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
             <div class="service-meta">
               <span>{{ service.timeline }}</span>
               <span class="price">{{ service.price }}</span>
@@ -68,5 +61,6 @@
         </article>
       </div>
     </section>
+
   </div>
 </ion-content>

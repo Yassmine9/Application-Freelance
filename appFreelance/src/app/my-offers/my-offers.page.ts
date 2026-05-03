@@ -4,14 +4,14 @@ import { Router, RouterModule } from '@angular/router';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonList, IonItem, IonLabel, IonBadge, IonIcon,
-  IonSpinner, IonButton
+  IonSpinner, IonButton, IonFab, IonFabButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { briefcaseOutline, chevronForwardOutline, peopleOutline } from 'ionicons/icons';
 import { ApiService } from '../services/api.service';
 import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-
+import { addOutline } from 'ionicons/icons';
 @Component({
   selector: 'app-my-offers',
   templateUrl: './my-offers.page.html',
@@ -21,7 +21,7 @@ import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
     CommonModule, RouterModule,
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonList, IonItem, IonLabel, IonBadge, IonIcon,
-    IonSpinner, IonButton,
+    IonSpinner, IonButton, IonFab, IonFabButton,
     ToolBarComponent
   ]
 })
@@ -34,7 +34,7 @@ export class MyOffersPage implements OnInit {
     private auth: FreelanceAuthHelper,
     private router: Router
   ) {
-    addIcons({ briefcaseOutline, chevronForwardOutline, peopleOutline });
+    addIcons({ briefcaseOutline, chevronForwardOutline, peopleOutline, addOutline });
   }
 
   ngOnInit() {
@@ -49,6 +49,9 @@ export class MyOffersPage implements OnInit {
     }
 
     this.loadOffers();
+  }
+  createOffer() {
+    this.router.navigate(['/offers'], { queryParams: { create: '1' } });
   }
 
   loadOffers() {

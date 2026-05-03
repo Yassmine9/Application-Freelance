@@ -1,15 +1,37 @@
-.profile-header ion-toolbar {
-  --background: linear-gradient(135deg, #0f1c4d, #1e2a78);
-  --color: #ffffff;
-  --border-width: 0;
+:host {
+  display: block;
+  --text-primary: #1a1f36;
+  --text-secondary: #6b7a99;
+  --card-border: #e3e7f2;
 }
 
+// =============================================
+// HEADER
+// =============================================
+.profile-header {
+  ion-toolbar {
+    --background: #ffffff;
+    --color: var(--text-primary);
+    --border-width: 0;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  ion-back-button {
+    --color: #1e2a78;
+    --padding-start: 10px;
+    --padding-end: 10px;
+  }
+}
+
+// =============================================
+// CONTENT
+// =============================================
 .profile-content {
-  --background: #f4f5f7;
+  --background: #f4f6fb;
 }
 
 .profile-content::part(scroll) {
-  padding-bottom: 120px;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom));
 }
 
 .center-box {
@@ -18,18 +40,19 @@
   padding: 60px 20px;
 }
 
-.profile-container {
-  padding: 0 0 40px;
-}
-
+// =============================================
+// HERO
+// =============================================
 .profile-hero {
-  background: linear-gradient(135deg, #0f1c4d, #1e2a78);
-  padding: 28px 20px 20px;
+  position: relative;
+  background: linear-gradient(145deg, #1e2a78 0%, #0f1c4d 100%);
+  padding: 28px 20px 24px;
   display: grid;
   gap: 16px;
   text-align: left;
-  position: relative;
   overflow: hidden;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 
   .hero-bg {
     position: absolute;
@@ -37,16 +60,17 @@
     right: -40px;
     width: 180px;
     height: 180px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.07);
     border-radius: 50%;
+    pointer-events: none;
   }
 
   .avatar-circle {
     width: 86px;
     height: 86px;
     border-radius: 22px;
-    background: rgba(255,255,255,0.2);
-    border: 3px solid rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.4);
     color: #fff;
     font-weight: 800;
     font-size: 1.6rem;
@@ -60,6 +84,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
   }
 
@@ -72,21 +97,26 @@
     font-weight: 800;
     color: #fff;
     margin: 0 0 4px;
+    letter-spacing: -0.02em;
   }
 
   .role-badge {
-    background: rgba(255,255,255,0.2);
-    color: #fff;
-    padding: 3px 12px;
-    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.95);
     font-size: 0.78rem;
     font-weight: 700;
+    letter-spacing: 0.04em;
   }
 
   .profile-bio {
-    color: rgba(255,255,255,0.8);
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.86rem;
-    margin: 4px 0 0;
+    margin: 6px 0 0;
     max-width: 320px;
     line-height: 1.5;
   }
@@ -94,106 +124,140 @@
   .hero-metrics {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
+    gap: 8px;
     z-index: 1;
 
     div {
-      background: rgba(255, 255, 255, 0.16);
-      border-radius: 12px;
-      padding: 10px;
+      padding: 12px 8px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       text-align: center;
-      color: #ffffff;
-      font-size: 0.75rem;
     }
 
     strong {
       display: block;
-      font-size: 1rem;
-      font-weight: 700;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    span {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
   }
 }
 
-.info-card, .skills-card, .client-offers-card {
+// =============================================
+// CARDS
+// =============================================
+.info-card,
+.skills-card,
+.client-actions-card,
+.client-offers-card,
+.offers-card {
   margin: 16px 16px 0;
-  background: #fff;
-  border-radius: 14px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
   padding: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
 }
 
+// =============================================
+// INFO
+// =============================================
 .info-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0f2f6;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f2f8;
   font-size: 0.9rem;
-  color: #333;
+  color: var(--text-primary);
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 
-  ion-icon { color: #1e2a78; font-size: 1.1rem; flex-shrink: 0; }
+  ion-icon {
+    color: #1e2a78;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
 }
 
-.skills-card h3 {
-  font-size: 0.88rem;
+// =============================================
+// SKILLS
+// =============================================
+.skills-card h3,
+.client-actions-card h3,
+.client-offers-card h3,
+.offers-card h3 {
+  font-size: 0.68rem;
   font-weight: 800;
-  color: #1e2a78;
+  color: #4e5bd4;
   margin: 0 0 12px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
 }
 
+.skills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .skill-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(30, 42, 120, 0.07);
+    border: 1px solid rgba(30, 42, 120, 0.1);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1e2a78;
+  }
+}
+
+// =============================================
+// CLIENT ACTIONS
+// =============================================
 .client-actions-card {
-  margin: 16px 16px 0;
-  background: #fff;
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  .action-header {
+    margin-bottom: 12px;
 
-  h3 {
-    font-size: 0.88rem;
-    font-weight: 800;
-    color: #1e2a78;
-    margin: 0 0 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    h3 {
+      margin: 0 0 2px;
+    }
+
+    span {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
   }
 
-  .action-note {
-    margin: 0 0 12px;
-    color: #5b6784;
-    font-size: 0.86rem;
-  }
-}
-
-.client-offers-card h3 {
-  font-size: 0.88rem;
-  font-weight: 800;
-  color: #1e2a78;
-  margin: 0 0 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.offers-card {
-  margin: 16px 16px 0;
-  background: #fff;
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-
-  h3 {
-    font-size: 0.88rem;
-    font-weight: 800;
-    color: #1e2a78;
-    margin: 0 0 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  ion-button {
+    --background: #1e2a78;
+    --background-hover: #0f1c4d;
+    --border-radius: 14px;
+    --box-shadow: 0 2px 8px rgba(30, 42, 120, 0.15);
+    height: 48px;
+    font-size: 0.9rem;
+    font-weight: 700;
   }
 }
 
+// =============================================
+// OFFERS
+// =============================================
 .offers-loading {
   display: flex;
   justify-content: center;
@@ -204,177 +268,247 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 6px 0 12px;
+  margin: 6px 0 14px;
+
+  ion-button {
+    --border-radius: 999px;
+    --padding-start: 14px;
+    --padding-end: 14px;
+    height: 32px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    &[fill='solid'] {
+      --background: #1e2a78;
+      --color: #ffffff;
+      --box-shadow: 0 2px 8px rgba(30, 42, 120, 0.15);
+    }
+
+    &[fill='outline'] {
+      --border-color: var(--card-border);
+      --color: var(--text-secondary);
+      --background: transparent;
+      --background-hover: rgba(30, 42, 120, 0.04);
+    }
+  }
 }
 
 .offers-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .offer-item {
-  border: 1px solid #edf0f7;
-  border-radius: 12px;
-  padding: 12px;
-  background: #fbfbfe;
-
-  .offer-title {
-    font-weight: 800;
-    color: #1e2a78;
-    font-size: 0.98rem;
-  }
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 14px;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(30, 42, 120, 0.04);
 
   .offer-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+  }
+
+  .offer-title {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    line-height: 1.3;
   }
 
   .offer-meta {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: #5b6784;
+    color: var(--text-secondary);
     font-size: 0.78rem;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    font-weight: 600;
   }
 
   .proposal-meta {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
   }
 
   .offer-desc {
     margin: 0 0 8px;
-    color: #444;
+    color: var(--text-secondary);
     font-size: 0.86rem;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   .file-row {
     margin-bottom: 8px;
   }
+
+  ion-button[fill='clear'] {
+    --color: #1e2a78;
+    font-weight: 700;
+    font-size: 0.8rem;
+    height: 32px;
+    margin: 0;
+  }
 }
 
 .status-chip {
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 
-  &.open { background: #e9f7ef; color: #1a7f4b; }
-  &.closed { background: #f1f2f4; color: #6b7280; }
+  &.open {
+    background: rgba(34, 197, 94, 0.12);
+    color: #15803d;
+  }
+
+  &.closed {
+    background: #f0f2f8;
+    color: var(--text-secondary);
+  }
 }
 
 .proposal-chip {
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 0.68rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   background: #eef2ff;
-  color: #34439a;
+  color: #1e2a78;
 
-  &.pending { background: #fff3d9; color: #9a6b00; }
-  &.accepted { background: #e9f7ef; color: #1a7f4b; }
-  &.rejected { background: #fce7e7; color: #a11a1a; }
+  &.pending {
+    background: #fff3d9;
+    color: #9a6b00;
+  }
+
+  &.accepted {
+    background: rgba(34, 197, 94, 0.12);
+    color: #15803d;
+  }
+
+  &.rejected {
+    background: #fce7e7;
+    color: #a11a1a;
+  }
 }
 
 .proposal-amount {
   font-size: 0.78rem;
-    .avatar-circle {
-      width: 86px;
-      height: 86px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.2);
-      border: 3px solid rgba(255,255,255,0.4);
-      color: #fff;
-      font-weight: 800;
-      font-size: 1.6rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      z-index: 1;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-.modal-form {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #fff;
-      margin: 0 0 4px;
-
-  ion-item {
-      color: rgba(255,255,255,0.8);
-      font-size: 0.86rem;
-      margin: 4px 0 0;
-      max-width: 320px;
-      line-height: 1.5;
-  .submit-btn {
-    margin-top: 8px;
-  }
-    margin: 16px 16px 0;
-    background: #fff;
-    border-radius: 14px;
-    padding: 16px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 0.85rem;
-    color: #333;
-  }
+  font-weight: 700;
+  color: #1e2a78;
 }
 
-    .action-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-
-      span {
-        font-size: 0.75rem;
-        color: #5b6784;
-      }
-    }
 .file-link {
   color: #1e2a78;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.82rem;
   text-decoration: none;
+}
+
+.empty-offers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+// =============================================
+// MODAL
+// =============================================
+.modal-content {
+  --background: #f4f6fb;
+}
+
+.modal-form {
+  padding: 16px;
+
+  ion-item {
+    --background: #ffffff;
+    --border-radius: 14px;
+    --border-color: var(--card-border);
+    --padding-start: 12px;
+    --padding-end: 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+
+    ion-label {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--text-primary);
+    }
+
+    ion-input {
+      --padding-start: 0;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+
+    .form-label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .file-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px dashed var(--card-border);
+      border-radius: 14px;
+      background: #ffffff;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+  }
+
+  .submit-btn {
+    --background: #1e2a78;
+    --background-hover: #0f1c4d;
+    --border-radius: 14px;
+    --box-shadow: 0 2px 8px rgba(30, 42, 120, 0.15);
+    height: 50px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-top: 8px;
+  }
 }
 
 .required {
   color: #c0392b;
 }
 
-.skills-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-
-  .skill-pill {
-    background: #f0f2fc;
-    color: #1e2a78;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-  }
-}
-
+// =============================================
+// EMPTY / COMING SOON
+// =============================================
 .coming-soon {
   margin: 32px 16px;
   display: flex;
@@ -383,8 +517,52 @@
   gap: 8px;
   color: #aaa;
 
-  ion-icon { font-size: 3rem; color: #d0d5e8; }
-  p { font-size: 1rem; font-weight: 700; color: #555; margin: 0; }
-  span { font-size: 0.8rem; color: #aaa; }
+  ion-icon {
+    font-size: 3rem;
+    color: #d0d5e8;
+  }
+
+  p {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #555;
+    margin: 0;
+  }
+
+  span {
+    font-size: 0.8rem;
+    color: #aaa;
+  }
 }
+
+// =============================================
+// SKELETON
+// =============================================
+@keyframes shimmer {
+  0% {
+    background-position: -800px 0;
+  }
+  100% {
+    background-position: 800px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  height: 11px;
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 4px;
+  margin-top: 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
 }

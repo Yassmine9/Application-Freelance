@@ -50,7 +50,15 @@ def init_indexes():
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    CORS(app)
+    app.url_map.strict_slashes = False   
+    CORS(app, resources={
+        r"/*": {
+            "origins": ["http://localhost:4200", "http://127.0.0.1:4200"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+            "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"],
+            "supports_credentials": True
+        }
+    })
 
     app.config["JWT_SECRET_KEY"] = Config.JWT_SECRET_KEY
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
@@ -136,8 +144,8 @@ def create_app() -> Flask:
     app.register_blueprint(proposals_bp, url_prefix="/api/proposals")
     app.register_blueprint(messages_bp, url_prefix="/api/messages")
     app.register_blueprint(admin_bp, url_prefix="/admin")
-    app.register_blueprint(category_bp, url_prefix="/categories")
-    app.register_blueprint(product_bp, url_prefix="/products")
+    app.register_blueprint(category_bp, url_prefix="/categories", strict_slashes=False)
+    app.register_blueprint(product_bp, url_prefix="/products", strict_slashes=False)
     app.register_blueprint(freelancer_routes, url_prefix="/api")
     app.register_blueprint(gig_routes, url_prefix="/api")
 

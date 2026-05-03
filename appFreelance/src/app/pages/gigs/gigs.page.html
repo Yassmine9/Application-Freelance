@@ -1,24 +1,15 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>gigs</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<!--<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">gigs</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>-->
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar class="custom-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" class="icon-button"></ion-back-button>
+    </ion-buttons>
     <ion-title>Browse Gigs</ion-title>
   </ion-toolbar>
 
-  <!-- search bar -->
-  <ion-toolbar>
+  <!-- Sticky search -->
+  <ion-toolbar class="search-toolbar">
     <ion-searchbar
+      class="search-bar"
       placeholder="Search by title or tag..."
       (ionInput)="onSearch($event)"
       debounce="400">
@@ -26,68 +17,76 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="gigs-content" [fullscreen]="true" [forceOverscroll]="false">
+  <div class="page-shell">
 
-  <!-- loading state -->
-  <div *ngIf="isLoading" class="center">
-    <ion-spinner name="crescent"></ion-spinner>
-  </div>
-
-  <!-- error state -->
-  <div *ngIf="error && !isLoading" class="center">
-    <ion-icon name="alert-circle-outline" size="large" color="danger"></ion-icon>
-    <p>{{ error }}</p>
-    <ion-button fill="outline" (click)="loadGigs()">Retry</ion-button>
-  </div>
-
-  <!-- empty state -->
-  <div *ngIf="!isLoading && !error && filteredGigs.length === 0" class="center">
-    <ion-icon name="search-outline" size="large" color="medium"></ion-icon>
-    <p>No gigs found</p>
-  </div>
-
-  <!-- gig cards -->
-  <div class="gigs-grid" *ngIf="!isLoading && !error">
-    <ion-card
-      *ngFor="let gig of filteredGigs"
-      (click)="openGig(gig._id)"
-      class="gig-card">
-
-      <!-- gig image placeholder -->
-      <div class="gig-image">
-        <ion-icon name="briefcase-outline" size="large" color="medium"></ion-icon>
+    <!-- Loading skeleton -->
+    <div class="gigs-grid" *ngIf="isLoading">
+      <div class="gig-card skeleton-card" *ngFor="let s of [1,2,3,4]">
+        <div class="gig-image skeleton" style="border-radius:0; height:110px;"></div>
+        <div class="card-body">
+          <div class="skeleton-text" style="width:60%"></div>
+          <div class="skeleton-text" style="width:80%"></div>
+          <div style="display:flex; gap:4px; margin-top:10px;">
+            <div class="skeleton-text" style="width:40px; height:18px; border-radius:999px;"></div>
+            <div class="skeleton-text" style="width:50px; height:18px; border-radius:999px;"></div>
+          </div>
+          <div class="skeleton-text" style="width:40%; margin-top:12px;"></div>
+        </div>
       </div>
+    </div>
 
-      <ion-card-content>
+    <!-- Error state -->
+    <div *ngIf="error && !isLoading" class="center">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="outline" (click)="loadGigs()">Retry</ion-button>
+    </div>
 
-        <!-- freelancer name -->
-        <p class="freelancer-name">
-          <ion-icon name="person-outline"></ion-icon>
-          {{ gig.freelancer_name }}
-        </p>
+    <!-- Empty state -->
+    <div *ngIf="!isLoading && !error && filteredGigs.length === 0" class="center">
+      <ion-icon name="search-outline"></ion-icon>
+      <p>No gigs found</p>
+    </div>
 
-        <!-- title -->
-        <h2 class="gig-title">{{ gig.title }}</h2>
+    <!-- Section heading -->
+    <div class="section-heading" *ngIf="!isLoading && !error && filteredGigs.length > 0">
+      <span class="section-kicker">Available Gigs</span>
+      <span class="results-count">{{ filteredGigs.length }} found</span>
+    </div>
 
-        <!-- tags -->
-        <div class="tags">
-          <ion-chip
-            *ngFor="let tag of gig.tags"
-            color="primary"
-            outline="true"
-            size="small">
-            {{ tag }}
-          </ion-chip>
+    <!-- Gig cards -->
+    <div class="gigs-grid" *ngIf="!isLoading && !error">
+      <article
+        class="gig-card"
+        *ngFor="let gig of filteredGigs"
+        (click)="openGig(gig._id)">
+
+        <div class="gig-image">
+          <ion-icon name="briefcase-outline"></ion-icon>
         </div>
 
-        <!-- price -->
-        <div class="price-row">
-          <span class="price-label">Starting at</span>
-          <span class="price">${{ gig.price }}</span>
-        </div>
+        <div class="card-body">
+          <p class="freelancer-name">
+            <ion-icon name="person-outline"></ion-icon>
+            {{ gig.freelancer_name }}
+          </p>
 
-      </ion-card-content>
-    </ion-card>
+          <h2 class="gig-title">{{ gig.title }}</h2>
+
+          <div class="tags">
+            <span class="tag" *ngFor="let tag of gig.tags">
+              {{ tag }}
+            </span>
+          </div>
+
+          <div class="price-row">
+            <span class="price-label">Starting at</span>
+            <span class="price">${{ gig.price }}</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
   </div>
-
 </ion-content>
