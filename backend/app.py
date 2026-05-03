@@ -14,14 +14,14 @@ from routes.category_routes import category_bp
 from routes.admin_routes import admin_bp
 from routes.freelancer_routes import freelancer_routes
 from routes.gig_routes import gig_routes
-
-
+from routes.gig_order_routes import gig_order_bp
+from routes.review_routes import review_routes
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.config["JWT_SECRET_KEY"] = Config.JWT_SECRET_KEY
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] =timedelta(hours=2)
-    CORS(app, origins=["http://localhost:8100", "http://127.0.0.1:5000"])
+    CORS(app, origins=["http://localhost:4200", "http://127.0.0.1:5000"])
 
     JWTManager(app)
 
@@ -32,6 +32,8 @@ def create_app():
     app.register_blueprint(product_bp, url_prefix="/products")
     app.register_blueprint(category_bp, url_prefix="/categories")
     app.register_blueprint(admin_bp, url_prefix="/admin")
+    app.register_blueprint(gig_order_bp,url_prefix="/api")
+    app.register_blueprint(review_routes,url_prefix="/api")
 
     @app.route("/")
     def home():

@@ -17,7 +17,7 @@ class Gig:
     # ── Create ──────────────────────────────────────────────
 
     @classmethod
-    def create(cls, freelancer_id, freelancer_name, title, description, price, tags):
+    def create(cls, freelancer_id, freelancer_name, title, description, price, tags,duration):
         gig = {
             "freelancer_id":   freelancer_id,
             "freelancer_name": freelancer_name,
@@ -29,6 +29,20 @@ class Gig:
             "status":          "draft",
             "created_at":      datetime.utcnow(),
             "updated_at":      datetime.utcnow(),
+            "duration":  duration,
+            "stats": {
+                "total_orders":    0,
+                "total_reviews":   0,
+                "average_rating":  0
+            },
+            "promotion": {
+                "is_promoted":  False,
+                "plan":         None,
+                "amount_paid":  0,
+                "start_date":   None,
+                "end_date":     None,
+                "status":       "inactive"
+            }
         }
         result = cls.collection.insert_one(gig)
         gig["_id"] = str(result.inserted_id)
@@ -130,3 +144,79 @@ class Gig:
     @classmethod
     def delete(cls, gig_id):
         cls.collection.delete_one({"_id": ObjectId(gig_id)})
+
+    # ── Stats updates ───────────────────────────────────────
+
+    @classmethod
+    def increment_order_count(cls, gig_id):
+        """Call this when an order is placed for the gig."""
+        cls.collection.update_one(
+            {"_id": ObjectId(gig_id)},
+            {
+                "$inc": {"stats.total_orders": 1},
+                "$set": {"updated_at": datetime.utcnow()}
+            }
+        )
+
+    @classmethod
+    def update_rating(cls, gig_id, new_rating):
+        """
+        Update average rating after a new review.
+        new_rating should be a float between 0 and 5.
+        """
+        gig = cls.collection.find_one({"_id": ObjectId(gig_id)})
+        if not gig:
+            return
+        stats = gig.get("stats", {})
+        total_reviews = stats.get("total_reviews", 0)
+        current_avg = stats.get("average_rating", 0)
+
+        # Calculate new average
+        new_total_reviews = total_reviews + 1
+        new_average = ((current_avg * total_reviews) + new_rating) / new_total_reviews
+
+        cls.collection.update_one(
+            {"_id": ObjectId(gig_id)},
+            {
+                "$set": {
+                    "stats.total_reviews": new_total_reviews,
+                    "stats.average_rating": round(new_average, 2),
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+
+    # ── Promotion management ────────────────────────────────
+
+    @classmethod
+    def set_promotion(cls, gig_id, plan, amount_paid, duration_days):
+        """Activate a promotion for this gig."""
+        start_date = datetime.utcnow()
+        end_date = start_date + timedelta(days=duration_days)
+        cls.collection.update_one(
+            {"_id": ObjectId(gig_id)},
+            {
+                "$set": {
+                    "promotion.is_promoted": True,
+                    "promotion.plan": plan,
+                    "promotion.amount_paid": amount_paid,
+                    "promotion.start_date": start_date,
+                    "promotion.end_date": end_date,
+                    "promotion.status": "active",
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+
+    @classmethod
+    def disable_promotion(cls, gig_id):
+        cls.collection.update_one(
+            {"_id": ObjectId(gig_id)},
+            {
+                "$set": {
+                    "promotion.is_promoted": False,
+                    "promotion.status": "inactive",
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
