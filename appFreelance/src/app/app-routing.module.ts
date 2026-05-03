@@ -1,8 +1,14 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { FreelancerGuard } from './guards/freelancer.guard';
+import { freelancersProfilePage } from './pages/freelancer-profile/freelancer-profile.page';
 
 const routes: Routes = [
+  {
+    path: 'freelancer-profile',
+    component: freelancersProfilePage,
+    canActivate: [FreelancerGuard]
+  }, 
   {
     path: 'dev-login',
     loadComponent: () => import('./dev-login/dev-login.page').then(m => m.DevLoginPage)

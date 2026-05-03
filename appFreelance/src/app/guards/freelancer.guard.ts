@@ -18,7 +18,7 @@ export class FreelancerGuard implements CanActivate {
       return false;
     }
 
-    // Check if user role is 'freelancer'
+    // Check if user role is 'freelancers'
     if (user && user.role === 'freelancer') {
       return true;
     }

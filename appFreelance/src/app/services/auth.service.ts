@@ -105,7 +105,7 @@ export class AuthService {
   }
 
   isfreelancers(): boolean {
-    return this.getUserRole() === 'freelancers';
+    return this.getUserRole() === 'freelancer';
   }
 
   isClient(): boolean {

@@ -77,6 +77,13 @@ export class SideBarComponent implements OnInit {
       return;
     }
 
+    // If user is a freelancer, navigate to freelancer-profile page
+    if (this.authService.isfreelancers()) {
+      this.router.navigateByUrl('/freelancer-profile');
+      return;
+    }
+
+    // Otherwise, navigate to the generic profile page
     const role = this.authService.getUserRole() || 'client';
     const userId = this.authService.getUserId();
     this.router.navigateByUrl(`/profile/${role}/${userId}`);
