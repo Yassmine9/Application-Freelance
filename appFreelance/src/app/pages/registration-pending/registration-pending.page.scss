@@ -1,4 +1,6 @@
 
+@use 'sass:color';
+
 
 $primary:       #1e2a78;
 $primary-dark:  #0f1c4d;
@@ -209,7 +211,7 @@ $text-light:    #6b7a99;
   }
 
   &.pending {
-    background: linear-gradient(135deg, $warm-bg, darken($primary, 6%));
+    background: linear-gradient(135deg, $warm-bg, color.adjust($primary, $lightness: -6%));
     box-shadow: 0 4px 14px rgba($warm-bg, 0.30);
     animation: breathe 2s ease-in-out infinite;
   }

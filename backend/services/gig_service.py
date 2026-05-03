@@ -69,7 +69,7 @@ def delete_existing_gig(gig_id,user_id):
     if err:
         return None,err
     Gig.delete(gig_id)
-    return (f"Gig Deleted Successfully")
+    return {"message": "Gig Deleted Successfully"}, None
 
 def get_gig_details(gig_id):
     gig = Gig.find_by_id(gig_id)
@@ -100,7 +100,7 @@ def approve_existing_gig(gig_id,user_id):
     user , err = verify_admin(user_id)
     if err:
         return None,err
-        gig = Gig.find_by_id(gig_id)
+    gig = Gig.find_by_id(gig_id)
     if not gig:
         return None, ("Gig Not Found" , 404)
     Gig.approve(gig_id)

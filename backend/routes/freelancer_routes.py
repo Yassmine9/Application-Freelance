@@ -8,8 +8,9 @@ from werkzeug.utils import secure_filename
 
 freelancer_routes = Blueprint('freelancer_routes', __name__)
 
-CV_FOLDER     = os.path.join(os.getcwd(), 'uploads', 'cvs')
-AVATAR_FOLDER = os.path.join(os.getcwd(), 'uploads', 'avatars')
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+CV_FOLDER = os.path.join(BASE_DIR, 'uploads', 'cv')
+AVATAR_FOLDER = os.path.join(BASE_DIR, 'uploads', 'avatars')
 
 ALLOWED_CV     = {'pdf', 'doc', 'docx'}
 ALLOWED_IMG    = {'jpg', 'jpeg', 'png'}
@@ -29,7 +30,9 @@ def get_profile():
         return jsonify({"error": "Utilisateur introuvable"}), 404
     if user.get("role") != "freelancer":
         return jsonify({"error": "Accès refusé"}), 403
-    gigs = fetch_my_gigs(user_id)
+    gigs, gigs_err = fetch_my_gigs(user_id)
+    if gigs_err:
+        gigs = []
     return jsonify({
         "user": {
         "id":                 user["_id"],
@@ -58,16 +61,23 @@ def get_profile():
     }}), 200
 
 # ── GET public profile ──────────────────────────────────────────
-@freelancer_routes.route('/freelancer/profile/<freelancer_name>', methods=['GET'])
-@jwt_required()
-def get_public_profile_route(freelancer_name):
+@freelancer_routes.route('/freelancer/<freelancer_id>', methods=['GET'])
+def get_public_profile_route(freelancer_id):
+
     """
-    Anyone logged-in viewing another freelancer's profile.
-    JWT required — but we use the URL param, not the token identity.
+    Anyone viewing another freelancer's profile.
+    Returns only public fields.
     """
-    profile, err = get_public_profile(freelancer_name)
+    profile, err = get_public_profile(freelancer_id)
     if err:
         return jsonify({"error": err[0]}), err[1]
+    
+    # Add gigs to the profile
+    gigs, gigs_err = fetch_my_gigs(freelancer_id)
+    if gigs_err:
+        gigs = []
+    profile["gigs"] = gigs
+    
     return jsonify({"user": profile}), 200
 
 
@@ -161,10 +171,22 @@ def upload_cv():
 
 # ── DOWNLOAD CV ──────────────────────────────────────────────
 @freelancer_routes.route('/freelancer/profile/cv/download', methods=['GET'])
-
+@jwt_required()
 def download_cv():
+    user_id = get_jwt_identity()
+    user = Freelancer.find_by_id(user_id)
 
-    return send_from_directory(CV_FOLDER, user["cv_filename"])
+    if not user:
+        return jsonify({"error": "Utilisateur introuvable"}), 404
+
+    cv_filename = user.get("cv_filename")
+    if not cv_filename:
+        return jsonify({"error": "Aucun CV trouvé"}), 404
+
+    try:
+        return send_from_directory(CV_FOLDER, cv_filename, as_attachment=True)
+    except FileNotFoundError:
+        return jsonify({"error": "Fichier CV introuvable"}), 404
 
 
 # ── GET all approved freelancers (public) ───────────────────

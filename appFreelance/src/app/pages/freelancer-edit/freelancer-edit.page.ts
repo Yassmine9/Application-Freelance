@@ -5,6 +5,7 @@ import { FreelancerProfileService } from '../../services/freelancer-profile.serv
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { environment } from '../../../environments/environment';
 
 export interface Project {
   title: string;
@@ -69,7 +70,7 @@ export class FreelancerEditPage implements OnInit {
         this.portfolio       = u.portfolio || [];
         this.cvName          = u.cv_filename || '';
         if (u.avatar_filename) {
-          this.avatarUrl = `http://127.0.0.1:5000/api/uploads/avatars/${u.avatar_filename}`;
+          this.avatarUrl = `${environment.apiUrl}/uploads/avatars/${u.avatar_filename}`;
         }
         this.isLoading = false;
       },

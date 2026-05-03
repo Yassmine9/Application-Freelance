@@ -94,7 +94,42 @@
         </div>
       </div>
     </div>
-
+<!-- Pending Clients Section -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Pending Clients ({{ clients.length }})</ion-card-title>
+  </ion-card-header>
+  
+  <ion-card-content>
+    <ion-spinner *ngIf="clientsLoading"></ion-spinner>
+    
+    <ion-list *ngIf="!clientsLoading && clients.length > 0">
+      <ion-item *ngFor="let c of clients">
+        <ion-avatar slot="start">
+          <div class="initials">{{ getInitials(c.name) }}</div>
+        </ion-avatar>
+        
+        <ion-label>
+          <h3>{{ c.name }}</h3>
+          <p>{{ c.email }} • {{ c.company_name || 'No company' }}</p>
+        </ion-label>
+        
+        <ion-buttons slot="end">
+          <ion-button color="success" (click)="approveClient(c)" [disabled]="c._processing">
+            <ion-icon name="checkmark"></ion-icon>
+          </ion-button>
+          <ion-button color="danger" (click)="rejectClient(c)" [disabled]="c._processing">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+    
+    <ion-text color="medium" *ngIf="!clientsLoading && clients.length === 0">
+      No pending clients.
+    </ion-text>
+  </ion-card-content>
+</ion-card>
     <!-- Empty approvals -->
     <div class="empty-state" *ngIf="!freelancersLoading && freelancers.length === 0">
       <div class="empty-icon-wrap">
@@ -134,16 +169,28 @@
         <button
           class="action-btn approve-btn"
           [disabled]="f._processing"
-          (click)="approve(f)">
+          (click)="approve(f)"
+          title="Approve freelancer">
           <ion-spinner name="crescent" *ngIf="f._processing === 'approve'" class="mini-spinner"></ion-spinner>
           <ion-icon name="checkmark-outline" *ngIf="f._processing !== 'approve'"></ion-icon>
         </button>
         <button
           class="action-btn reject-btn"
           [disabled]="f._processing"
-          (click)="reject(f)">
+          (click)="reject(f)"
+          title="Reject freelancer">
           <ion-spinner name="crescent" *ngIf="f._processing === 'reject'" class="mini-spinner"></ion-spinner>
           <ion-icon name="close-outline" *ngIf="f._processing !== 'reject'"></ion-icon>
+        </button>
+        <button
+          class="action-btn block-btn"
+          [disabled]="f._processing"
+          [class.is-blocked]="f.is_blocked"
+          (click)="f.is_blocked ? unblock(f) : block(f)"
+          [title]="f.is_blocked ? 'Unblock freelancer' : 'Block freelancer'">
+          <ion-spinner name="crescent" *ngIf="f._processing === 'block' || f._processing === 'unblock'" class="mini-spinner"></ion-spinner>
+          <ion-icon name="ban-outline" *ngIf="!f.is_blocked && f._processing !== 'block' && f._processing !== 'unblock'"></ion-icon>
+          <ion-icon name="checkmark-circle-outline" *ngIf="f.is_blocked && f._processing !== 'block' && f._processing !== 'unblock'"></ion-icon>
         </button>
       </div>
 

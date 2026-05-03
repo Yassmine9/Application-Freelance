@@ -1,25 +1,42 @@
-<ion-header>
+<ion-header class="offers-header">
   <ion-toolbar>
     <ion-title>My Offers</ion-title>
+    <div class="header-subtitle">Track proposals and manage your job posts</div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="offers-content">
   <div class="center-box" *ngIf="isLoading">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
   </div>
 
-  <ion-list *ngIf="!isLoading && offers.length">
-    <ion-item *ngFor="let offer of offers" [routerLink]="['/proposals', offer._id]" detail="true">
-      <ion-icon name="briefcase-outline" slot="start"></ion-icon>
-      <ion-label>
+  <div class="offer-shell" *ngIf="!isLoading && offers.length">
+    <div class="offer-card" *ngFor="let offer of offers" [routerLink]="['/proposals', offer._id]">
+      <div class="offer-icon">
+        <ion-icon name="briefcase-outline"></ion-icon>
+      </div>
+      <div class="offer-body">
         <h2>{{ offer.title || 'Untitled offer' }}</h2>
-        <p>{{ offer.description }}</p>
-        <p class="meta">Budget ${{ offer.budget | number }} · {{ offer.status | titlecase }}</p>
-      </ion-label>
-      <ion-badge color="medium" slot="end">{{ offer.proposalCount || 0 }}</ion-badge>
-    </ion-item>
-  </ion-list>
+        <p>{{ offer.description || 'Offer details will show here.' }}</p>
+        <div class="meta-row">
+          <span>Budget ${{ offer.budget | number }}</span>
+          <span class="status" [class.status-open]="offer.status === 'open'" [class.status-in_progress]="offer.status === 'in_progress'" [class.status-closed]="offer.status === 'closed'">
+            {{ offer.status | titlecase }}
+          </span>
+        </div>
+      </div>
+      <div class="offer-badge">
+        <ion-badge [color]="offer.pendingProposals > 0 ? 'danger' : 'medium'">
+          {{ offer.proposalCount || 0 }}
+        </ion-badge>
+        <span *ngIf="offer.pendingProposals > 0" class="pending-text">{{ offer.pendingProposals }} pending</span>
+        <span *ngIf="!offer.pendingProposals">Proposals</span>
+      </div>
+      <div class="chevron">
+        <ion-icon name="chevron-forward-outline" color="medium"></ion-icon>
+      </div>
+    </div>
+  </div>
 
   <div class="empty-state" *ngIf="!isLoading && offers.length === 0">
     <ion-icon name="briefcase-outline"></ion-icon>
@@ -28,4 +45,4 @@
   </div>
 </ion-content>
 
-<app-side-bar activeTab="offers"></app-side-bar>
+<app-toolbar activeTab="offers"></app-toolbar>

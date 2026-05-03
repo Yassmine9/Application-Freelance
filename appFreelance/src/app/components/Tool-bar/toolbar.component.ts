@@ -4,17 +4,17 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
-type SideBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav' | 'offers' | 'action' | 'messages' | 'profile' | 'search';
+type ToolBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav' | 'offers' | 'action' | 'messages' | 'profile' | 'search';
 
 @Component({
-  selector: 'app-side-bar',
-  templateUrl: './side-bar.component.html',
-  styleUrls: ['./side-bar.component.scss'],
+  selector: 'app-toolbar',
+  templateUrl: './toolbar.component.html',
+  styleUrls: ['./toolbar.component.scss'],
   standalone: true,
   imports: [CommonModule, IonicModule],
 })
-export class SideBarComponent implements OnInit {
-  @Input() activeTab: SideBarTab = 'home';
+export class ToolBarComponent implements OnInit {
+  @Input() activeTab: ToolBarTab = 'home';
 
   isLoggedIn = false;
   userRole: string | null = null;
@@ -42,12 +42,13 @@ export class SideBarComponent implements OnInit {
   }
 
   get actionLabel(): string {
-    return this.authService.isClient() ? 'Post' : 'Proposals';
+    return this.authService.isClient() ? 'Post' : 'Jobs';
   }
 
   get actionIcon(): string {
-    return this.authService.isClient() ? 'add-outline' : 'document-text-outline';
+    return this.authService.isClient() ? 'add-outline' : 'briefcase-outline';
   }
+
 
   goHome(): void {
     this.router.navigateByUrl('/home');
@@ -93,7 +94,8 @@ export class SideBarComponent implements OnInit {
       return;
     }
 
-    this.router.navigateByUrl('/my-proposals');
+    this.router.navigateByUrl('/my-jobs');
+
   }
 
   goToStore(): void {
@@ -147,7 +149,7 @@ export class SideBarComponent implements OnInit {
       header: 'Navigation scheme',
       buttons: [
         {
-          text: 'Home (this page)',
+          text: 'Home ',
           icon: 'home-outline',
           handler: () => {
             this.router.navigateByUrl('/home');
@@ -161,10 +163,10 @@ export class SideBarComponent implements OnInit {
           },
         },
         {
-          text: 'Services list',
-          icon: 'grid-outline',
+          text: 'All Gigs',
+          icon: 'briefcase-outline',
           handler: () => {
-            this.router.navigateByUrl('/view-all-services');
+            this.router.navigateByUrl('/gigs');
           },
         },
         {
@@ -188,20 +190,8 @@ export class SideBarComponent implements OnInit {
             this.router.navigateByUrl('/store');
           },
         },
-        {
-          text: 'All Gigs',
-          icon: 'briefcase-outline',
-          handler: () => {
-            this.router.navigateByUrl('/gigs');
-          },
-        },
-        {
-          text: 'Preferences',
-          icon: 'settings-outline',
-          handler: () => {
-            this.router.navigateByUrl('/preferences');
-          },
-        },
+
+
         {
           text: 'Cancel',
           role: 'cancel',

@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+<ion-header class="profile-header">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/offers"></ion-back-button>
@@ -7,24 +7,40 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content class="profile-content">
   <div class="center-box" *ngIf="isLoading">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
   </div>
 
   <div class="profile-container" *ngIf="!isLoading && profile">
-
-    <!-- Avatar + name header -->
     <div class="profile-hero">
-      <div class="avatar-circle">{{ getInitials(profile.name || profile.username || '') }}</div>
-      <h1 class="profile-name">{{ profile.name || profile.username || 'User #' + userId?.slice(-6) }}</h1>
-      <span class="role-badge">{{ profile.role || role | titlecase }}</span>
-      <p class="profile-bio" *ngIf="profile.bio">{{ profile.bio }}</p>
+      <div class="hero-bg"></div>
+      <div class="avatar-circle">
+        <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile" />
+        <span *ngIf="!avatarUrl">{{ getInitials(displayName) }}</span>
+      </div>
+      <div class="hero-copy">
+        <h1 class="profile-name">{{ displayName }}</h1>
+        <span class="role-badge">{{ profile.role || role | titlecase }}</span>
+        <p class="profile-bio">{{ profile.bio || headline }}</p>
+      </div>
+      <div class="hero-metrics">
+        <div>
+          <strong>{{ totalProjects }}</strong>
+          <span>projects</span>
+        </div>
+        <div>
+          <strong>{{ ratingValue || 0 }}</strong>
+          <span>rating</span>
+        </div>
+        <div>
+          <strong>{{ clientOffers.length }}</strong>
+          <span>offers</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Details card -->
-    <div class="info-card" *ngIf="profile.email || profile.location || profile.skills">
+    <div class="info-card" *ngIf="profile.email || profile.location || profile.phone">
       <div class="info-row" *ngIf="profile.email">
         <ion-icon name="mail-outline"></ion-icon>
         <span>{{ profile.email }}</span>
@@ -39,7 +55,6 @@
       </div>
     </div>
 
-    <!-- Skills (freelancer) -->
     <div class="skills-card" *ngIf="profile.skills?.length">
       <h3>Skills</h3>
       <div class="skills-wrap">
@@ -47,14 +62,36 @@
       </div>
     </div>
 
-    <!-- Client actions -->
     <div class="client-actions-card" *ngIf="isOwnerClient">
-      <h3>Post a New Offer</h3>
-      <p class="action-note">Create a job offer directly from your profile.</p>
+      <div class="action-header">
+        <h3>Post a New Offer</h3>
+        <span>Keep your pipeline full</span>
+      </div>
       <ion-button expand="block" (click)="openOfferModal()">Create Offer</ion-button>
     </div>
 
-    <!-- Offers proposed by freelancer -->
+    <div class="client-offers-card" *ngIf="role === 'client'">
+      <h3>Recent Offers</h3>
+      <div class="offers-loading" *ngIf="clientOffersLoading">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+      <div class="offers-list" *ngIf="!clientOffersLoading && clientOffers.length">
+        <div class="offer-item" *ngFor="let offer of clientOffers">
+          <div class="offer-header">
+            <div class="offer-title">{{ offer.title || 'Untitled offer' }}</div>
+            <span class="status-chip">{{ offer.status | titlecase }}</span>
+          </div>
+          <div class="offer-meta">
+            <span class="budget">${{ offer.budget | number }}</span>
+            <span class="date" *ngIf="offer.createdAt">Posted {{ offer.createdAt | date:'MMM d, y' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="empty-offers" *ngIf="!clientOffersLoading && clientOffers.length === 0">
+        No offers yet
+      </div>
+    </div>
+
     <div class="offers-card" *ngIf="role === 'freelancer'">
       <h3>Offers Applied</h3>
 
@@ -96,19 +133,10 @@
         No offers yet
       </div>
     </div>
-
-    <!-- Placeholder when teammate's full profile is not yet merged -->
-    <div class="coming-soon" *ngIf="!profile.email && !profile.skills">
-      <ion-icon name="person-outline"></ion-icon>
-      <p>Full profile coming soon</p>
-      <span>User ID: {{ userId }}</span>
-    </div>
-
   </div>
-
 </ion-content>
 
-<app-side-bar activeTab="profile"></app-side-bar>
+<app-toolbar activeTab="profile"></app-toolbar>
 
 <!-- ===== Create Offer Modal ===== -->
 <ion-modal [isOpen]="showOfferModal" (didDismiss)="closeOfferModal()" [breakpoints]="[0, 1]" [initialBreakpoint]="1">

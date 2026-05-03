@@ -12,8 +12,9 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="home-content" [fullscreen]="true">
+<ion-content class="home-content" [fullscreen]="true" [forceOverscroll]="false">
   <div class="page-shell">
+    <!-- Hero Section -->
     <section class="hero-card">
       <div class="hero-badge">Hello, User</div>
       <h1 class="hero-title">Let's find best talent for you</h1>
@@ -35,21 +36,22 @@
 
         <div class="hero-metrics">
           <div class="metric-card">
-            <strong>120+</strong>
+            <strong>{{ metrics.talents }}</strong>
             <span>talents</span>
           </div>
           <div class="metric-card">
-            <strong>24h</strong>
-            <span>response</span>
+            <strong>{{ metrics.services }}</strong>
+            <span>services</span>
           </div>
           <div class="metric-card">
-            <strong>4.9</strong>
+            <strong>{{ metrics.rating | number: '1.1-1' }}</strong>
             <span>rating</span>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Feature Section -->
     <section class="feature-section">
       <div class="section-heading">
         <div>
@@ -58,7 +60,16 @@
         <a routerLink="/view-all-categories" class="view-all">View all</a>
       </div>
 
-      <div class="feature-grid">
+      <!-- Loading skeleton -->
+      <div class="feature-grid" *ngIf="isLoadingFeatures">
+        <div class="feature-card skeleton-card" *ngFor="let s of [1,2,3,4]">
+          <div class="feature-icon skeleton"></div>
+          <div class="skeleton-text"></div>
+        </div>
+      </div>
+
+      <!-- Actual content -->
+      <div class="feature-grid" *ngIf="!isLoadingFeatures">
         <article class="feature-card" *ngFor="let feature of features; trackBy: trackByIndex">
           <div class="feature-icon">
             <ion-icon [name]="feature.icon"></ion-icon>
@@ -68,6 +79,7 @@
       </div>
     </section>
 
+    <!-- Freelancer Section -->
     <section class="feature-section" *ngIf="showFreelancersSection">
       <div class="section-heading">
         <div>
@@ -76,10 +88,24 @@
         <a routerLink="/view-all-freelancers" class="view-all">View all</a>
       </div>
 
-      <div class="freelancer-strip">
+      <!-- Loading skeleton -->
+      <div class="freelancer-strip" *ngIf="isLoadingFreelancers">
+        <div class="freelancer-card skeleton-card" *ngFor="let s of [1,2,3]">
+          <div class="freelancer-avatar skeleton"></div>
+          <div class="freelancer-copy">
+            <div class="skeleton-text" style="width: 70%;"></div>
+            <div class="skeleton-text" style="width: 50%; margin-top: 8px;"></div>
+            <div class="skeleton-text" style="width: 90%; margin-top: 8px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actual content -->
+      <div class="freelancer-strip" *ngIf="!isLoadingFreelancers">
         <article
           class="freelancer-card"
           *ngFor="let freelancer of filteredFreelancers; trackBy: trackByIndex"
+          (click)="navigateToFreelancerProfile(freelancer.id)"
         >
           <div class="freelancer-avatar">
             <img [src]="freelancer.avatarImage" [alt]="freelancer.name" loading="lazy" />
@@ -100,6 +126,7 @@
       </div>
     </section>
 
+    <!-- Service Section -->
     <section class="service-section" *ngIf="showServicesSection">
       <div class="section-heading">
         <div>
@@ -108,7 +135,20 @@
         <a routerLink="/gigs" class="view-all">View All</a>
       </div>
 
-      <div class="services-grid">
+      <!-- Loading skeleton -->
+      <div class="services-grid" *ngIf="isLoadingServices">
+        <div class="service-card skeleton-card" *ngFor="let s of [1,2,3,4]">
+          <div class="service-cover-wrap">
+            <div class="service-cover skeleton"></div>
+          </div>
+          <div class="service-overlay">
+            <div style="height: 80px; background: rgba(255,255,255,0.1);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actual content -->
+      <div class="services-grid" *ngIf="!isLoadingServices">
         <article class="service-card" *ngFor="let service of filteredServices; trackBy: trackByIndex">
           <div class="service-cover-wrap">
             <img [src]="service.coverImage" [alt]="service.title" class="service-cover" loading="lazy" />
@@ -131,7 +171,7 @@
                 <span>{{ service.rating | number: '1.1-1' }}</span>
               </div>
 
-              <ion-button fill="solid" size="small" class="service-more-btn">More details</ion-button>
+              <ion-button fill="solid" size="small" class="service-more-btn" (click)="navigateToService(service.id)">More details</ion-button>
             </div>
           </div>
         </article>
@@ -142,7 +182,6 @@
       </div>
     </section>
   </div>
-
 </ion-content>
 
-<app-side-bar activeTab="home"></app-side-bar>
+<app-toolbar activeTab="home"></app-toolbar>

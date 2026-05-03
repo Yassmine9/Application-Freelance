@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 interface FreelancerCard {
+  id: string;
   name: string;
   primarySkill: string;
   skills: string[];
@@ -18,9 +20,7 @@ interface FreelancerApiItem {
   hourly_rate?: number;
 }
 
-interface FreelancersApiResponse {
-  freelancers: FreelancerApiItem[];
-}
+type FreelancersApiResponse = FreelancerApiItem[] | { freelancers?: FreelancerApiItem[] };
 
 @Component({
   selector: 'app-view-all-freelancers',
@@ -32,7 +32,7 @@ export class ViewAllFreelancersPage {
   freelancers: FreelancerCard[] = [];
   isLoading = false;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private readonly router: Router) {}
 
   ionViewWillEnter(): void {
     this.loadFreelancers();
@@ -41,9 +41,10 @@ export class ViewAllFreelancersPage {
   private loadFreelancers(): void {
     this.isLoading = true;
 
-    this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
+    this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/auth/freelancers?status=all`).subscribe({
       next: (response) => {
-        this.freelancers = (response.freelancers ?? [])
+        const rawFreelancers = Array.isArray(response) ? response : (response.freelancers ?? []);
+        this.freelancers = rawFreelancers
           .map((freelancer) => this.mapFreelancer(freelancer))
           .filter((freelancer): freelancer is FreelancerCard => freelancer !== null);
         this.isLoading = false;
@@ -70,6 +71,7 @@ export class ViewAllFreelancersPage {
     const primarySkill = skills[0];
 
     return {
+      id: freelancer._id,
       name,
       primarySkill,
       skills,
@@ -128,5 +130,9 @@ export class ViewAllFreelancersPage {
 
   getAccentClass(index: number): string {
     return `accent-${(index % 6) + 1}`;
+  }
+
+  navigateToFreelancerProfile(freelancerId: string): void {
+    this.router.navigateByUrl(`/view-freelancer-profile/${freelancerId}`);
   }
 }

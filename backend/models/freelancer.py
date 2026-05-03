@@ -1,60 +1,47 @@
-from db.mongo import db
 from models.base_user import BaseUser
 
 
 class Freelancer(BaseUser):
-
     """Modèle Freelancer – collection 'freelancer'"""
-
-    collection = db["freelancer"] if db is not None else None
+    _collection_name = "freelancer"
 
     @classmethod
-    def create(cls, email, password, name, phone):
+    def create(cls, email, password, name, phone, skills=None, hourly_rate=0, bio=""):
+        skills = skills or []
         return super().create(
             email, password, name,
             role="freelancer",
             phone=phone,
-
-            # filled later by freelancer
             title="",
-            bio="",
-            skills=[],
-            hourly_rate=0,
+            bio=bio,
+            skills=skills,
+            hourly_rate=hourly_rate,
             experience_years=0,
             projects_completed=0,
             avatar_filename="",
             cv_filename="",
-
             portfolio=[],
-            # calculated automatically
             client_rating=0.0,
             success_rate=0,
-            # auto
-            status="draft",
+            status="pending",  # <-- CHANGED from "draft"
             proposals_sent=[]
         )
 
     @classmethod
     def find_by_skill(cls, skill):
-        if cls.collection is None:
-            return []
-        return [cls._serialize(u) for u in cls.collection.find({
+        return [cls._serialize(u) for u in cls.get_collection().find({
             "skills": {"$in": [skill]}
         })]
 
     @classmethod
     def find_approved(cls):
-        """Returns all approved freelancers (visible to clients)"""
-        if cls.collection is None:
-            return []
-        return [cls._serialize(u) for u in cls.collection.find(
+        return [cls._serialize(u) for u in cls.get_collection().find(
             {"status": "approved"},
             {"password": 0}
         )]
 
     @classmethod
     def recalculate_stats(cls, freelancer_email, reviews: list):
-        """Recalculates client_rating and success_rate from reviews list"""
         if not reviews:
             return
         total = len(reviews)

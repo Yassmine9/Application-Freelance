@@ -63,10 +63,10 @@ export class EditGigPage implements OnInit {
 
   async onSubmit() {
     // Validation
-    if (!this.gig.title || !this.gig.description || !this.gig.category || !this.gig.price || !this.gig.duration) {
+    if (!this.gig.title || !this.gig.description || !this.gig.category || !this.gig.price ) {
       const alert = await this.alertCtrl.create({
         header: 'Erreur',
-        message: 'Veuillez remplir tous les champs obligatoires.',
+        message: 'missing fields',
         buttons: ['OK']
       });
       await alert.present();

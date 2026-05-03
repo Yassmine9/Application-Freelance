@@ -7,9 +7,9 @@ import {
   IonSpinner, IonButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { briefcaseOutline, chevronForwardOutline } from 'ionicons/icons';
+import { briefcaseOutline, chevronForwardOutline, peopleOutline } from 'ionicons/icons';
 import { ApiService } from '../services/api.service';
-import { SideBarComponent } from '../components/side-bar/side-bar.component';
+import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
 
 @Component({
@@ -22,7 +22,7 @@ import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonList, IonItem, IonLabel, IonBadge, IonIcon,
     IonSpinner, IonButton,
-    SideBarComponent
+    ToolBarComponent
   ]
 })
 export class MyOffersPage implements OnInit {
@@ -34,7 +34,7 @@ export class MyOffersPage implements OnInit {
     private auth: FreelanceAuthHelper,
     private router: Router
   ) {
-    addIcons({ briefcaseOutline, chevronForwardOutline });
+    addIcons({ briefcaseOutline, chevronForwardOutline, peopleOutline });
   }
 
   ngOnInit() {
@@ -56,6 +56,19 @@ export class MyOffersPage implements OnInit {
     this.api.getMyOffers().subscribe({
       next: (res) => {
         this.offers = res || [];
+        // Load proposal counts for each offer
+        this.offers.forEach((offer) => {
+          this.api.getProposals(offer._id).subscribe({
+            next: (proposals) => {
+              offer.proposalCount = proposals.length;
+              offer.pendingProposals = proposals.filter((p: any) => p.status === 'pending').length;
+            },
+            error: () => {
+              offer.proposalCount = 0;
+              offer.pendingProposals = 0;
+            }
+          });
+        });
         this.isLoading = false;
       },
       error: () => {
@@ -63,5 +76,13 @@ export class MyOffersPage implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  viewProposals(offerId: string) {
+    this.router.navigate(['/proposals', offerId]);
+  }
+
+  getInitials(clientId: string): string {
+    return clientId ? clientId.slice(-2).toUpperCase() : 'CL';
   }
 }

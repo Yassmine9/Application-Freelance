@@ -34,11 +34,9 @@
          [routerLink]="['/proposals', offer._id]">
 
       <div class="card-top">
-        <span class="status-chip"
-              [ngClass]="offer.status === 'open' ? 'open' :
-                         offer.status === 'in_progress' ? 'in-progress' :
-                         'closed'">
-          {{ offer.status === 'in_progress' ? 'In Progress' : (offer.status | titlecase) }}
+        <!-- All offers here are open, so show simple open badge -->
+        <span class="status-chip open">
+          Open
         </span>
 
         <span class="post-time">
@@ -88,12 +86,6 @@
                     [routerLink]="['/proposals', offer._id]">
           {{ isClient ? 'View Proposals' : 'Apply Now' }}
         </ion-button>
-
-        <ion-button size="small" fill="outline" color="medium"
-                    *ngIf="offer.status === 'in_progress'"
-                    [routerLink]="getChatLink(offer)">
-          Chat
-        </ion-button>
       </div>
 
     </div>
@@ -127,7 +119,7 @@
 
 </ion-content>
 
-<app-side-bar activeTab="offers"></app-side-bar>
+<app-toolbar activeTab="offers"></app-toolbar>
 
 <!-- FAB: Post a Job (clients only) -->
 <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="isClient">

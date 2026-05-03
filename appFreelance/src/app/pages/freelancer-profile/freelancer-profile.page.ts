@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FreelancerProfileService } from '../../services/freelancer-profile.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 export interface Project {
   title: string;
@@ -29,7 +30,7 @@ export class FreelancerProfilePage implements OnInit {
 
   // ---- Profile fields ----
   id : string ='';
-  name: string = 'asma';
+  name: string = '';
   email: string = '';
   phone: string = '';
   title: string = '';
@@ -107,10 +108,10 @@ export class FreelancerProfilePage implements OnInit {
       this.profileStatus     = data.user.status || 'draft';
       
       if (data.user.avatar_filename) {
-        this.avatarUrl = `http://127.0.0.1:5000/api/uploads/avatars/${data.user.avatar_filename}`;
+        this.avatarUrl = `${environment.apiUrl}/uploads/avatars/${data.user.avatar_filename}`;
       }
       else {
-      this.avatarUrl = 'appFreelance/src/assets/avatar.png';
+      this.avatarUrl = 'assets/avatar.png';
        }
       this.isLoading = false;
       

@@ -1,32 +1,39 @@
-<ion-header>
+<ion-header class="messages-header">
   <ion-toolbar>
     <ion-title>Messages</ion-title>
+    <div class="header-subtitle">Your active chats and updates</div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="messages-content">
   <div class="center-box" *ngIf="isLoading">
     <ion-spinner name="crescent" color="primary"></ion-spinner>
   </div>
 
-  <ion-list *ngIf="!isLoading && conversations.length">
-    <ion-item
+  <div class="messages-list" *ngIf="!isLoading && conversations.length">
+    <button
+      class="message-card"
       *ngFor="let convo of conversations"
-      [routerLink]="convo.otherUserId ? ['/chat', convo.offerId, convo.otherUserId] : null"
       [disabled]="!convo.otherUserId"
-      detail="true"
+      [routerLink]="convo.otherUserId ? ['/chat', convo.offerId, convo.otherUserId] : null"
+      type="button"
     >
-      <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
-      <ion-label>
-        <h2>{{ convo.offerTitle || 'Conversation' }}</h2>
-        <p>{{ getLastPreview(convo) }}</p>
-      </ion-label>
-      <div class="item-meta" slot="end">
-        <span class="time" *ngIf="convo.lastMessage?.createdAt">{{ convo.lastMessage.createdAt | date:'MMM d' }}</span>
-        <ion-badge color="primary" *ngIf="convo.unreadCount">{{ convo.unreadCount }}</ion-badge>
+      <div class="avatar">
+        {{ getInitials(convo.offerTitle || 'Conversation') }}
       </div>
-    </ion-item>
-  </ion-list>
+      <div class="message-body">
+        <div class="message-title">
+          <h3>{{ convo.offerTitle || 'Conversation' }}</h3>
+          <span class="time" *ngIf="convo.lastMessage?.createdAt">{{ convo.lastMessage.createdAt | date:'MMM d' }}</span>
+        </div>
+        <p>{{ getLastPreview(convo) }}</p>
+      </div>
+      <div class="message-meta">
+        <ion-badge color="primary" *ngIf="convo.unreadCount">{{ convo.unreadCount }}</ion-badge>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+    </button>
+  </div>
 
   <div class="empty-state" *ngIf="!isLoading && conversations.length === 0">
     <ion-icon name="chatbubbles-outline"></ion-icon>
@@ -35,4 +42,4 @@
   </div>
 </ion-content>
 
-<app-side-bar activeTab="messages"></app-side-bar>
+<app-toolbar activeTab="messages"></app-toolbar>

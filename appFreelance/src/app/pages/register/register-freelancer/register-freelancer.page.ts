@@ -120,9 +120,10 @@ export class RegisterPage implements OnInit {
   }
 
 
+
   private isValidPhone(phone: string): boolean {
-    const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
-    return phoneRegex.test(phone.replace(/\s/g, ''));
+    const cleaned = phone.replace(/\s/g, '');
+    return cleaned.length >= 8 && /^[+\d][\d\s\-().]{7,}$/.test(cleaned);
   }
 
 }

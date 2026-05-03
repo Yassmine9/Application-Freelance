@@ -1,0 +1,74 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>My Jobs</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading -->
+  <div class="center-box" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <!-- Jobs List -->
+  <div class="jobs-list" *ngIf="!isLoading && jobs.length > 0">
+
+    <div class="job-card" *ngFor="let job of jobs" [routerLink]="['/proposals', job._id]">
+
+      <div class="card-header">
+        <ion-badge color="success">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          Accepted
+        </ion-badge>
+        <span class="date">{{ job.createdAt | date:'MMM d, yyyy' }}</span>
+      </div>
+
+      <h2 class="job-title">{{ job.title }}</h2>
+
+      <div class="budget-row">
+        <ion-icon name="cash-outline" color="success"></ion-icon>
+        <span>${{ job.budget | number }}</span>
+      </div>
+
+      <div class="meta-row" *ngIf="job.deadline">
+        <ion-icon name="calendar-outline" color="medium"></ion-icon>
+        <span>Due {{ job.deadline | date:'MMM d, yyyy' }}</span>
+      </div>
+
+      <div class="client-row">
+        <div class="avatar">{{ getInitials(job.clientName || 'Client') }}</div>
+        <div class="client-info">
+          <span class="label">Posted by</span>
+          <span class="name">Client #{{ job.clientId?.slice(-6) }}</span>
+        </div>
+      </div>
+
+      <div class="actions" (click)="$event.stopPropagation()">
+        <ion-button size="small" fill="solid" color="primary" [routerLink]="getChatLink(job)">
+          <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+          Chat with Client
+        </ion-button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && jobs.length === 0">
+    <ion-icon name="briefcase-outline" color="medium"></ion-icon>
+    <h3>No active jobs</h3>
+    <p>Browse open offers and submit proposals to get hired.</p>
+    <ion-button fill="solid" color="primary" routerLink="/offers">
+      Find Jobs
+    </ion-button>
+  </div>
+
+</ion-content>
+
+<app-toolbar activeTab="action"></app-toolbar>

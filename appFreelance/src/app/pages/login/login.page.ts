@@ -46,21 +46,26 @@ export class LoginPage implements OnInit {
 
     this.authService.login(this.email, this.password).subscribe({
       next: async (res) => {
-        console.log("Inside the authservice.login");
         await loading.dismiss();
         if (res.status === 'pending') {
           this.router.navigate(['/registration-pending']);
-        } else {
-          const role = res?.user?.role;
-          this.router.navigate([role === 'freelancer' ? '/offers' : '/home']);
+          return;
         }
-        
+
+        const role = res?.user?.role;
+        if (role === 'admin') {
+          this.router.navigate(['/admin-panel']);
+        } else if (role === 'freelancer') {
+          this.router.navigate(['/offers']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
       error: async (err) => {
         await loading.dismiss();
         const alert = await this.alertCtrl.create({
           header: 'Erreur',
-          message: err.error?.error || 'Email ou mot de passe incorrect.',
+          message: err.error?.error || 'Email or password incorrect.',
           buttons: ['OK']
         });
         await alert.present();
