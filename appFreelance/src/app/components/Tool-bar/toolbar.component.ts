@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
-type ToolBarTab = 'home' | 'store' | 'join' | 'feedback' | 'nav' | 'offers' | 'action' | 'messages' | 'profile' | 'search';
+type ToolBarTab =
+  | 'home' | 'store' | 'join' | 'offers' | 'action'
+  | 'messages' | 'profile' | 'search';
 
 @Component({
   selector: 'app-toolbar',
@@ -18,6 +20,7 @@ export class ToolBarComponent implements OnInit {
 
   isLoggedIn = false;
   userRole: string | null = null;
+  showActionMenu = false;
 
   constructor(
     private readonly router: Router,
@@ -27,178 +30,64 @@ export class ToolBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateAuthStatus();
-    this.authService.getCurrentUser().subscribe(() => {
-      this.updateAuthStatus();
-    });
+    this.authService.getCurrentUser().subscribe(() => this.updateAuthStatus());
   }
 
   private updateAuthStatus(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
-    this.userRole = this.authService.getUserRole();
+    this.userRole   = this.authService.getUserRole();
   }
 
-  get offersLabel(): string {
-    return this.authService.isClient() ? 'My offers' : 'Offers';
-  }
-
-  get actionLabel(): string {
-    return this.authService.isClient() ? 'Post' : 'Jobs';
-  }
-
-  get actionIcon(): string {
-    return this.authService.isClient() ? 'add-outline' : 'briefcase-outline';
-  }
-
-
-  goHome(): void {
-    this.router.navigateByUrl('/home');
-  }
-
-  goToOffers(): void {
-    if (this.authService.isClient()) {
-      this.router.navigateByUrl('/my-offers');
-      return;
-    }
-
-    this.router.navigateByUrl('/offers');
-  }
-
-  goToMessages(): void {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigateByUrl('/login');
-      return;
-    }
-
+  // ── Navigation ──────────────────────────────────────────────
+  goHome():      void { this.router.navigateByUrl('/home'); }
+  goToStore():   void { this.router.navigateByUrl('/store'); }
+  goToMessages():void {
+    if (!this.authService.isLoggedIn()) { this.router.navigateByUrl('/login'); return; }
     this.router.navigateByUrl('/conversations');
   }
 
   goToProfile(): void {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigateByUrl('/login');
-      return;
+    if (!this.authService.isLoggedIn()) { this.router.navigateByUrl('/login'); return; }
+      const role   = this.authService.getUserRole() || 'client';
+      const userId = this.authService.getUserId();
+    if (role === 'freelancer') {
+    // goes to the merged public/owner profile
+      this.router.navigateByUrl(`/view-freelancer-profile/${userId}`);
+    } else {
+      this.router.navigateByUrl(`/profile/client/${userId}`);
     }
-
-    const role = this.authService.getUserRole() || 'client';
-    const userId = this.authService.getUserId();
-    this.router.navigateByUrl(`/profile/${role}/${userId}`);
   }
-
-  goToAction(): void {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigateByUrl('/login');
-      return;
-    }
-
+  goToOffers(): void {
     if (this.authService.isClient()) {
-      this.router.navigateByUrl('/post-offer');
-      return;
+      this.router.navigateByUrl('/my-offers');
+    } else {
+      this.router.navigateByUrl('/offers');
     }
-
-    this.router.navigateByUrl('/my-jobs');
-
   }
 
-  goToStore(): void {
-    this.router.navigateByUrl('/view-all-services');
-  }
+  // ── Freelancer popup actions ─────────────────────────────────
+  goToMyGigs(): void { this.router.navigateByUrl('/my-gigs'); }
+  goToMyJobs(): void { this.router.navigateByUrl('/my-jobs'); }
 
-  goToFeedback(): void {
-    this.router.navigateByUrl('/feedback');
-  }
+  toggleActionMenu():  void { this.showActionMenu = !this.showActionMenu; }
+  closeActionMenu():   void { this.showActionMenu = false; }
 
-  openSearch(): void {
-    this.router.navigateByUrl('/search');
+  // ── Sheets ───────────────────────────────────────────────────
+  async openContactSheet(): Promise<void> {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Welcome to FreelanceHub',
+      buttons: [
+        { text: 'Log in',          icon: 'log-in-outline',    handler: () => this.router.navigateByUrl('/login') },
+        { text: 'Create account',  icon: 'person-add-outline', handler: () => this.router.navigateByUrl('/register') },
+        { text: 'Cancel', role: 'cancel' },
+      ],
+    });
+    await actionSheet.present();
   }
 
   logout(): void {
     this.authService.logout();
     this.updateAuthStatus();
     this.router.navigateByUrl('/home', { replaceUrl: true });
-  }
-
-  async openContactSheet(): Promise<void> {
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Contact us',
-      buttons: [
-        {
-          text: 'Go to login',
-          icon: 'log-in-outline',
-          handler: () => {
-            this.router.navigateByUrl('/login');
-          },
-        },
-        {
-          text: 'Create account',
-          icon: 'person-add-outline',
-          handler: () => {
-            this.router.navigateByUrl('/register');
-          },
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-      ],
-    });
-
-    await actionSheet.present();
-  }
-
-  async openNavigationScheme(): Promise<void> {
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Navigation scheme',
-      buttons: [
-        {
-          text: 'Home ',
-          icon: 'home-outline',
-          handler: () => {
-            this.router.navigateByUrl('/home');
-          },
-        },
-        {
-          text: 'Search',
-          icon: 'search-outline',
-          handler: () => {
-            this.router.navigateByUrl('/search');
-          },
-        },
-        {
-          text: 'All Gigs',
-          icon: 'briefcase-outline',
-          handler: () => {
-            this.router.navigateByUrl('/gigs');
-          },
-        },
-        {
-          text: 'Freelancers list',
-          icon: 'people-outline',
-          handler: () => {
-            this.router.navigateByUrl('/view-all-freelancers');
-          },
-        },
-        {
-          text: 'Categories',
-          icon: 'layers-outline',
-          handler: () => {
-            this.router.navigateByUrl('/view-all-categories');
-          },
-        },
-        {
-          text: 'Store',
-          icon: 'storefront-outline',
-          handler: () => {
-            this.router.navigateByUrl('/store');
-          },
-        },
-
-
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-      ],
-    });
-
-    await actionSheet.present();
   }
 }

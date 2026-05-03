@@ -1,120 +1,99 @@
+<!-- FREELANCER ACTION POPUP -->
+<div class="action-backdrop" *ngIf="showActionMenu" (click)="closeActionMenu()"></div>
+
+<div class="action-popup" [class.visible]="showActionMenu && isLoggedIn && userRole === 'freelancer'">
+  <button class="popup-item" (click)="goToMyJobs(); closeActionMenu()">
+    <span class="popup-icon"><ion-icon name="hammer-outline"></ion-icon></span>
+    <span>My Jobs</span>
+  </button>
+  <button class="popup-item" (click)="goToMyGigs(); closeActionMenu()">
+    <span class="popup-icon"><ion-icon name="briefcase-outline"></ion-icon></span>
+    <span>My Gigs</span>
+  </button>
+  <button class="popup-item" (click)="goToOffers(); closeActionMenu()">
+    <span class="popup-icon"><ion-icon name="document-text-outline"></ion-icon></span>
+    <span>Offers</span>
+  </button>
+</div>
+
 <div class="custom-navbar">
-  <ng-container *ngIf="!isLoggedIn; else loggedInNav">
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'home'"
-      aria-label="Home"
-      (click)="goHome()"
-    >
+
+  <!-- ── NOT LOGGED IN ── -->
+  <ng-container *ngIf="!isLoggedIn">
+    <button type="button" class="nav-item" [class.active]="activeTab === 'home'" (click)="goHome()">
       <ion-icon name="home-outline"></ion-icon>
       <span>Home</span>
     </button>
 
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'store'"
-      aria-label="Services"
-      (click)="goToStore()"
-    >
-      <ion-icon name="storefront-outline"></ion-icon>
-      <span>Services</span>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item nav-item-center"
-      [class.active]="activeTab === 'join'"
-      aria-label="Join us"
-      (click)="openContactSheet()"
-    >
+    <button type="button" class="nav-item nav-item-center" (click)="openContactSheet()">
       <span class="center-chip">
         <ion-icon name="log-in-outline"></ion-icon>
       </span>
       <span>Join us</span>
     </button>
 
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'feedback'"
-      aria-label="Feedback"
-      (click)="goToFeedback()"
-    >
-      <ion-icon name="clipboard-outline"></ion-icon>
-      <span>Feedback</span>
-    </button>
-
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'nav'"
-      aria-label="Navigation scheme"
-      (click)="openNavigationScheme()"
-    >
-      <ion-icon name="git-network-outline"></ion-icon>
-      <span>Nav map</span>
+    <button type="button" class="nav-item" [class.active]="activeTab === 'store'" (click)="goToStore()">
+      <ion-icon name="storefront-outline"></ion-icon>
+      <span>Store</span>
     </button>
   </ng-container>
 
-  <ng-template #loggedInNav>
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'home'"
-      aria-label="Home"
-      (click)="goHome()"
-    >
+  <!-- ── FREELANCER ── -->
+  <ng-container *ngIf="isLoggedIn && userRole === 'freelancer'">
+    <button type="button" class="nav-item" [class.active]="activeTab === 'home'" (click)="goHome()">
       <ion-icon name="home-outline"></ion-icon>
       <span>Home</span>
     </button>
 
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'offers'"
-      aria-label="Offers"
-      (click)="goToOffers()"
-    >
-      <ion-icon name="briefcase-outline"></ion-icon>
-      <span>{{ offersLabel }}</span>
+    <button type="button" class="nav-item" [class.active]="activeTab === 'store'" (click)="goToStore()">
+      <ion-icon name="storefront-outline"></ion-icon>
+      <span>Store</span>
     </button>
 
-    <button
-      type="button"
-      class="nav-item nav-item-center"
-      [class.active]="activeTab === 'action'"
-      aria-label="Action"
-      (click)="goToAction()"
-    >
-      <span class="center-chip">
-        <ion-icon [name]="actionIcon"></ion-icon>
+    <button type="button" class="nav-item nav-item-center" (click)="toggleActionMenu()">
+      <span class="center-chip" [class.chip-open]="showActionMenu">
+        <ion-icon [name]="showActionMenu ? 'close-outline' : 'add-outline'"></ion-icon>
       </span>
-      <span>{{ actionLabel }}</span>
+      <span>{{ showActionMenu ? 'Close' : 'Actions' }}</span>
     </button>
 
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'messages'"
-      aria-label="Messages"
-      (click)="goToMessages()"
-    >
+    <button type="button" class="nav-item" [class.active]="activeTab === 'messages'" (click)="goToMessages()">
       <ion-icon name="chatbubbles-outline"></ion-icon>
       <span>Messages</span>
     </button>
 
-    <button
-      type="button"
-      class="nav-item"
-      [class.active]="activeTab === 'profile'"
-      aria-label="Profile"
-      (click)="goToProfile()"
-    >
+    <button type="button" class="nav-item" [class.active]="activeTab === 'profile'" (click)="goToProfile()">
       <ion-icon name="person-circle-outline"></ion-icon>
       <span>Profile</span>
     </button>
-    
-  </ng-template>
+  </ng-container>
+
+  <!-- ── CLIENT ── -->
+  <ng-container *ngIf="isLoggedIn && userRole === 'client'">
+    <button type="button" class="nav-item" [class.active]="activeTab === 'home'" (click)="goHome()">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Home</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'store'" (click)="goToStore()">
+      <ion-icon name="storefront-outline"></ion-icon>
+      <span>Store</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'offers'" (click)="goToOffers()">
+      <ion-icon name="briefcase-outline"></ion-icon>
+      <span>My Offers</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'messages'" (click)="goToMessages()">
+      <ion-icon name="chatbubbles-outline"></ion-icon>
+      <span>Messages</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'profile'" (click)="goToProfile()">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <span>Profile</span>
+    </button>
+  </ng-container>
+
 </div>

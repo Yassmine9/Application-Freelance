@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PreferencesService } from '../services/preferences.service';
 import { environment } from '../../environments/environment';
-
+import { AuthService } from '../services/auth.service';
 interface HomeFeature {
   title: string;
   icon: string;
@@ -68,6 +68,7 @@ type SearchScope = 'all' | 'freelancers' | 'services';
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
+
 export class HomePage {
   searchTerm = '';
   searchScope: SearchScope = 'all';
@@ -82,12 +83,13 @@ export class HomePage {
   isLoadingFeatures = true;
   isLoadingFreelancers = true;
   isLoadingServices = true;
-
+  userName = '';  
   constructor(
     private readonly router: Router,
     private readonly actionSheetController: ActionSheetController,
     private readonly preferencesService: PreferencesService,
     private readonly http: HttpClient,
+    private readonly authService: AuthService, 
   ) {}
 
   ionViewWillEnter(): void {
@@ -95,8 +97,9 @@ export class HomePage {
       this.router.navigateByUrl('/preferences', { replaceUrl: true });
       return;
     }
-
+    this.userName = this.authService.getStoredUser()?.name ?? ''; 
     this.preferredCategories = this.preferencesService.getPreferences().categories;
+    this.userName = this.authService.getStoredUser()?.name ?? '';
     this.loadFeatures();
     this.loadFreelancers();
     this.loadServices();
