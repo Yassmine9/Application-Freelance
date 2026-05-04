@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/gigs"></ion-back-button>
+    </ion-buttons>
+    <ion-title>New Gig Order</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="gig; else loading">
+    <!-- Gig summary -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ gig.title }}</ion-card-title>
+        <ion-card-subtitle>by {{ gig.freelancer_name }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Price:</strong> ${{ gig.price }}</p>
+        <p><strong>Delivery:</strong> {{ gig.duration || 'Standard' }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Requirements form -->
+    <ion-item>
+      <ion-label position="stacked">
+        Your requirements <span class="required">*</span>
+      </ion-label>
+      <ion-textarea
+        [(ngModel)]="requirements"
+        rows="6"
+        placeholder="Describe what you need (min 20 characters)..."
+        [counter]="true"
+        maxlength="1000"
+      ></ion-textarea>
+    </ion-item>
+    <ion-note color="medium" class="ion-padding-start">
+      Minimum 20 characters. Be specific about scope, features, and deadlines.
+    </ion-note>
+
+    <ion-button
+      expand="block"
+      color="primary"
+      (click)="placeGigOrder()"
+      [disabled]="isSubmitting"
+      class="ion-margin-top"
+    >
+      <ion-spinner *ngIf="isSubmitting" name="crescent" slot="start"></ion-spinner>
+      {{ isSubmitting ? 'Placing order...' : 'Place Gig Order - $' + gig?.price }}
+    </ion-button>
+  </div>
+
+  <ng-template #loading>
+    <div class="center">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading gig details...</p>
+    </div>
+  </ng-template>
+</ion-content>

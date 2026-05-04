@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FreelancerProfileService } from '../../services/freelancer-profile.service';
-
+import { ReviewService } from '../../services/review.service';
 export interface Project {
   title: string;
   description: string;
@@ -23,6 +23,7 @@ export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'blo
   styleUrls: ['./view-freelancer-profile.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
+  providers: [ReviewService],
 })
 export class ViewFreelancerProfilePage implements OnInit {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
@@ -46,6 +47,24 @@ export class ViewFreelancerProfilePage implements OnInit {
   profileStatus: ProfileStatus = 'draft';
   gigs: Gig[] = [];
 
+  // ---- Review state ----
+  reviews:          any[]    = [];
+  canReview:        boolean  = false;
+  cannotReason:     string   = '';
+  rating:           number   = 0;
+  comment:          string   = '';
+  submitted:        boolean  = false;
+  isSubmitting:     boolean  = false;
+  isLoadingReviews: boolean  = false;
+  stars = [1, 2, 3, 4, 5];
+  starLabels: { [key: number]: string } = {
+    1: 'Poor',
+    2: 'Fair',
+    3: 'Good',
+    4: 'Very Good',
+    5: 'Excellent'
+  };
+
   // ---- UI state ----
   activeTab: string = 'bio';
   isLoading = true;
@@ -67,11 +86,21 @@ export class ViewFreelancerProfilePage implements OnInit {
     return labels[this.profileStatus];
   }
 
+  get isCommentValid(): boolean {
+    return this.comment.trim().length >= 20 &&
+           this.comment.trim().length <= 500;
+  }
+
+  get isFormValid(): boolean {
+    return this.rating > 0 && this.isCommentValid;
+  }
   constructor(
     private route: ActivatedRoute,
     private profileService: FreelancerProfileService,
     private router: Router,
     private actionSheetController: ActionSheetController,
+    private reviewService: ReviewService,
+    
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +108,8 @@ export class ViewFreelancerProfilePage implements OnInit {
       this.freelancerId = params.get('id') || '';
       if (this.freelancerId) {
         this.loadFreelancerProfile(this.freelancerId);
+        this.loadReviews(this.freelancerId);
+        this.checkCanReview(this.freelancerId);
       } else {
         this.isLoading = false;
       }
@@ -125,6 +156,64 @@ export class ViewFreelancerProfilePage implements OnInit {
         console.error('Failed to load freelancer profile', err);
         this.isLoading = false;
       },
+    });
+  }
+  // ---- Reviews ------------------------------------------------
+
+  loadReviews(freelancerId: string): void {
+    this.isLoadingReviews = true;
+    this.reviewService.getFreelancerReviews(freelancerId).subscribe({
+      next:  (data) => {
+        this.reviews          = data;
+        this.isLoadingReviews = false;
+      },
+      error: (err) => {
+        console.error('Failed to load reviews', err);
+        this.isLoadingReviews = false;
+      }
+    });
+  }
+
+  checkCanReview(freelancerId: string): void {
+    this.reviewService.canReview(freelancerId).subscribe({
+      next:  (res) => {
+        this.canReview    = res.can_review;
+        this.cannotReason = res.reason || '';
+      },
+      error: (err) => console.error('Can review check failed', err)
+    });
+  }
+
+  setRating(star: number): void {
+    this.rating = star;
+  }
+
+  submitReview(): void {
+    this.submitted = true;
+    if (!this.isFormValid) return;
+
+    this.isSubmitting = true;
+
+    this.reviewService.submitReview({
+      freelancer_id: this.freelancerId,
+      rating:        this.rating,
+      comment:       this.comment.trim()
+    }).subscribe({
+      next: () => {
+        // Reset form
+        this.canReview    = false;
+        this.rating       = 0;
+        this.comment      = '';
+        this.submitted    = false;
+        this.isSubmitting = false;
+
+        // Reload reviews to show the new one
+        this.loadReviews(this.freelancerId);
+      },
+      error: (err) => {
+        console.error('Failed to submit review', err?.error?.error);
+        this.isSubmitting = false;
+      }
     });
   }
 

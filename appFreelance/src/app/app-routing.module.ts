@@ -122,7 +122,11 @@ const routes: Routes = [
   {
     path: 'view-freelancer-profile/:id',
     loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewFreelancerProfileRoutingModule)
-  }
+  },
+  {
+  path: 'gig-order/new/:gigId',
+  loadChildren: () => import('./pages/gig-order-placement/gig-order-placement.module').then(m => m.GigOrderPlacementPageModule)
+}
 ];
 
 @NgModule({

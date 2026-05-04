@@ -251,37 +251,52 @@
       </div>
     </div>
     </div>
-  <!-- ==================== CLIENT REVIEWS ==================== -->
-  <div id="reviews" class="section">
-    <div class="reviews-header">
-      <h2 class="section-title">Latest clients reviews</h2>
-      <span class="reviews-badge">⭐ 4.9 (42 avis)</span>
-    </div>
+<!-- ==================== CLIENT REVIEWS ==================== -->
+<div id="reviews" class="section">
+  <div class="reviews-header">
+    <h2 class="section-title">Client reviews</h2>
+    <span class="reviews-badge">
+      ⭐ {{ clientRating | number:'1.1-1' }} ({{ reviews.length }} avis)
+    </span>
+  </div>
 
-    <div class="review-card">
-      <div class="review-top">
-        <img src="assets/avatar.png" class="reviewer-avatar" />
-        <div class="reviewer-info">
-          <h4>Marc Lefebvre</h4>
-          <p>CEO at TechNov</p>
-        </div>
-        <span class="review-score">⭐ 5.0</span>
+  <!-- Empty state -->
+  <div *ngIf="reviews.length === 0" class="no-reviews">
+    <p style="color:#1a1a2e;">No reviews yet.</p>
+  </div>
+
+  <!-- Review cards -->
+  <div *ngFor="let review of reviews" class="review-card">
+    <div class="review-top">
+      <img [src]="review.client_avatar || 'assets/avatar.png'" class="reviewer-avatar" />
+      <div class="reviewer-info">
+        <small class="review-date" style="color:#1a1a2e;">{{ review.created_at | date:'mediumDate' }}</small>
+        <h4>{{ review.client_name || 'Anonymous' }}</h4>
+        <p *ngIf="review.client_title">{{ review.client_title }}</p>
       </div>
-      <p class="review-text">"Exceptional work on our mobile application. Clean code and intuitive design. Julian is a true professional who understands business needs."</p>
+      <span class="review-score">⭐ {{ review.rating }}</span>
+    </div>
+    <p class="review-text">"{{ review.comment }}"</p>
+    
+
+    <!-- Freelancer's reply if exists -->
+    <div *ngIf="review.freelancer_reply" class="freelancer-reply">
+      <strong style="color:#1a1a2e;">Your reply:</strong>
+      <p style="color:#1a1a2e;">{{ review.freelancer_reply }}</p>
     </div>
 
-    <div class="review-card">
-      <div class="review-top">
-        <img src="assets/avatar.png" class="reviewer-avatar" />
-        <div class="reviewer-info">
-          <h4>Sophie Martin</h4>
-          <p>Product Lead</p>
-        </div>
-        <span class="review-score">⭐ 4.8</span>
-      </div>
-      <p class="review-text">"Highly responsive and proactive. The final result exceeded our initial expectations. Looking forward to our next collaboration!"</p>
-    </div>
+    <!-- Reply button (edit if already replied) -->
+    <ion-button
+      size="small"
+      [fill]="review.freelancer_reply ? 'clear' : 'outline'"
+      (click)="replyToReview(review._id, review.freelancer_reply || null)">
+      <ion-icon [name]="review.freelancer_reply ? 'create-outline' : 'chatbubble-outline'" slot="start"></ion-icon>
+      {{ review.freelancer_reply ? 'Edit reply' : 'Reply' }}
+    </ion-button>
+  </div>
+</div>
 
+ <div>
     <div class="section" style="padding: 0;">
       <ion-button expand="block" class="testimonials-btn">
         View All Testimonials
