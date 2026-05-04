@@ -101,10 +101,46 @@ const routes: Routes = [
     loadChildren: () => import('./pages/view-all-categories/view-all-categories.module').then( m => m.ViewAllCategoriesPageModule)
   },
   {
-    path: 'admin-panel',
-    loadChildren: () => import('./pages/admin-panel/admin-panel.module').then(m => m.AdminPanelPageModule)
+  path: 'admin',
+  loadComponent: () =>
+    import('./pages/admin-panel/admin-panel.page')
+      .then(m => m.AdminPanelPage)
+},
+  {
+    path: 'admin',
+    children: [
+      {
+        path: 'gigs',
+        loadComponent: () =>
+          import('./pages/admin-gigs/admin-gigs.page')
+            .then(m => m.AdminGigsPage)
+      },
+      {
+        path: 'feedback',
+        loadComponent: () =>
+          import('./pages/admin-feedback/admin-feedback.page')
+            .then(m => m.AdminFeedbackPage)
+      },
+      {
+        path: 'reviews',
+        loadComponent: () => 
+          import('./pages/admin-reviews/admin-reviews.page')
+            .then( m => m.AdminReviewsPage)
+      },
+      {
+        path: 'products',
+        loadComponent: () => 
+          import('./pages/admin-products/admin-products.page')
+            .then( m => m.AdminProductsPage)
+      },
+      {
+        path: 'users',
+        loadComponent: () => 
+          import('./pages/admin-users/admin-users.page')
+        .then( m => m.AdminUsersPage)
+      }
+    ]
   },
-  { path: 'admin', loadComponent: () => import('./pages/admin-panel/admin-panel.page').then(m => m.AdminPanelPage) },
   {
     path: 'freelancers-profile',
     loadChildren: () => import('./pages/freelancer-profile/freelancer-profile.module').then(m => m.freelancersProfilePageModule),
@@ -149,6 +185,11 @@ const routes: Routes = [
     path: 'view-freelancers-profile/:id',
     loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewfreelancersProfileRoutingModule)
   }
+
+
+
+
+
 ];
 
 @NgModule({

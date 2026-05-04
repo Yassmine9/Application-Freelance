@@ -6,6 +6,12 @@ import { HttpClient } from '@angular/common/http';
 
 const API_URL = 'http://localhost:5000';
 
+export interface ActivityItem {
+  text: string;
+  time: string;
+  color: 'green' | 'purple' | 'red' | 'blue' | 'amber';
+}
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin-panel.page.html',
@@ -15,105 +21,145 @@ const API_URL = 'http://localhost:5000';
 })
 export class AdminPanelPage implements OnInit {
 
+  // ── Stats (overview cards, read-only) ──────────────────
   stats = {
     total_users:       0,
     total_freelancers: 0,
-    total_products:    0,
-    total_purchases:   0,
+    total_products:        0,
+    total_purchases:    0,
   };
+  statsLoading = true;
 
-  freelancers:      any[] = [];
-  clients:          any[] = [];
-  activeTab:        string = 'freelancers'; 
-  statsLoading      = true;
-  usersLoading      = true;
+  // ── Pending counts (derived from loaded data) ──────────
+  // These drive the Pending Actions section
+  pendingFreelancers = 0;
+  pendingClients     = 0;
+  pendingGigs        = 0;
+  pendingFeedback    = 0;
+
+  openedSection: string | null = null;
+
+  pendingFreelancersList: any[] = [];
+  pendingClientsList: any[] = [];
+  pendingGigsList: any[] = [];
+  pendingFeedbackList: any[] = [];
 
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
     this.loadStats();
-    this.loadPendingUsers();
+    this.loadPendingCounts();
   }
 
+  // ── Stats ──────────────────────────────────────────────
   loadStats() {
     this.statsLoading = true;
     this.http.get<any>(`${API_URL}/admin/stats`).subscribe({
-      next:  (data) => { this.stats = data; this.statsLoading = false; },
-      error: ()     => { this.statsLoading = false; }
+      next: (data) => {
+        this.stats = {
+          total_users:       data.total_users       ?? 0,
+          total_freelancers: data.total_freelancers ?? 0,
+          total_products:        data.total_products        ?? 0,
+          total_purchases:    data.total_purchases    ?? 0,
+        };
+        this.statsLoading = false;
+      },
+      error: () => { this.statsLoading = false; }
     });
   }
 
-  loadPendingUsers() {
-    this.usersLoading = true;
-    this.http.get<any[]>(`${API_URL}/admin/freelancers`).subscribe({
-      next: (data) => {
-        // Separate users by role
-        this.freelancers = data.filter(u => u.role === 'freelancers');
-        this.clients = data.filter(u => u.role === 'client');
-        this.usersLoading = false;
-      },
-      error: () => {
-        this.freelancers = [];
-        this.clients = [];
-        this.usersLoading = false;
+  // ── Pending counts ─────────────────────────────────────
+  // Call your existing endpoints and derive counts from the response.
+  // Adjust the endpoint paths / filter logic to match your API.
+ loadPendingCounts() {
+  this.http.get<any[]>(`${API_URL}/admin/freelancers`)
+    .subscribe({
+      next: data => {
+        this.pendingFreelancersList =
+          data.filter(u => u.role === 'freelancer');
+
+        this.pendingClientsList =
+          data.filter(u => u.role === 'client');
+
+        this.pendingFreelancers =
+          this.pendingFreelancersList.length;
+
+        this.pendingClients =
+          this.pendingClientsList.length;
       }
     });
-  }
 
-  approve(user: any) {
-    user._processing = 'approve';
-    this.http.patch(`${API_URL}/admin/approve/${user._id}`, {}).subscribe({
-      next:  () => this.removeUser(user._id),
-      error: () => { user._processing = null; }
+  this.http.get<any[]>(`${API_URL}/admin/gigs`)
+    .subscribe({
+      next: data => {
+        this.pendingGigsList =
+          data.filter(g => g.status === 'pending');
+
+        this.pendingGigs =
+          this.pendingGigsList.length;
+      }
     });
-  }
+}
 
-  reject(user: any) {
-    user._processing = 'reject';
-    this.http.patch(`${API_URL}/admin/reject/${user._id}`, {}).subscribe({
-      next:  () => this.removeUser(user._id),
-      error: () => { user._processing = null; }
-    });
-  }
-
-  removeUser(id: string) {
-    this.freelancers = this.freelancers.filter(f => f._id !== id);
-    this.clients = this.clients.filter(c => c._id !== id);
-    this.loadStats();
-  }
-
-  switchTab(tab: string) {
-    this.activeTab = tab;
-  }
-
-  getInitials(name: string): string {
-    if (!name) return '?';
-    return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
-  }
-
-  getUserTypeLabel(user: any): string {
-    return user.role === 'freelancers' ? 'freelancers' : 'Client';
-  }
-
-  getUserTypeIcon(user: any): string {
-    return user.role === 'freelancers' ? 'briefcase-outline' : 'store-outline';
-  }
-
-  getTotalPending(): number {
-    return this.freelancers.length + this.clients.length;
-  }
-
-  refreshAll() {
-    this.loadStats();
-    this.loadPendingUsers();
-  }
-
-  doRefresh(event: any) {
-    this.refreshAll();
-    setTimeout(() => event.target.complete(), 1000);
+  // ── Navigation ─────────────────────────────────────────
+  navigateTo(page: string) {
+    this.router.navigate([`/${page}`]);
   }
 
   goBack() {
     this.router.navigate(['/home']);
   }
+
+  // ── Refresh ────────────────────────────────────────────
+  refreshAll() {
+    this.loadStats();
+    this.loadPendingCounts();
+  }
+
+  doRefresh(event: any) {
+    this.refreshAll();
+    setTimeout(() => event.target.complete(), 1200);
+  }
+
+  toggleSection(section: string) {
+  this.openedSection =
+    this.openedSection === section ? null : section;
+}
+
+approveUser(id: string) {
+  this.http.patch(`${API_URL}/admin/approve/${id}`, {})
+    .subscribe(() => {
+      this.refreshAll();
+    });
+}
+
+rejectUser(id: string) {
+  this.http.patch(`${API_URL}/admin/reject/${id}`, {})
+    .subscribe(() => {
+      this.refreshAll();
+    });
+}
+
+approveGig(id: string) {
+  this.http.patch(`${API_URL}/admin/gigs/${id}/approve`, {})
+    .subscribe(() => {
+      this.refreshAll();
+    });
+}
+
+rejectGig(id: string) {
+  this.http.patch(`${API_URL}/admin/gigs/${id}/reject`, {})
+    .subscribe(() => {
+      this.refreshAll();
+    });
+}
+
+deleteFeedback(id: string) {
+  this.http.delete(`${API_URL}/admin/feedback/${id}`)
+    .subscribe(() => {
+      this.refreshAll();
+    });
+
+
+}
 }

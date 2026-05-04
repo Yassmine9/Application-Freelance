@@ -1,0 +1,204 @@
+<!-- manage-products.component.html -->
+<ion-header class="admin-header ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="header-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="header-title">Manage Products</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button class="header-btn" (click)="loadProducts()">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content" [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="admin-container">
+    <!-- Hero Section -->
+    <div class="welcome-section">
+      <div class="admin-avatar">
+        <ion-icon name="cube-outline"></ion-icon>
+      </div>
+      <div class="welcome-text">
+        <p class="welcome-label">Administration</p>
+        <h1 class="welcome-title">Products</h1>
+        <p class="hero-sub">{{ products.length }} total products</p>
+      </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="section-card">
+      <p class="section-label">Search</p>
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Search products..."
+          [(ngModel)]="search"
+          (input)="onSearch()"
+        />
+      </div>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="section-card">
+      <p class="section-label">Categories</p>
+      <div class="filter-row">
+        <button
+          class="chip"
+          [class.active]="selectedCategory === 'all'"
+          (click)="filterCategory('all')">
+          All
+        </button>
+        <button
+          class="chip"
+          *ngFor="let cat of categories"
+          [class.active]="selectedCategory === cat._id"
+          (click)="filterCategory(cat._id)">
+          {{ cat.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="skeleton-list">
+      <div class="product-card skeleton-card" *ngFor="let s of [1,2,3]">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line w60"></div>
+          <div class="skeleton-line w40"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="activity-empty" *ngIf="!loading && filteredProducts.length === 0">
+      <ion-icon name="cube-outline"></ion-icon>
+      <span>No products found</span>
+    </div>
+
+    <!-- Products List -->
+    <div *ngIf="!loading && filteredProducts.length > 0" class="products-list">
+      <div class="product-card"
+        *ngFor="let p of filteredProducts"
+        [class.expanded]="openedProduct === p._id">
+        
+        <!-- Card Header (Always Visible) -->
+        <div class="product-card-header" (click)="toggleProduct(p._id)">
+          <div class="product-icon">
+            <ion-icon name="cube-outline"></ion-icon>
+          </div>
+          <div class="product-info">
+            <h3>{{ p.name || p.title }}</h3>
+            <p class="product-category">{{ getCategoryName(p) || p.category || 'No category' }}</p>
+            <div class="meta-row">
+              <span class="meta-chip" *ngIf="p.price">
+                <ion-icon name="cash-outline"></ion-icon>
+                ${{ p.price }}
+              </span>
+              <span class="meta-chip" *ngIf="p.stock">
+                <ion-icon name="archive-outline"></ion-icon>
+                {{ p.stock }} stock
+              </span>
+              <span class="meta-chip status-chip" *ngIf="p.status">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                {{ p.status }}
+              </span>
+            </div>
+          </div>
+          <ion-icon class="chev" [name]="openedProduct === p._id ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </div>
+
+        <!-- Expanded Content -->
+        <div class="expanded-content" *ngIf="openedProduct === p._id">
+          <!-- Description -->
+          <div class="detail-section" *ngIf="p.description">
+            <div class="detail-label">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <span>Description</span>
+            </div>
+            <p class="description-text">{{ p.description }}</p>
+          </div>
+
+          <!-- Details Grid -->
+          <div class="details-grid">
+            <div class="detail-item" *ngIf="p.version">
+              <div class="detail-icon">
+                <ion-icon name="code-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Version</small>
+                <strong>{{ p.version }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item" *ngIf="p.license">
+              <div class="detail-icon">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>License</small>
+                <strong>{{ p.license }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="download-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Downloads</small>
+                <strong>{{ p.downloadCount || 0 }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item" *ngIf="p.createdAt">
+              <div class="detail-icon">
+                <ion-icon name="calendar-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Created</small>
+                <strong>{{ p.createdAt | date:'MMM d, yyyy' }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- File Path -->
+          <div class="file-info" *ngIf="p.filePath">
+            <ion-icon name="folder-open-outline"></ion-icon>
+            <span>{{ p.filePath }}</span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+  <button
+    class="action-btn delete-btn"
+    (click)="deleteProduct(p); $event.stopPropagation()"
+    [disabled]="p._deleting">
+
+    <ion-spinner
+      *ngIf="p._deleting"
+      name="crescent">
+    </ion-spinner>
+
+    <ng-container *ngIf="!p._deleting">
+      <ion-icon name="trash-outline"></ion-icon>
+      Delete
+    </ng-container>
+
+  </button>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

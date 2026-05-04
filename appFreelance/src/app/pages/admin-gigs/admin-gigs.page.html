@@ -1,0 +1,136 @@
+<ion-header class="admin-header ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="header-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="header-title">Manage Gigs</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button class="header-btn" (click)="loadGigs()">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content" [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="admin-container">
+    <!-- Hero Section -->
+    <div class="welcome-section">
+      <div class="admin-avatar">
+        <ion-icon name="layers-outline"></ion-icon>
+      </div>
+      <div class="welcome-text">
+        <p class="welcome-label">Administration</p>
+        <h1 class="welcome-title">Gigs</h1>
+        <p class="hero-sub">{{ gigs.length }} total gigs</p>
+      </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="section-card">
+      <p class="section-label">Filter by Status</p>
+      <div class="filter-row">
+        <button class="chip" [class.active]="filterStatus === 'all'" (click)="setFilter('all')">All</button>
+        <button class="chip" [class.active]="filterStatus === 'pending'" (click)="setFilter('pending')">Pending</button>
+        <button class="chip" [class.active]="filterStatus === 'approved'" (click)="setFilter('approved')">Approved</button>
+        <button class="chip" [class.active]="filterStatus === 'rejected'" (click)="setFilter('rejected')">Rejected</button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="skeleton-list">
+      <div class="product-card skeleton-card" *ngFor="let s of [1,2,3]">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line w60"></div>
+          <div class="skeleton-line w40"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="activity-empty" *ngIf="!loading && filteredGigs.length === 0">
+      <ion-icon name="layers-outline"></ion-icon>
+      <span>No gigs found</span>
+    </div>
+
+    <!-- Gigs List -->
+    <div *ngIf="!loading && filteredGigs.length > 0" class="products-list">
+      <div class="product-card"
+        *ngFor="let g of filteredGigs"
+        [class.expanded]="openedGig === g._id">
+        
+        <!-- Card Header (Always Visible) -->
+        <div class="product-card-header" (click)="toggleGig(g._id)">
+          <div class="product-icon">
+            <ion-icon name="layers-outline"></ion-icon>
+          </div>
+          <div class="product-info">
+            <h3>{{ g.title }}</h3>
+            <p class="product-category">{{ g.freelancer_name || g.freelancer_id || 'Unknown freelancer' }}</p>
+            <div class="meta-row">
+              <span class="meta-chip" *ngIf="g.price">
+                <ion-icon name="cash-outline"></ion-icon>
+                ${{ g.price }}
+              </span>
+              <span class="meta-chip" *ngIf="g.category">
+                <ion-icon name="pricetag-outline"></ion-icon>
+                {{ g.category }}
+              </span>
+              <span class="meta-chip status-chip" [style.background]="getStatusColor(g.status || 'pending')">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                {{ g.status || 'pending' }}
+              </span>
+            </div>
+          </div>
+          <ion-icon class="chev" [name]="openedGig === g._id ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </div>
+
+        <!-- Expanded Content -->
+        <div class="expanded-content" *ngIf="openedGig === g._id">
+          <!-- Description -->
+          <div class="detail-section" *ngIf="g.description">
+            <div class="detail-label">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <span>Description</span>
+            </div>
+            <p class="description-text">{{ g.description }}</p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button
+              class="action-btn approve-btn"
+              (click)="approveGig(g); $event.stopPropagation()"
+              [disabled]="g._processing || g.status === 'approved'">
+              <ion-spinner *ngIf="g._processing === 'approve'" name="crescent"></ion-spinner>
+              <ng-container *ngIf="g._processing !== 'approve'">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                Approve
+              </ng-container>
+            </button>
+
+            <button
+              class="action-btn reject-btn"
+              (click)="rejectGig(g); $event.stopPropagation()"
+              [disabled]="g._processing || g.status === 'rejected'">
+              <ion-spinner *ngIf="g._processing === 'reject'" name="crescent"></ion-spinner>
+              <ng-container *ngIf="g._processing !== 'reject'">
+                <ion-icon name="close-outline"></ion-icon>
+                Reject
+              </ng-container>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

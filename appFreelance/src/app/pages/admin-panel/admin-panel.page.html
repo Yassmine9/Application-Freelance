@@ -1,13 +1,13 @@
 <ion-header class="admin-header ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button class="back-btn" (click)="goBack()">
+      <ion-button class="header-btn" (click)="goBack()">
         <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title class="header-title">Admin Panel</ion-title>
+    <ion-title class="header-title">Admin Dashboard</ion-title>
     <ion-buttons slot="end">
-      <ion-button class="icon-btn" (click)="refreshAll()">
+      <ion-button class="header-btn" (click)="refreshAll()">
         <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -17,233 +17,344 @@
 <ion-content class="admin-content" [fullscreen]="true">
   <div class="admin-container">
 
-    <!-- Welcome -->
+    <!-- ── Welcome ── -->
     <div class="welcome-section">
       <div class="admin-avatar">
         <ion-icon name="shield-checkmark-outline"></ion-icon>
       </div>
-      <div>
+      <div class="welcome-text">
         <p class="welcome-label">Welcome back</p>
         <h1 class="welcome-title">Admin Dashboard</h1>
       </div>
     </div>
 
-    <!-- Stats -->
+    <!-- ── Overview Stats ── -->
+    <p class="section-label">Overview</p>
     <div class="stats-grid" [class.loading]="statsLoading">
-      <div class="stat-card" style="animation-delay: 0.05s">
-        <div class="stat-icon-wrap purple">
+      <div class="stat-card">
+        <div class="stat-icon-wrap si-purple">
           <ion-icon name="people-outline"></ion-icon>
         </div>
-        <div class="stat-info">
-          <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_users }}</span>
+        <div class="stat-body">
+          <span class="stat-num" *ngIf="!statsLoading">{{ stats.total_users }}</span>
           <div class="skeleton-val" *ngIf="statsLoading"></div>
-          <span class="stat-label">Total Users</span>
+          <span class="stat-lbl">Total users</span>
         </div>
       </div>
 
-      <div class="stat-card" style="animation-delay: 0.1s">
-        <div class="stat-icon-wrap blue">
+      <div class="stat-card">
+        <div class="stat-icon-wrap si-accent">
           <ion-icon name="briefcase-outline"></ion-icon>
         </div>
-        <div class="stat-info">
-          <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_freelancers }}</span>
+        <div class="stat-body">
+          <span class="stat-num" *ngIf="!statsLoading">{{ stats.total_freelancers }}</span>
           <div class="skeleton-val" *ngIf="statsLoading"></div>
-          <span class="stat-label">freelancers</span>
+          <span class="stat-lbl">Freelancers</span>
         </div>
       </div>
 
-      <div class="stat-card" style="animation-delay: 0.15s">
-        <div class="stat-icon-wrap pink">
-          <ion-icon name="cube-outline"></ion-icon>
+      <div class="stat-card">
+        <div class="stat-icon-wrap si-pink">
+          <ion-icon name="layers-outline"></ion-icon>
         </div>
-        <div class="stat-info">
-          <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_products }}</span>
+        <div class="stat-body">
+          <span class="stat-num" *ngIf="!statsLoading">{{ stats.total_products }}</span>
           <div class="skeleton-val" *ngIf="statsLoading"></div>
-          <span class="stat-label">Products</span>
+          <span class="stat-lbl">Total products</span>
         </div>
       </div>
 
-      <div class="stat-card" style="animation-delay: 0.2s">
-        <div class="stat-icon-wrap dark">
-          <ion-icon name="bag-check-outline"></ion-icon>
+      <div class="stat-card">
+        <div class="stat-icon-wrap si-teal">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
         </div>
-        <div class="stat-info">
-          <span class="stat-value" *ngIf="!statsLoading">{{ stats.total_purchases }}</span>
+        <div class="stat-body">
+          <span class="stat-num" *ngIf="!statsLoading">{{ stats.total_purchases }}</span>
           <div class="skeleton-val" *ngIf="statsLoading"></div>
-          <span class="stat-label">Purchases</span>
+          <span class="stat-lbl">Total purchases</span>
         </div>
       </div>
     </div>
 
-    <!-- Pending approvals -->
-    <div class="section-header-row" style="animation-delay: 0.25s">
-      <div class="section-title-block">
-        <ion-icon name="hourglass-outline" class="section-icon"></ion-icon>
-        <h2 class="section-title">Pending Approvals</h2>
-      </div>
-      <span class="badge-count" *ngIf="getTotalPending() > 0">{{ getTotalPending() }}</span>
-    </div>
+    <!-- ── Pending Actions ── -->
+    <p class="section-label">Pending actions</p>
+    <div class="pending-list">
 
-    <!-- Tab buttons -->
-    <div class="tab-buttons" style="animation-delay: 0.26s">
-      <button 
-        class="tab-btn" 
-        [class.active]="activeTab === 'freelancers'"
-        (click)="switchTab('freelancers')">
-        <ion-icon name="briefcase-outline"></ion-icon>
-        freelancers
-        <ion-badge *ngIf="freelancers.length > 0" class="tab-badge">{{ freelancers.length }}</ion-badge>
-      </button>
-      <button 
-        class="tab-btn" 
-        [class.active]="activeTab === 'clients'"
-        (click)="switchTab('clients')">
-        <ion-icon name="store-outline"></ion-icon>
-        Clients
-        <ion-badge *ngIf="clients.length > 0" class="tab-badge">{{ clients.length }}</ion-badge>
-      </button>
-    </div>
+      <!-- Freelancer Approvals -->
+      <div class="pending-card"
+          [class.urgent]="pendingFreelancers > 0"
+          (click)="toggleSection('freelancers')">
 
-    <!-- Loading skeleton -->
-    <div *ngIf="usersLoading">
-      <div class="freelancers-card skeleton-card" *ngFor="let s of [1,2,3]">
-        <div class="skeleton-avatar"></div>
-        <div class="skeleton-lines">
-          <div class="skeleton-line" style="width:55%"></div>
-          <div class="skeleton-line" style="width:40%; margin-top:8px"></div>
+        <div class="p-icon-wrap si-accent">
+          <ion-icon name="briefcase-outline"></ion-icon>
         </div>
-      </div>
-    </div>
 
-    <!-- freelancers TAB -->
-    <div *ngIf="!usersLoading && activeTab === 'freelancers'">
-      <!-- Empty state -->
-      <div class="empty-state" *ngIf="freelancers.length === 0">
-        <div class="empty-icon-wrap">
-          <ion-icon name="checkmark-done-outline"></ion-icon>
+        <div class="p-body">
+          <span class="p-title">Freelancer approvals</span>
+          <span class="p-sub" *ngIf="pendingFreelancers > 0">
+            {{ pendingFreelancers }} awaiting review
+          </span>
+          <span class="p-sub empty" *ngIf="pendingFreelancers === 0">
+            No pending items
+          </span>
         </div>
-        <h3 class="empty-title">All caught up!</h3>
-        <p class="empty-sub">No pending freelancers approvals</p>
+
+        <div class="p-badge"
+            [class.badge-active]="pendingFreelancers > 0"
+            [class.badge-empty]="pendingFreelancers === 0">
+          {{ pendingFreelancers > 0 ? pendingFreelancers : '–' }}
+        </div>
+        <ion-icon
+          [name]="openedSection === 'freelancers'
+            ? 'chevron-up-outline'
+            : 'chevron-down-outline'"
+          class="p-chevron">
+        </ion-icon>
       </div>
 
-      <!-- freelancers cards -->
       <div
-        class="freelancers-card"
-        *ngFor="let f of freelancers; let i = index"
-        [style.animation-delay]="(0.27 + i * 0.08) + 's'">
+  class="pending-dropdown"
+  *ngIf="openedSection === 'freelancers'">
 
-        <div class="freelancers-left">
-          <div class="freelancers-avatar">
-            <span>{{ getInitials(f.name) }}</span>
-          </div>
-          <div class="freelancers-info">
-            <h3 class="freelancers-name">{{ f.name }}</h3>
-            <p class="freelancers-email">{{ f.email }}</p>
-            <div class="user-type-badge">
-              <ion-icon [name]="getUserTypeIcon(f)"></ion-icon>
-              {{ getUserTypeLabel(f) }}
-            </div>
-            <div class="freelancers-meta">
-              <span class="meta-chip" *ngIf="f.skills?.length > 0">
-                <ion-icon name="code-slash-outline"></ion-icon>
-                {{ f.skills.slice(0,2).join(', ') }}
-              </span>
-              <span class="meta-chip" *ngIf="f.hourly_rate">
-                <ion-icon name="cash-outline"></ion-icon>
-                ${{ f.hourly_rate }}/hr
-              </span>
-            </div>
-          </div>
-        </div>
+  <div
+    class="pending-item"
+    *ngFor="let user of pendingFreelancersList">
 
-        <div class="freelancers-actions">
-          <button
-            class="action-btn approve-btn"
-            [disabled]="f._processing"
-            (click)="approve(f)"
-            title="Approve">
-            <ion-spinner name="crescent" *ngIf="f._processing === 'approve'" class="mini-spinner"></ion-spinner>
-            <ion-icon name="checkmark-outline" *ngIf="f._processing !== 'approve'"></ion-icon>
-          </button>
-          <button
-            class="action-btn reject-btn"
-            [disabled]="f._processing"
-            (click)="reject(f)"
-            title="Reject">
-            <ion-spinner name="crescent" *ngIf="f._processing === 'reject'" class="mini-spinner"></ion-spinner>
-            <ion-icon name="close-outline" *ngIf="f._processing !== 'reject'"></ion-icon>
-          </button>
-        </div>
-      </div>
+    <div class="user-info">
+      <h3>{{ user.name }}</h3>
+      <p>{{ user.email }}</p>
     </div>
 
-    <!-- CLIENTS TAB -->
-    <div *ngIf="!usersLoading && activeTab === 'clients'">
-      <!-- Empty state -->
-      <div class="empty-state" *ngIf="clients.length === 0">
-        <div class="empty-icon-wrap">
-          <ion-icon name="checkmark-done-outline"></ion-icon>
-        </div>
-        <h3 class="empty-title">All caught up!</h3>
-        <p class="empty-sub">No pending client approvals</p>
-      </div>
+    <div class="actions">
+      <ion-button
+        color="success"
+        size="small"
+        (click)="approveUser(user._id); $event.stopPropagation()">
+        Approve
+      </ion-button>
 
-      <!-- Client cards -->
-      <div
-        class="freelancers-card"
-        *ngFor="let c of clients; let i = index"
-        [style.animation-delay]="(0.27 + i * 0.08) + 's'">
-
-        <div class="freelancers-left">
-          <div class="freelancers-avatar client-avatar">
-            <span>{{ getInitials(c.name) }}</span>
-          </div>
-          <div class="freelancers-info">
-            <h3 class="freelancers-name">{{ c.name }}</h3>
-            <p class="freelancers-email">{{ c.email }}</p>
-            <div class="user-type-badge client-badge">
-              <ion-icon name="store-outline"></ion-icon>
-              Client
-            </div>
-            <div class="freelancers-meta">
-              <span class="meta-chip" *ngIf="c.company_name">
-                <ion-icon name="business-outline"></ion-icon>
-                {{ c.company_name }}
-              </span>
-              <span class="meta-chip" *ngIf="c.phone">
-                <ion-icon name="call-outline"></ion-icon>
-                {{ c.phone }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="freelancers-actions">
-          <button
-            class="action-btn approve-btn"
-            [disabled]="c._processing"
-            (click)="approve(c)"
-            title="Approve">
-            <ion-spinner name="crescent" *ngIf="c._processing === 'approve'" class="mini-spinner"></ion-spinner>
-            <ion-icon name="checkmark-outline" *ngIf="c._processing !== 'approve'"></ion-icon>
-          </button>
-          <button
-            class="action-btn reject-btn"
-            [disabled]="c._processing"
-            (click)="reject(c)"
-            title="Reject">
-            <ion-spinner name="crescent" *ngIf="c._processing === 'reject'" class="mini-spinner"></ion-spinner>
-            <ion-icon name="close-outline" *ngIf="c._processing !== 'reject'"></ion-icon>
-          </button>
-        </div>
-      </div>
+      <ion-button
+        color="danger"
+        size="small"
+        (click)="rejectUser(user._id); $event.stopPropagation()">
+        Reject
+      </ion-button>
     </div>
 
-    <div style="height: 32px"></div>
+  </div>
+</div>
+      <!-- Client Approvals -->
+<div class="pending-card"
+     [class.urgent]="pendingClients > 0"
+     (click)="toggleSection('clients')">
+
+  <div class="p-icon-wrap si-purple">
+    <ion-icon name="storefront-outline"></ion-icon>
+  </div>
+
+  <div class="p-body">
+    <span class="p-title">Client approvals</span>
+    <span class="p-sub" *ngIf="pendingClients > 0">
+      {{ pendingClients }} awaiting review
+    </span>
+    <span class="p-sub empty" *ngIf="pendingClients === 0">
+      No pending items
+    </span>
+  </div>
+
+  <div class="p-badge"
+       [class.badge-active]="pendingClients > 0"
+       [class.badge-empty]="pendingClients === 0">
+    {{ pendingClients > 0 ? pendingClients : '–' }}
+  </div>
+
+  <ion-icon
+    [name]="openedSection === 'clients'
+      ? 'chevron-up-outline'
+      : 'chevron-down-outline'"
+    class="p-chevron">
+  </ion-icon>
+</div>
+
+<div class="pending-dropdown"
+     *ngIf="openedSection === 'clients'">
+
+  <div class="pending-item"
+       *ngFor="let user of pendingClientsList">
+
+    <div class="user-info">
+      <h3>{{ user.name }}</h3>
+      <p>{{ user.email }}</p>
+    </div>
+
+    <div class="actions">
+      <ion-button
+        color="success"
+        size="small"
+        (click)="approveUser(user._id); $event.stopPropagation()">
+        Approve
+      </ion-button>
+
+      <ion-button
+        color="danger"
+        size="small"
+        (click)="rejectUser(user._id); $event.stopPropagation()">
+        Reject
+      </ion-button>
+    </div>
+
+  </div>
+
+  <div class="activity-empty"
+       *ngIf="pendingClientsList.length === 0">
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+    <span>No pending clients</span>
+  </div>
+</div>
+
+
+<!-- Gig Moderation -->
+<div class="pending-card"
+     [class.urgent]="pendingGigs > 0"
+     (click)="toggleSection('gigs')">
+
+  <div class="p-icon-wrap si-pink">
+    <ion-icon name="layers-outline"></ion-icon>
+  </div>
+
+  <div class="p-body">
+    <span class="p-title">Gig moderation</span>
+    <span class="p-sub" *ngIf="pendingGigs > 0">
+      {{ pendingGigs }} pending approval
+    </span>
+    <span class="p-sub empty" *ngIf="pendingGigs === 0">
+      No pending items
+    </span>
+  </div>
+
+  <div class="p-badge"
+       [class.badge-active]="pendingGigs > 0"
+       [class.badge-empty]="pendingGigs === 0">
+    {{ pendingGigs > 0 ? pendingGigs : '–' }}
+  </div>
+
+  <ion-icon
+    [name]="openedSection === 'gigs'
+      ? 'chevron-up-outline'
+      : 'chevron-down-outline'"
+    class="p-chevron">
+  </ion-icon>
+</div>
+
+<div class="pending-dropdown"
+     *ngIf="openedSection === 'gigs'">
+
+  <div class="pending-item"
+       *ngFor="let gig of pendingGigsList">
+
+    <div class="user-info">
+      <h3>{{ gig.title }}</h3>
+      <p>{{ gig.category || 'No category' }}</p>
+    </div>
+
+    <div class="actions">
+      <ion-button
+        color="success"
+        size="small"
+        (click)="approveGig(gig._id); $event.stopPropagation()">
+        Approve
+      </ion-button>
+
+      <ion-button
+        color="danger"
+        size="small"
+        (click)="rejectGig(gig._id); $event.stopPropagation()">
+        Reject
+      </ion-button>
+    </div>
+
+  </div>
+
+  <div class="activity-empty"
+       *ngIf="pendingGigsList.length === 0">
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+    <span>No pending gigs</span>
+  </div>
+</div>
+
+
+    <!-- ── Management ── -->
+    <p class="section-label">Manage</p>
+    <div class="mgmt-grid">
+
+      <div class="mgmt-card" (click)="navigateTo('admin/users')">
+        <div class="mgmt-icon si-purple">
+          <ion-icon name="people-outline"></ion-icon>
+        </div>
+        <span class="mgmt-title">Users</span>
+        <span class="mgmt-arrow">View all <ion-icon name="arrow-forward-outline"></ion-icon></span>
+      </div>
+
+      <div class="mgmt-card" (click)="navigateTo('admin/gigs')">
+        <div class="mgmt-icon si-pink">
+          <ion-icon name="layers-outline"></ion-icon>
+        </div>
+        <span class="mgmt-title">Gigs</span>
+        <span class="mgmt-arrow">View all <ion-icon name="arrow-forward-outline"></ion-icon></span>
+      </div>
+
+      <div class="mgmt-card" (click)="navigateTo('admin/feedback')">
+        <div class="mgmt-icon si-teal">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+        </div>
+        <span class="mgmt-title">Feedback</span>
+        <span class="mgmt-arrow">View all <ion-icon name="arrow-forward-outline"></ion-icon></span>
+      </div>
+
+      <div class="mgmt-card" (click)="navigateTo('admin/reviews')">
+        <div class="mgmt-icon si-accent">
+          <ion-icon name="star-outline"></ion-icon>
+        </div>
+        <span class="mgmt-title">Reviews</span>
+        <span class="mgmt-arrow">View all <ion-icon name="arrow-forward-outline"></ion-icon></span>
+      </div>
+
+      <div class="mgmt-card" (click)="navigateTo('admin/products')">
+      <div class="mgmt-icon si-pink">
+        <ion-icon name="cube-outline"></ion-icon>
+      </div>
+      <span class="mgmt-title">Products</span>
+      <span class="mgmt-arrow">
+        View all <ion-icon name="arrow-forward-outline"></ion-icon>
+      </span>
+    </div>
+
+    <div class="mgmt-card" (click)="navigateTo('admin/offers')">
+      <div class="mgmt-icon si-accent">
+        <ion-icon name="pricetags-outline"></ion-icon>
+      </div>
+      <span class="mgmt-title">Offers</span>
+      <span class="mgmt-arrow">
+        View all <ion-icon name="arrow-forward-outline"></ion-icon>
+      </span>
+    </div>
+
+    <div class="mgmt-card" (click)="navigateTo('admin/purchases')">
+      <div class="mgmt-icon si-teal">
+        <ion-icon name="receipt-outline"></ion-icon>
+      </div>
+      <span class="mgmt-title">Purchases</span>
+      <span class="mgmt-arrow">
+        View all <ion-icon name="arrow-forward-outline"></ion-icon>
+      </span>
+    </div>
+
+    </div>
+
+
+    <div style="height: 40px;"></div>
   </div>
 
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
-</ion-content>

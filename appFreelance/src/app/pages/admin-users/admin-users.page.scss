@@ -1,0 +1,47 @@
+@import '../admin-products/admin-products.page.scss'; // optional reuse if structured
+
+// small overrides (users specific)
+
+.product-icon ion-icon {
+  color: #1e2a78;
+}
+
+.meta-chip {
+  text-transform: capitalize;
+}
+
+.status-chip {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+// role colors
+.meta-chip:nth-child(1) {
+  background: #eef2ff;
+  color: #4e5bd4;
+}
+
+.product-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;              // 👈 takes available space
+  min-width: 0;        // 👈 prevents overflow pushing chevron
+}
+
+.meta-row {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;      // 👈 keeps it stable
+}
+
+.chev {
+  margin-left: auto;   // 👈 forces it to far right
+  flex-shrink: 0;
+}
