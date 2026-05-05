@@ -1,364 +1,149 @@
-:host {
-  display: block;
-  --text-primary: #1a1f36;
-  --text-secondary: #6b7a99;
-  --card-border: #e3e7f2;
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
 }
 
-// =============================================
-// HEADER
-// =============================================
-ion-header.header {
-  ion-toolbar {
-    --background: #ffffff;
-    --color: var(--text-primary);
-    --border-width: 0;
-    border-bottom: 1px solid var(--card-border);
-    padding: 4px 8px;
-  }
-
-  .header-title {
-    font-size: 0.9rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-primary);
-  }
-
-  .back-btn,
-  .save-top-btn {
-    --color: #1e2a78;
-    --border-radius: 50%;
-    --background: rgba(30, 42, 120, 0.06);
-    --padding-start: 8px;
-    --padding-end: 8px;
-    width: 36px;
-    height: 36px;
-  }
-}
-
-// =============================================
-// CONTENT
-// =============================================
-ion-content.edit-content {
-  --background: #f4f6fb;
-}
-
-.page-shell {
-  padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
-}
-
-// =============================================
-// HERO / AVATAR
-// =============================================
-.hero-card {
+// ── Avatar ──────────────────────────────────────────────
+.avatar-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 20px;
-  background: linear-gradient(145deg, #1e2a78 0%, #0f1c4d 100%);
-  border-radius: 20px;
-  margin-bottom: 16px;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -30px;
-    right: -30px;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.07);
-    pointer-events: none;
-  }
+  padding: 24px 0 16px;
 }
 
-.avatar-edit {
+.avatar-wrapper {
+  position: relative;
   width: 90px;
   height: 90px;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.avatar-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--ion-color-primary);
+}
+
+.avatar-edit-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--ion-color-primary);
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
   cursor: pointer;
-  position: relative;
-  z-index: 1;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  ion-icon {
-    font-size: 2rem;
-    color: rgba(255, 255, 255, 0.8);
-  }
+  font-size: 14px;
 }
 
 .avatar-hint {
-  margin: 10px 0 0;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-  z-index: 1;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  margin-top: 8px;
 }
 
-// =============================================
-// CARDS
-// =============================================
-.form-card {
-  background: #ffffff;
-  border-radius: 18px;
-  border: 1px solid var(--card-border);
-  padding: 20px;
+// ── Section cards ────────────────────────────────────────
+.section-card {
+  background: var(--ion-card-background);
+  border-radius: 12px;
+  padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-// =============================================
-// SECTION HEADERS
-// =============================================
-.section-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-  gap: 10px;
-
-  .section-accent {
-    width: 4px;
-    height: 24px;
-    border-radius: 4px;
-    background: linear-gradient(160deg, #1e2a78, #4e5bd4);
-    flex-shrink: 0;
-  }
-
-  .section-title {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--text-primary);
-    letter-spacing: -0.3px;
-  }
-}
-
-// =============================================
-// FORM FIELDS
-// =============================================
-.field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 14px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.field-label {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: 0.02em;
-}
-
-.field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.app-input {
-  --background: #ffffff;
-  --border-radius: 14px;
-  --padding-start: 14px;
-  --padding-end: 14px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
-  border: 1px solid var(--card-border);
-  border-radius: 14px;
-  font-size: 14px;
-  color: var(--text-primary);
-  min-height: 48px;
-}
-
-.app-textarea {
-  min-height: 100px;
-}
-
-.input-hint {
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin: 0;
-  padding-left: 4px;
-}
-
-// =============================================
-// SKILLS PREVIEW
-// =============================================
-.skills-preview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.skill-pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: rgba(30, 42, 120, 0.07);
-  border: 1px solid rgba(30, 42, 120, 0.1);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #1e2a78;
-}
-
-// =============================================
-// CV
-// =============================================
-.file-label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px;
-  background: #ffffff;
-  border: 2px dashed #1e2a78;
-  border-radius: 14px;
-  cursor: pointer;
-  color: #1e2a78;
-  font-weight: 600;
-  font-size: 14px;
-
-  ion-icon {
-    font-size: 26px;
-    flex-shrink: 0;
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-
-    small {
-      font-size: 11px;
-      color: var(--text-secondary);
-      font-weight: 400;
-    }
-  }
-}
-
-.cv-file-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 14px;
-  border: 1px solid var(--card-border);
-  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
-
-  .cv-icon {
-    font-size: 28px;
-    color: #1e2a78;
-    flex-shrink: 0;
-  }
-
-  .cv-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-
-    .cv-filename {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .cv-type {
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-  }
-
-  .cv-remove {
-    font-size: 22px;
-    color: #ef4444;
-    flex-shrink: 0;
-    cursor: pointer;
-  }
-}
-
-// =============================================
-// PORTFOLIO EDIT
-// =============================================
-.project-edit-card {
-  background: #f4f6fb;
-  border-radius: 14px;
-  border: 1px solid var(--card-border);
-  padding: 14px;
-  margin-bottom: 12px;
-
-  .project-edit-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-
-    .project-num {
-      font-size: 12px;
-      font-weight: 700;
-      color: #1e2a78;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .remove-project {
-      font-size: 20px;
-      color: #ef4444;
-      cursor: pointer;
-    }
-  }
-}
-
-.add-btn {
-  --color: #1e2a78;
-  font-weight: 700;
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-// =============================================
-// BUTTONS
-// =============================================
-.save-btn {
-  --background: #1e2a78;
-  --background-hover: #0f1c4d;
-  --border-radius: 14px;
-  --color: #ffffff;
-  --box-shadow: 0 2px 8px rgba(30, 42, 120, 0.15);
-  height: 52px;
+.section-title {
   font-size: 15px;
   font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0 0 12px 0;
+}
+
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--ion-color-medium);
+  padding: 4px 16px 0;
   margin: 0;
 }
 
-// =============================================
-// EMPTY / LOADING
-// =============================================
-.empty-text {
+// ── CV ───────────────────────────────────────────────────
+.cv-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--ion-color-light);
+  margin-bottom: 10px;
+
+  &.new {
+    background: rgba(var(--ion-color-success-rgb), 0.1);
+  }
+}
+
+.cv-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--ion-color-dark);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px dashed var(--ion-color-primary);
+  border-radius: 8px;
+  color: var(--ion-color-primary);
   font-size: 14px;
-  color: var(--text-secondary);
+  cursor: pointer;
+  justify-content: center;
+}
+
+// ── Portfolio ────────────────────────────────────────────
+.project-card {
+  border: 1px solid var(--ion-color-light);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.project-num {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ion-color-primary);
+}
+
+.empty-text {
   text-align: center;
-  padding: 20px 0;
-  margin: 0;
+  color: var(--ion-color-medium);
+  font-size: 13px;
+  padding: 16px 0;
+}
+
+// ── Save button ──────────────────────────────────────────
+.save-btn {
+  margin-top: 8px;
 }

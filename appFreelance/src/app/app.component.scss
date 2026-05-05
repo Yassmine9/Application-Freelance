@@ -1,7 +1,8 @@
 .app-menu {
-  --background:
-    radial-gradient(circle at top left, rgba(78, 91, 212, 0.12), transparent 28%),
-    radial-gradient(circle at right top, rgba(30, 42, 120, 0.1), transparent 24%),
-    linear-gradient(180deg, #f4f6fb 0%, #eef2f8 100%);
-  color: #1a1f36;
+	--background:
+		radial-gradient(circle at top left, rgba(151, 125, 255, 0.14), transparent 28%),
+		radial-gradient(circle at right top, rgba(6, 0, 171, 0.1), transparent 24%),
+		linear-gradient(180deg, #fafbfc 0%, #f4f6ff 100%);
+	color: var(--app-text-primary);
+	backdrop-filter: blur(18px);
 }

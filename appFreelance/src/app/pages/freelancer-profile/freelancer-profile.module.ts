@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 //import { HttpClientModule } from '@angular/common/http';
-import { freelancersProfilePageRoutingModule } from './freelancer-profile-routing.module';
-import { freelancersProfilePage } from './freelancer-profile.page';
+import { FreelancerProfilePageRoutingModule } from './freelancer-profile-routing.module';
+import { FreelancerProfilePage } from './freelancer-profile.page';
 
 @NgModule({
   imports: [
@@ -12,9 +12,9 @@ import { freelancersProfilePage } from './freelancer-profile.page';
     FormsModule,
     IonicModule,
     //HttpClientModule,
-    freelancersProfilePageRoutingModule, // ← import instead of declare (because it's standalone)
-    freelancersProfilePage
+    FreelancerProfilePageRoutingModule, // ← import instead of declare (because it's standalone)
+    FreelancerProfilePage
   ], 
-  //declarations: [freelancersProfilePage]
+  //declarations: [FreelancerProfilePage]
 })
-export class freelancersProfilePageModule {}
+export class FreelancerProfilePageModule {}

@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { freelancersEditPageRoutingModule } from './freelancer-edit-routing.module';
+import { FreelancerEditPageRoutingModule } from './freelancer-edit-routing.module';
 
-import { freelancersEditPage } from './freelancer-edit.page';
+import { FreelancerEditPage } from './freelancer-edit.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    freelancersEditPageRoutingModule,freelancersEditPage
+    FreelancerEditPageRoutingModule,FreelancerEditPage
   ],
   declarations: []
 })
-export class freelancersEditPageModule {}
+export class FreelancerEditPageModule {}

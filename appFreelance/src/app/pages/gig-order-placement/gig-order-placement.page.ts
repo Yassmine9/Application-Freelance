@@ -74,7 +74,7 @@ export class GigOrderPlacementPage implements OnInit {
       next: (response) => {
         loading.dismiss();
         this.isSubmitting = false;
-        this.router.navigate(['/gig-orders', response.order_id], { replaceUrl: true });
+        this.router.navigate(['/gigs'], { replaceUrl: true });
       },
       error: (error) => {
         loading.dismiss();

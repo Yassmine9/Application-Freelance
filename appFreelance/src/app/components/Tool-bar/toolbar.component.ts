@@ -52,7 +52,7 @@ export class ToolBarComponent implements OnInit {
       const userId = this.authService.getUserId();
     if (role === 'freelancer') {
     // goes to the merged public/owner profile
-      this.router.navigateByUrl(`/freelancer-profile/${userId}`);
+      this.router.navigateByUrl(`/freelancer-profile`);
     } else {
       this.router.navigateByUrl(`/profile/client/${userId}`);
     }

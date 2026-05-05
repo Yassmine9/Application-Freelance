@@ -17,7 +17,7 @@ export class EditGigPage implements OnInit {
   gig = {
     title: '',
     description: '',
-    category: '',
+    tags: [],
     price: null,
     duration: '',
     deliverables: ''
@@ -46,7 +46,10 @@ export class EditGigPage implements OnInit {
     this.isLoading = true;
     this.gigService.getMyGigDetails(this.gigId).subscribe({
       next: (res) => {
-        this.gig = res;
+        this.gig = {
+  ...res,
+  tags: Array.isArray(res.tags) ? res.tags : [res.tags]
+};
         this.isLoading = false;
       },
       error: async () => {
@@ -63,7 +66,7 @@ export class EditGigPage implements OnInit {
 
   async onSubmit() {
     // Validation
-    if (!this.gig.title || !this.gig.description || !this.gig.category || !this.gig.price ) {
+    if (!this.gig.title || !this.gig.description || !this.gig.tags || !this.gig.price ) {
       const alert = await this.alertCtrl.create({
         header: 'Erreur',
         message: 'missing fields',

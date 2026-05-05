@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, send_from_directory
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.gig_service import fetch_gigs , fetch_my_gigs , create_new_gig , update_existing_gig , delete_existing_gig , get_gig_details , get_my_gig_details, fetch_pending_gigs,approve_existing_gig,reject_existing_gig, fetch_gigs_query
+from services.gig_service import fetch_gigs , fetch_my_gigs , create_new_gig , update_existing_gig , delete_existing_gig , get_gig_details , get_my_gig_details, fetch_pending_gigs,approve_existing_gig,reject_existing_gig, fetch_gigs_query,promote_gig, cancel_gig_promotion,expire_old_promotions, fetch_gigs_promoted,admin_disable_promotion
 from services.freelancer_service import get_my_profile
 gig_routes = Blueprint('gig_routes',__name__)
 
@@ -13,18 +13,6 @@ gig_routes = Blueprint('gig_routes',__name__)
 def get_gigs():
     return fetch_gigs()
 
-
-@gig_routes.route("/gigs/search", methods=['GET'])
-#@jwt_required()
-def search_gig():
-    query = request.args.get("query", "").strip()
-    if not query:
-        return jsonify({"error": "No JSON received"}), 400
-    result, err = fetch_gigs_query(query)
-    if err:
-        return jsonify({"error": err[0]}), err[1]
-    return jsonify(result), 200
-
 # get a gig's details :
 @gig_routes.route("/gigs/<gig_id>", methods=['GET'])
 #@jwt_required()
@@ -34,10 +22,20 @@ def get_gig(gig_id):
         return jsonify({"error": err[0]}), err[1]
     return jsonify(result) , 200
 
+@gig_routes.route("/gigs/search", methods=['GET'])
+#@jwt_required()
+def search_gig():
+    query = request.args.get("query", "").strip() 
+    if not query:
+        return jsonify({"error": "No JSON received"}), 400
+    result , err =  fetch_gigs_query(query)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
+    return jsonify(result) , 200
 # ---- gigs endpoints related to freelancer (get,create,put,delete) ----
 
-# Get all gigs related to a freelancers by id 
-@gig_routes.route("/freelancers/gigs" , methods=['GET'])
+# Get all gigs related to a freelancer by id 
+@gig_routes.route("/freelancer/gigs" , methods=['GET'])
 @jwt_required()
 def get_my_gigs():
     user_id = get_jwt_identity()
@@ -45,8 +43,9 @@ def get_my_gigs():
     if err:
         return jsonify({"error": err[0]}), err[1]
     return jsonify(result),200
+    
 # get my gig's details 
-@gig_routes.route("/freelancers/gigs/<gig_id>" , methods=['GET'])
+@gig_routes.route("/freelancer/gigs/<gig_id>" , methods=['GET'])
 @jwt_required()
 def get_my_gig(gig_id):
     user_id = get_jwt_identity()
@@ -56,7 +55,7 @@ def get_my_gig(gig_id):
     return jsonify(result), 200
 
 # Create A gig
-@gig_routes.route("/freelancers/gigs" , methods=['POST'])
+@gig_routes.route("/freelancer/gigs" , methods=['POST'])
 @jwt_required()
 def create_gig():
     user_id = get_jwt_identity()
@@ -70,7 +69,7 @@ def create_gig():
 
 
 # Update a gig
-@gig_routes.route("/freelancers/gigs/<gig_id>" , methods=['PUT'])
+@gig_routes.route("/freelancer/gigs/<gig_id>" , methods=['PUT'])
 @jwt_required()
 def update_gig(gig_id):
     user_id = get_jwt_identity()
@@ -83,13 +82,11 @@ def update_gig(gig_id):
     return jsonify(result), 200
 
 # delete a gig
-@gig_routes.route("/freelancers/gigs/<gig_id>" , methods=['DELETE'])
+@gig_routes.route("/freelancer/gigs/<gig_id>" , methods=['DELETE'])
 @jwt_required()
 def delete_gig(gig_id):
     user_id = get_jwt_identity()
-    result, err = delete_existing_gig(gig_id, user_id)
-    if err:
-        return jsonify({"error": err[0]}), err[1]
+    result = delete_existing_gig(gig_id, user_id)
     return jsonify(result), 200
 
 
@@ -102,27 +99,21 @@ def reject_gig():         # PUT    /admin/gigs/<id>/reject"""
 @jwt_required()
 def get_pending_gigs():
     user_id = get_jwt_identity()
-    result, err = fetch_pending_gigs(user_id)
-    if err:
-        return jsonify({"error": err[0]}), err[1]
+    result = fetch_pending_gigs(user_id)
     return jsonify(result), 200
 
 @gig_routes.route("/admin/gigs/<gig_id>/approve" , methods=['PUT'])
 @jwt_required()
 def approve_gig(gig_id):
     user_id = get_jwt_identity()
-    result, err = approve_existing_gig(gig_id, user_id)
-    if err:
-        return jsonify({"error": err[0]}), err[1]
+    result = approve_existing_gig(gig_id, user_id)
     return jsonify(result), 200
 
 @gig_routes.route("/admin/gigs/<gig_id>/reject" , methods=['PUT'])
 @jwt_required()
 def reject_gig(gig_id):
     user_id = get_jwt_identity()
-    result, err = reject_existing_gig(gig_id, user_id)
-    if err:
-        return jsonify({"error": err[0]}), err[1]
+    result = reject_existing_gig(gig_id, user_id)
     return jsonify(result), 200
 
 """
@@ -132,3 +123,66 @@ def order_gig(gig_id):
     user_id = get_jwt_identity()
     result = order_existing_gig(gig_id, user_id)
     return jsonify(result), 200"""
+
+"""
+# ── Get gigs (promoted first) ─────────────────────────────
+# Replace your existing /gigs route with this
+@gig_routes.route("/gigs", methods=['GET'])
+def get_gigs():
+    gigs = fetch_gigs_promoted()
+    return jsonify(gigs), 200"""
+
+
+# ── Get available promotion plans ────────────────────────
+@gig_routes.route("/promotions/plans", methods=['GET'])
+def get_promotion_plans():
+    from services.gig_service import PROMOTION_PLANS
+    return jsonify(PROMOTION_PLANS), 200
+
+
+# ── Freelancer promotes a gig ────────────────────────────
+@gig_routes.route("/freelancer/gigs/<gig_id>/promote", methods=['POST'])
+@jwt_required()
+def promote_my_gig(gig_id):
+    user_id = get_jwt_identity()
+    data    = request.get_json()
+    if not data:
+        return jsonify({"error": "No JSON received"}), 400
+    result, err = promote_gig(gig_id, user_id, data)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
+    return jsonify(result), 200
+
+
+# ── Freelancer cancels a promotion ───────────────────────
+@gig_routes.route("/freelancer/gigs/<gig_id>/promote", methods=['DELETE'])
+@jwt_required()
+def cancel_my_promotion(gig_id):
+    user_id = get_jwt_identity()
+    result, err = cancel_gig_promotion(gig_id, user_id)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
+    return jsonify(result), 200
+
+
+# ── Admin disables a promotion ───────────────────────────
+@gig_routes.route("/admin/gigs/<gig_id>/promotion/disable", methods=['PUT'])
+@jwt_required()
+def disable_promotion(gig_id):
+    user_id = get_jwt_identity()
+    result, err = admin_disable_promotion(gig_id, user_id)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
+    return jsonify(result), 200
+
+
+# ── Expire old promotions (cron trigger) ─────────────────
+@gig_routes.route("/admin/promotions/expire", methods=['POST'])
+@jwt_required()
+def expire_promotions():
+    user_id = get_jwt_identity()
+    from models.admin import Admin
+    if not Admin.find_by_id(user_id):
+        return jsonify({"error": "Unauthorized"}), 403
+    result = expire_old_promotions()
+    return jsonify(result), 200

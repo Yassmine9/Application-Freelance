@@ -146,7 +146,7 @@ const routes: Routes = [
   },
   {
     path: 'freelancer-profile',
-    loadChildren: () => import('./pages/freelancer-profile/freelancer-profile.module').then(m => m.freelancersProfilePageModule),
+    loadChildren: () => import('./pages/freelancer-profile/freelancer-profile.module').then(m => m.FreelancerProfilePageModule),
     canActivate: [FreelancerGuard]
   },
   {
@@ -182,8 +182,8 @@ const routes: Routes = [
     canActivate: [FreelancerGuard]
   },
   {
-    path: 'freelancers-edit',
-    loadChildren: () => import('./pages/freelancer-edit/freelancer-edit.module').then(m => m.freelancersEditPageModule)
+    path: 'freelancer-edit',
+    loadChildren: () => import('./pages/freelancer-edit/freelancer-edit.module').then(m => m.FreelancerEditPageModule)
   },
   {
   path: 'search',
@@ -191,7 +191,7 @@ const routes: Routes = [
   },
   {
     path: 'view-freelancer-profile/:id',
-    loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewfreelancersProfileRoutingModule)
+    loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewFreelancerProfileRoutingModule)
   },
   {
   path: 'gig-order/new/:gigId',

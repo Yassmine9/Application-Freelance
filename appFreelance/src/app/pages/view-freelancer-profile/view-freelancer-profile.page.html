@@ -51,10 +51,6 @@
 
     <!-- ACTION BUTTONS -->
     <div class="action-buttons-section">
-      <ion-button expand="block" class="hire-btn" >
-        <ion-icon name="sparkles-outline" slot="start"></ion-icon>
-        Hire Now
-      </ion-button>
       <ion-button expand="block" class="message-btn" fill="outline">
         <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
         Send Message
@@ -94,7 +90,35 @@
         <p *ngIf="skillList.length === 0" class="empty-text">No skills listed.</p>
       </div>
     </div>
+    <!-- ==================== cv ==================== -->
+      
+  <div id="cv" class="section">
+    <div class="section-header bio-header">
+      <div class="section-accent"></div>
+      <h2 class="section-title">CV</h2>
+    </div>
 
+   
+    <div>
+      <div *ngIf="cvName" class="cv-display">
+  <div class="cv-file-card">
+    <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
+<div class="cv-info">
+  <!-- Download button instead of link -->
+  <a 
+    fill="clear" 
+    size="small" 
+    (click)="downloadCv()" 
+    class="cv-filename-link"
+    >
+    <ion-icon name="download-outline" slot="start"></ion-icon>
+    {{ original_cv_name || 'No CV uploaded' }}
+</a>
+  <span class="cv-type">PDF Document</span>
+</div>
+  </div>
+</div>
+    </div></div>
     <!-- ==================== PORTFOLIO ==================== -->
     <div id="portfolio" class="section">
       <div class="portfolio-header">
@@ -145,12 +169,12 @@
         </div>
       </div>
     </div>
-
+    
     <!-- ==================== GIGS ==================== -->
     <div id="services" class="section">
       <div class="portfolio-header">
         <h2 class="section-title">Services</h2>
-        <span class="view-stack-link" (click)="viewAllGigs()">VIEW ALL</span>
+        <span class="view-stack-link" (click)="getfreelancersgigs()">VIEW ALL</span>
       </div>
       <div *ngIf="gigs.length === 0" class="empty-text">No services added</div>
       <div *ngFor="let gig of gigs; trackBy: trackByIndex" class="project-card">
