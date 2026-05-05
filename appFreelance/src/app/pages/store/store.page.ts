@@ -4,9 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 
-const API_URL = environment.apiUrl.replace(/\/api\/?$/, '');
+const API_URL = 'http://localhost:5000';
 
 @Component({
   selector: 'app-store',
@@ -16,16 +15,18 @@ const API_URL = environment.apiUrl.replace(/\/api\/?$/, '');
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class StorePage implements OnInit {
-
   products: any[] = [];
   categories: any[] = [];
-  searchQuery: string = '';
+  searchQuery = '';
   selectedCategory: string | null = null;
-  isLoading: boolean = true;
+  isLoading = true;
 
   private searchTimeout: any;
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
     this.loadCategories();
@@ -33,19 +34,30 @@ export class StorePage implements OnInit {
   }
 
   loadCategories() {
-    this.http.get<any[]>(`${API_URL}/categories`).subscribe({
-      next: (data) => this.categories = data,
-      error: () => this.categories = []
+    this.http.get<any[]>(`${API_URL}/categories/`).subscribe({
+      next: (data) => {
+        this.categories = data;
+      },
+      error: () => {
+        this.categories = [];
+      }
     });
   }
 
   loadProducts() {
     this.isLoading = true;
-    const params: any = {};
-    if (this.searchQuery) params['search'] = this.searchQuery;
-    if (this.selectedCategory) params['category'] = this.selectedCategory;
 
-    this.http.get<any[]>(`${API_URL}/products`, { params }).subscribe({
+    const params: any = {};
+
+    if (this.searchQuery?.trim()) {
+      params.search = this.searchQuery.trim();
+    }
+
+    if (this.selectedCategory) {
+      params.category = this.selectedCategory;
+    }
+
+    this.http.get<any[]>(`${API_URL}/products/`, { params }).subscribe({
       next: (data) => {
         this.products = data;
         this.isLoading = false;
@@ -58,9 +70,11 @@ export class StorePage implements OnInit {
   }
 
   onSearch() {
-    // Debounce so we don't hit the API on every keystroke
     clearTimeout(this.searchTimeout);
-    this.searchTimeout = setTimeout(() => this.loadProducts(), 400);
+
+    this.searchTimeout = setTimeout(() => {
+      this.loadProducts();
+    }, 400);
   }
 
   selectCategory(categoryId: string | null) {
@@ -69,15 +83,18 @@ export class StorePage implements OnInit {
   }
 
   goToProduct(productId: string) {
-    this.router.navigate(['/product', productId]);
+    this.router.navigate(['/product/', productId]);
   }
 
   doRefresh(event: any) {
     this.loadProducts();
-    setTimeout(() => event.target.complete(), 800);
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 700);
   }
 
   goBack() {
-  this.router.navigate(['/home']);
-}
+    this.router.navigate(['/home']);
+  }
 }

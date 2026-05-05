@@ -1,8 +1,7 @@
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import get_jwt_identity, jwt_required
-from models.admin import Admin
+from flask import Blueprint, request, jsonify, send_from_directory
 from models.product import Product
 from models.purchase import Purchase
+import os
 
 product_bp = Blueprint("products", __name__)
 
@@ -24,17 +23,8 @@ def get_product(product_id):
     return jsonify(product), 200
 
 @product_bp.route("/", methods=["POST"])
-@jwt_required()
 def create_product():
-    admin_id = get_jwt_identity()
-    if not Admin.find_by_id(admin_id):
-        return jsonify({"error": "Access denied"}), 403
-
-    data = request.json or {}
-    required = ["creator_id", "title", "description", "version", "license", "price", "file_path", "category_id"]
-    missing = [field for field in required if data.get(field) in (None, "")]
-    if missing:
-        return jsonify({"error": f"Missing fields: {', '.join(missing)}"}), 400
+    data = request.json
 
     product = Product.create(
         creator_id=data["creator_id"],
@@ -64,7 +54,7 @@ def purchase_product():
 
     return {
         "message": "Purchase successful",
-        "download_link": product["filePath"]
+        "download_link": f"http://localhost:5000/products/download/{product['_id']}"
     }, 201
 
 @product_bp.route("/download/<product_id>", methods=["GET"])
@@ -73,18 +63,19 @@ def download_product(product_id):
 
     if not product:
         return {"error": "Product not found"}, 404
+    Product.increment_download(product_id)
+    filename = product["filePath"]   # example: focuspro.zip
 
-    return {
-        "download": product["filePath"]
-    }
+    uploads_folder = os.path.join(os.getcwd(), "uploads", "products")
+
+    return send_from_directory(
+        uploads_folder,
+        filename,
+        as_attachment=True
+    )
 
 @product_bp.route("/<product_id>", methods=["DELETE"])
-@jwt_required()
 def delete_product(product_id):
-    admin_id = get_jwt_identity()
-    if not Admin.find_by_id(admin_id):
-        return jsonify({"error": "Access denied"}), 403
-
     success = Product.delete(product_id)
 
     if success:

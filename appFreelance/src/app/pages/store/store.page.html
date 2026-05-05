@@ -1,20 +1,22 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="store-toolbar">
     <div class="toolbar-content">
+
       <div class="header-top">
-        <ion-button fill="clear" (click)="goBack()" class="back-btn">
-          <ion-icon name="chevron-back" slot="icon-only"></ion-icon>
+        <ion-button fill="clear" (click)="goBack()" class="icon-btn">
+          <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
         </ion-button>
-        <div>
+
+        <div class="header-center">
           <h1 class="store-title">Store</h1>
         </div>
-        <ion-button fill="clear" class="cart-btn">
+
+        <ion-button fill="clear" class="icon-btn">
           <ion-icon name="bag-outline" slot="icon-only"></ion-icon>
         </ion-button>
       </div>
 
-      <!-- Search bar -->
-      <div class="search-container">
+      <div class="search-wrapper">
         <ion-searchbar
           [(ngModel)]="searchQuery"
           (ionInput)="onSearch()"
@@ -24,13 +26,13 @@
         </ion-searchbar>
       </div>
 
-      <!-- Category chips -->
       <div class="categories-scroll">
         <ion-chip
           [class.active-chip]="selectedCategory === null"
           (click)="selectCategory(null)">
           All
         </ion-chip>
+
         <ion-chip
           *ngFor="let cat of categories"
           [class.active-chip]="selectedCategory === cat._id"
@@ -38,61 +40,69 @@
           {{ cat.name }}
         </ion-chip>
       </div>
+
     </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="store-content" [fullscreen]="true" [forceOverscroll]="false">
+<ion-content class="store-content">
 
-  <!-- Loading skeleton -->
-  <div class="products-grid" *ngIf="isLoading">
-    <div class="product-card skeleton-card" *ngFor="let s of [1,2,3,4,5,6]">
-      <ion-skeleton-text animated class="skeleton-img"></ion-skeleton-text>
-      <div class="card-body">
-        <ion-skeleton-text animated style="width:70%; height:14px; border-radius:6px"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width:40%; height:12px; border-radius:6px; margin-top:8px"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width:55%; height:12px; border-radius:6px; margin-top:6px"></ion-skeleton-text>
-      </div>
+  <!-- loading -->
+  <div class="products-list" *ngIf="isLoading">
+    <div class="product-card skeleton-card" *ngFor="let s of [1,2,3,4]">
+      <ion-skeleton-text animated class="skeleton-line large"></ion-skeleton-text>
+      <ion-skeleton-text animated class="skeleton-line medium"></ion-skeleton-text>
+      <ion-skeleton-text animated class="skeleton-line small"></ion-skeleton-text>
     </div>
   </div>
 
-  <!-- Empty state -->
+  <!-- empty -->
   <div class="empty-state" *ngIf="!isLoading && products.length === 0">
-    <ion-icon name="cube-outline" class="empty-icon"></ion-icon>
+    <ion-icon name="cube-outline"></ion-icon>
     <h3>No products found</h3>
-    <p>Try a different search or category</p>
+    <p>Try another search or category</p>
   </div>
 
-  <!-- Products grid -->
-  <div class="products-grid" *ngIf="!isLoading && products.length > 0">
+  <!-- products -->
+  <div class="products-list" *ngIf="!isLoading && products.length > 0">
     <div
       class="product-card"
-      *ngFor="let product of products"
-      (click)="goToProduct(product._id)">
+      *ngFor="let product of products; let i = index"
+      (click)="goToProduct(product._id)"
+      [class.alt-card]="i % 2 !== 0">
 
-      <div class="card-image-wrapper">
-        <div class="card-image-placeholder">
-          <ion-icon name="cube-outline"></ion-icon>
+      <div class="card-top">
+        <div class="shape"></div>
+
+        <div class="license-chip">
+          {{ product.license }}
         </div>
-        <div class="license-badge">{{ product.license }}</div>
+
+        <div class="price-pill">
+          {{ product.price }} T.D
+        </div>
       </div>
 
-      <div class="card-body">
-        <h3 class="product-title">{{ product.title }}</h3>
-        <p class="product-desc">{{ product.description }}</p>
-        <div class="card-footer">
-          <span class="product-price">{{ product.price }} T.D</span>
-          <div class="download-count">
+      <div class="card-content">
+        <h2>{{ product.title }}</h2>
+        <p>{{ product.description }}</p>
+
+        <div class="card-bottom">
+          <div class="downloads">
             <ion-icon name="download-outline"></ion-icon>
-            <span>{{ product.downloadCount }}</span>
+            <span>{{ product.downloadCount }} downloads</span>
           </div>
+
+          <button class="view-btn">
+            View
+            <ion-icon name="arrow-forward-outline"></ion-icon>
+          </button>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Pull to refresh -->
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
