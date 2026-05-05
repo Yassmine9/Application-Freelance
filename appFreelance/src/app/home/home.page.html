@@ -80,7 +80,7 @@
     </section>
 
     <!-- Freelancer Section -->
-    <section class="feature-section" *ngIf="showFreelancersSection">
+    <section class="feature-section" *ngIf="showfreelancersSection">
       <div class="section-heading">
         <div>
           <span class="section-kicker">Top rated freelancers</span>
@@ -104,7 +104,7 @@
       <div class="freelancer-strip" *ngIf="!isLoadingFreelancers">
         <article
           class="freelancer-card"
-          *ngFor="let freelancer of filteredFreelancers; trackBy: trackByIndex"
+          *ngFor="let freelancer of filteredfreelancers; trackBy: trackByIndex"
           (click)="navigateToFreelancerProfile(freelancer.id)"
         >
           <div class="freelancer-avatar">
@@ -120,7 +120,7 @@
           </div>
         </article>
 
-        <div class="empty-state" *ngIf="filteredFreelancers.length === 0">
+        <div class="empty-state" *ngIf="filteredfreelancers.length === 0">
           No freelancers match your search.
         </div>
       </div>

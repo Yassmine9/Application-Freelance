@@ -202,44 +202,8 @@ export class HomePage {
       .filter((freelancer): freelancer is HomeFreelancer => freelancer !== null);
   }
 
-  private mapFeaturesFromNames(names: string[]): HomeFeature[] {
-    const seen = new Set<string>();
-    const normalized = names
-      .map((name) => name.trim())
-      .filter((name) => {
-        const key = name.toLowerCase();
-        if (!key || seen.has(key)) {
-          return false;
-        }
-        seen.add(key);
-        return true;
-      })
-      .slice(0, 9);
-
-    if (normalized.length === 0) {
-      return [
-        { title: 'Web Development', icon: 'code-slash-outline' },
-        { title: 'Mobile Development', icon: 'phone-portrait-outline' },
-        { title: 'UI / UX Design', icon: 'color-palette-outline' },
-      ];
-    }
-
-    return normalized.map((title) => ({
-      title,
-      icon: this.iconForCategory(title),
-    }));
-  }
-
-  private mapFreelancersFromApi(response: FreelancersApiResponse): HomeFreelancer[] {
-    const rawFreelancers = Array.isArray(response) ? response : (response.freelancers ?? []);
-
-    return rawFreelancers
-      .map((freelancer) => this.mapFreelancerFromApi(freelancer))
-      .filter((freelancer): freelancer is HomeFreelancer => freelancer !== null);
-  }
-
-  private mapfreelancersFromApi(freelancers: freelancersApiItem): Homefreelancers | null {
-    const name = freelancers.name?.trim();
+  private mapFreelancerFromApi(freelancer: FreelancerApiItem): HomeFreelancer | null {
+    const name = freelancer.name?.trim();
 
     if (!name) {
       return null;

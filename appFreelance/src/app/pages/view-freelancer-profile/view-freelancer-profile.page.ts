@@ -3,7 +3,7 @@ import { IonicModule, IonContent, ActionSheetController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FreelancerProfileService } from '../../services/freelancer-profile.service';
+import { freelancersProfileService } from '../../services/freelancer-profile.service';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
 
@@ -62,7 +62,7 @@ export class ViewfreelancersProfilePage implements OnInit {
 
   constructor(
     private route:  ActivatedRoute,
-    private profileService: FreelancerProfileService,
+    private profileService: freelancersProfileService,
     private authService:    AuthService,
     private router: Router,
     private actionSheetController: ActionSheetController,
@@ -73,10 +73,10 @@ export class ViewfreelancersProfilePage implements OnInit {
       this.freelancerId = params.get('id') || '';
       // Check ownership — same ID as logged-in user AND role is freelancer
       const loggedId = this.authService.getUserId();
-      this.isOwner   = this.authService.isFreelancer() && loggedId === this.freelancerId;
+      this.isOwner   = this.authService.isfreelancers() && loggedId === this.freelancerId;
 
       if (this.freelancerId) {
-        this.loadFreelancerProfile(this.freelancerId);
+        this.loadfreelancersProfile(this.freelancerId);
       } else {
         this.isLoading = false;
       }
@@ -85,7 +85,7 @@ export class ViewfreelancersProfilePage implements OnInit {
 
   loadfreelancersProfile(id: string): void {
     this.isLoading = true;
-    this.profileService.getFreelancerProfile(id).subscribe({
+    this.profileService.getfreelancersProfile(id).subscribe({
       next: (data) => {
         this.id               = data.user.id;
         this.name             = data.user.name             || '';

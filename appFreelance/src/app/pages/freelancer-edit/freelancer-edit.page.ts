@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FreelancerProfileService } from '../../services/freelancer-profile.service';
+import { freelancersProfileService } from '../../services/freelancer-profile.service';
 import { environment } from '../../../environments/environment';
 
 export interface Project {
@@ -39,7 +39,7 @@ export class freelancersEditPage implements OnInit {
   projects: Project[] = [];
 
   constructor(
-    private profileService: FreelancerProfileService,
+    private profileService: freelancersProfileService,
     private router: Router
   ) {}
 

@@ -24,3 +24,5 @@ yarn-error.log
 /appFreelance/plugins/
 /appFreelance/.angular/
 /appFreelance/dist/
+__pycache__/
+*.pyc
