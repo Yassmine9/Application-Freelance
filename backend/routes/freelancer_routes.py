@@ -8,9 +8,8 @@ from werkzeug.utils import secure_filename
 
 freelancer_routes = Blueprint('freelancer_routes', __name__)
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-CV_FOLDER = os.path.join(BASE_DIR, 'uploads', 'cv')
-AVATAR_FOLDER = os.path.join(BASE_DIR, 'uploads', 'avatars')
+CV_FOLDER     = os.path.join(os.getcwd(), 'uploads', 'cv')
+AVATAR_FOLDER = os.path.join(os.getcwd(), 'uploads', 'avatars')
 
 ALLOWED_CV     = {'pdf', 'doc', 'docx'}
 ALLOWED_IMG    = {'jpg', 'jpeg', 'png'}
@@ -175,19 +174,24 @@ def upload_cv():
 def download_cv():
     user_id = get_jwt_identity()
     user = Freelancer.find_by_id(user_id)
-
-    if not user:
-        return jsonify({"error": "Utilisateur introuvable"}), 404
-
+    if not user or not user.get("cv_filename"):
+        return jsonify({"error": "No CV available"}), 404
     cv_filename = user.get("cv_filename")
+    print(f"[DEBUG] CV filename: {cv_filename}")  # check if None or empty
+
     if not cv_filename:
-        return jsonify({"error": "Aucun CV trouvé"}), 404
+        return jsonify({"error": "No CV filename in user profile"}), 404
+
+    # Print the full expected path
+    full_path = os.path.join(CV_FOLDER, cv_filename)
+    print(f"[DEBUG] Looking for file at: {full_path}")
+    print(f"[DEBUG] Does file exist? {os.path.exists(full_path)}")
 
     try:
         return send_from_directory(CV_FOLDER, cv_filename, as_attachment=True)
-    except FileNotFoundError:
-        return jsonify({"error": "Fichier CV introuvable"}), 404
-
+    except Exception as e:
+        print(f"[ERROR] send_from_directory failed: {e}")
+        return jsonify({"error": str(e)}), 500
 
 # ── GET all approved freelancers (public) ───────────────────
 @freelancer_routes.route('/freelancers', methods=['GET'])

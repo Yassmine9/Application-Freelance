@@ -78,7 +78,6 @@
   <div id="competences" class="section">
     <div class="skills-header">
       <h2 class="section-title">Skills</h2>
-      <span class="view-stack-link">VIEW STACK</span>
     </div>
     <div *ngIf="!editMode" class="skills-chips">
       <ion-chip *ngFor="let skill of skillList" class="skill-chip">
@@ -108,16 +107,19 @@
       <div *ngIf="cvName" class="cv-display">
   <div class="cv-file-card">
     <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
-    <div class="cv-info">
-      <!-- Download link -->
-      <a 
-        [href]="'http://127.0.0.1:5000/api/freelancers/profile/cv/download'" 
-        target="_blank"
-        class="cv-filename-link">
-        {{ original_cv_name }}
-      </a>
-      <span class="cv-type">PDF Document</span>
-    </div>
+<div class="cv-info">
+  <!-- Download button instead of link -->
+  <a 
+    fill="clear" 
+    size="small" 
+    (click)="downloadCv()" 
+    class="cv-filename-link"
+    >
+    <ion-icon name="download-outline" slot="start"></ion-icon>
+    {{ original_cv_name || 'No CV uploaded' }}
+</a>
+  <span class="cv-type">PDF Document</span>
+</div>
   </div>
 </div>
     </div>
@@ -234,7 +236,7 @@
     <div id="portfolio" class="section">
     <div class="portfolio-header">
       <h2 class="section-title">Gigs</h2>
-            <span class="view-stack-link" (click)="getmygigs()">VIEW Gigs</span>
+            <span class="view-stack-link" style="color: #b388ff;"(click)="getmygigs()">View Gigs</span>
     </div>
     <!-- View mode -->
     <div *ngIf="!editMode">
@@ -278,21 +280,21 @@
     </div>
     <p class="review-text">"{{ review.comment }}"</p>
     
-
-    <!-- Freelancer's reply if exists -->
+<!--
+     Freelancer's reply if exists 
     <div *ngIf="review.freelancer_reply" class="freelancer-reply">
       <strong style="color:#1a1a2e;">Your reply:</strong>
       <p style="color:#1a1a2e;">{{ review.freelancer_reply }}</p>
     </div>
 
-    <!-- Reply button (edit if already replied) -->
+     Reply button (edit if already replied) 
     <ion-button
       size="small"
       [fill]="review.freelancer_reply ? 'clear' : 'outline'"
       (click)="replyToReview(review._id, review.freelancer_reply || null)">
       <ion-icon [name]="review.freelancer_reply ? 'create-outline' : 'chatbubble-outline'" slot="start"></ion-icon>
       {{ review.freelancer_reply ? 'Edit reply' : 'Reply' }}
-    </ion-button>
+    </ion-button>-->
   </div>
 </div>
 

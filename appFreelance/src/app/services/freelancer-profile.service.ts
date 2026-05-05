@@ -35,7 +35,11 @@ export class freelancersProfileService {
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` })
     });
   }
-
+    downloadCv(): Observable<Blob> {
+      console.log('Download CV clicked!');
+    return this.http.get(`${this.base}/freelancer/profile/cv/download`, 
+    {responseType: 'blob'});
+  }
   uploadAvatar(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('avatar', file);

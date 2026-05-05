@@ -141,6 +141,7 @@ export class freelancersProfilePage implements OnInit {
         this.reviews = data;
         this.averageRating = data.averageRating || 0;
         this.totalReviews = data.totalReviews || 0;
+        
       },
       error: (err) => console.error('Failed to load reviews', err)
     });
@@ -242,6 +243,31 @@ export class freelancersProfilePage implements OnInit {
   }
 getmygigs() {
   this.router.navigate(['/my-gigs']);
+}
+downloadCv()
+{
+  this.profileService.downloadCv().subscribe({
+    next: (blob: Blob) => {
+      console.log('Blob received', blob); // you already see this
+
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a hidden anchor element
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = this.original_cv_name || 'cv.pdf'; // force filename
+      document.body.appendChild(a); // needed for Firefox
+      a.click();
+      
+      // Clean up
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('Download error', err);
+    }
+  });
 }
   // ---- Save ----
   saveProfile() {

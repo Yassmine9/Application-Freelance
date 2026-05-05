@@ -195,7 +195,31 @@ export class ViewfreelancersProfilePage implements OnInit {
   setRating(star: number): void {
     this.rating = star;
   }
+downloadCv()
+{
+  this.profileService.downloadCv().subscribe({
+    next: (blob: Blob) => {
+      console.log('Blob received', blob); // you already see this
 
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a hidden anchor element
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = this.original_cv_name || 'cv.pdf'; // force filename
+      document.body.appendChild(a); // needed for Firefox
+      a.click();
+      
+      // Clean up
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('Download error', err);
+    }
+  });
+}
   submitReview(): void {
     this.submitted = true;
     if (!this.isFormValid) return;

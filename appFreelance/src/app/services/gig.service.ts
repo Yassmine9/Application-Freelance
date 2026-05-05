@@ -51,4 +51,20 @@ export class GigService {
   deleteGig(gigId: string): Observable<any> {
     return this.http.delete(`${this.base}/freelancers/gigs/${gigId}`);
   }
+  downloadCv(gigId: string): Observable<any> {
+    return this.http.get(`${this.base}/freelancer/profile/cv/download`);
+  }
+    // ── Promotion endpoints ──────────────────────────────────
+
+  getPromotionPlans(): Observable<any> {
+    return this.http.get(`${this.base}/promotions/plans`);
+  }
+
+  promoteGig(gigId: string, data: { plan: string }): Observable<any> {
+    return this.http.post(`${this.base}/freelancer/gigs/${gigId}/promote`, data);
+  }
+
+  cancelPromotion(gigId: string): Observable<any> {
+    return this.http.delete(`${this.base}/freelancer/gigs/${gigId}/promote`);
+  }
 }

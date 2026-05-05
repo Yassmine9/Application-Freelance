@@ -37,10 +37,24 @@
         <ion-input [(ngModel)]="name" placeholder="Your name" class="app-input"></ion-input>
       </div>
 
-      <div class="field-group">
-        <label class="field-label">Professional Title</label>
-        <ion-input [(ngModel)]="title" placeholder="e.g. Full-Stack Developer" class="app-input"></ion-input>
-      </div>
+      <ion-item lines="full">
+        <ion-label position="stacked">Phone</ion-label>
+        <ion-input
+          [(ngModel)]="phone"
+          type="tel"
+          placeholder="+216 ...">
+        </ion-input>
+      </ion-item>
+<!--
+      <ion-item lines="none">
+        <ion-label position="stacked">Hourly Rate ($)</ion-label>
+        <ion-input
+          [(ngModel)]="hourlyRate"
+          type="number"
+          placeholder="0">
+        </ion-input>
+      </ion-item>-->
+    </div>
 
       <div class="field-group">
         <label class="field-label">Bio</label>
