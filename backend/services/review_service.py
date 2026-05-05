@@ -4,6 +4,8 @@ from models.freelancer import Freelancer
 from models.client import Client
 from models.admin import Admin
 from models.gig_order import GigOrderModel
+from db.mongo import db
+from bson import ObjectId
 
 
 # ── Verify Helpers ────────────────────────────────────────
@@ -33,10 +35,33 @@ def verify_review(review_id):
     return review, None
 
 
+def _id_candidates(value):
+    candidates = [str(value)]
+    try:
+        candidates.append(ObjectId(str(value)))
+    except Exception:
+        pass
+    return candidates
+
+
+def _find_accepted_offer(client_id, freelancer_id):
+    if db is None:
+        return None
+    query = {
+        "clientId": {"$in": _id_candidates(client_id)},
+        "acceptedFreelancerId": {"$in": _id_candidates(freelancer_id)},
+        "status": {"$in": ["in_progress", "closed"]}
+    }
+    return db.offers.find_one(query)
+
+
+def _offer_review_key(offer_id):
+    return f"offer:{offer_id}"
+
+
 # ── Submit Review ─────────────────────────────────────────
 
 def submit_new_review(user_id, data):
-
     # Must be a client
     client, err = verify_client(user_id)
     if err:
@@ -68,16 +93,36 @@ def submit_new_review(user_id, data):
     if err:
         return None, err
 
-    # Check client worked with this freelancer
+    # Check client worked with this freelancer (gig orders or accepted offers)
     order = GigOrderModel.get_unreviewed_order(user_id, freelancer_id)
     if not order:
         any_order = GigOrderModel.client_worked_with_freelancer(user_id, freelancer_id)
+        offer = _find_accepted_offer(user_id, freelancer_id)
+        if offer:
+            offer_id = str(offer.get("_id"))
+            offer_key = _offer_review_key(offer_id)
+            if Review.already_reviewed(offer_key):
+                return None, ("You already reviewed this freelancer", 409)
+
+            review = Review.create(
+                order_id=offer_key,
+                gig_id=None,
+                freelancer_id=freelancer_id,
+                client_id=user_id,
+                client_name=client.get("name", ""),
+                rating=rating,
+                comment=comment
+            )
+
+            Review.update_freelancer_stats(freelancer_id)
+            return {"message": "Review submitted successfully", "review": review}, None
+
         if not any_order:
             return None, ("You have not worked with this freelancer", 403)
         return None, ("You already reviewed this freelancer", 409)
 
     order_id = str(order["_id"])
-    gig_id   = str(order["gig_id"])
+    gig_id = str(order["gig_id"])
 
     # No duplicate review for same order
     if Review.already_reviewed(order_id):
@@ -85,20 +130,20 @@ def submit_new_review(user_id, data):
 
     # Save review
     review = Review.create(
-        order_id=      order_id,
-        gig_id=        gig_id,
-        freelancer_id= freelancer_id,
-        client_id=     user_id,
-        client_name=   client.get("name", ""),
-        rating=        rating,
-        comment=       comment
+        order_id=order_id,
+        gig_id=gig_id,
+        freelancer_id=freelancer_id,
+        client_id=user_id,
+        client_name=client.get("name", ""),
+        rating=rating,
+        comment=comment
     )
 
     # Mark order as reviewed
     GigOrderModel.mark_order_reviewed(order_id)
 
-    # Update freelancer stats
-    Freelancer.recalculate_stats(freelancer.email,get_freelancer_reviews(freelancer_id))
+    # ── FIX: use the existing Review method ─────────────────
+    Review.update_freelancer_stats(freelancer_id)
 
     # Update gig rating
     Gig.update_rating(gig_id, rating)
@@ -109,7 +154,6 @@ def submit_new_review(user_id, data):
 # ── Can Review Check ──────────────────────────────────────
 
 def check_can_review(user_id, freelancer_id):
-
     # Must be a client
     client, err = verify_client(user_id)
     if err:
@@ -125,22 +169,33 @@ def check_can_review(user_id, freelancer_id):
     if order:
         return {
             "can_review": True,
-            "order_id":   str(order["_id"]),
-            "gig_id":     str(order["gig_id"]),
-            "reason":     None
+            "order_id": str(order["_id"]),
+            "gig_id": str(order["gig_id"]),
+            "reason": None
         }, None
 
-    # Check if they worked together at all
+    # Check if they worked together at all (gig orders or accepted offers)
     any_order = GigOrderModel.client_worked_with_freelancer(user_id, freelancer_id)
-    if not any_order:
+    offer = _find_accepted_offer(user_id, freelancer_id)
+    if offer:
+        offer_id = str(offer.get("_id"))
+        offer_key = _offer_review_key(offer_id)
+        if not Review.already_reviewed(offer_key):
+            return {
+                "can_review": True,
+                "offer_id": offer_id,
+                "reason": None
+            }, None
+
+    if not any_order and not offer:
         return {
             "can_review": False,
-            "reason":     "You have not worked with this freelancer"
+            "reason": "You have not worked with this freelancer"
         }, None
 
     return {
         "can_review": False,
-        "reason":     "You already reviewed this freelancer"
+        "reason": "You already reviewed this freelancer"
     }, None
 
 
@@ -151,14 +206,13 @@ def get_freelancer_reviews(freelancer_id):
     if err:
         return None, err
     reviews = Review.find_by_freelancer(freelancer_id)
-    Review.update_freelancer_stats(freelancer_id)
+    # ── FIX: removed side-effect; don't update stats on every fetch ──
     return reviews, None
 
 
 # ── Freelancer Reply ──────────────────────────────────────
 
 def reply_to_existing_review(review_id, user_id, data):
-
     freelancer, err = verify_freelancer(user_id)
     if err:
         return None, err
@@ -188,7 +242,6 @@ def reply_to_existing_review(review_id, user_id, data):
 # ── Admin Hide Review ─────────────────────────────────────
 
 def hide_existing_review(review_id, user_id):
-
     admin, err = verify_admin(user_id)
     if err:
         return None, err

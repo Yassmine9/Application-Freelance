@@ -13,10 +13,10 @@ import {
   personOutline, briefcaseOutline, starOutline,
   mailOutline, callOutline, locationOutline
 } from 'ionicons/icons';
-import { ApiService } from '../services/api.service';
-import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
-import { environment } from '../../environments/environment';
+import { ApiService } from '../../services/api.service';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
+import { ToolBarComponent } from '../../components/Tool-bar/toolbar.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-profile',

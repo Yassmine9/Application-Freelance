@@ -18,11 +18,14 @@ class Admin(BaseUser):
 
     @classmethod
     def validate_user(cls, email):
-        """Valide un compte utilisateur (status → active)"""
-        for model in (Client, Freelancer):
-            user = model.find_by_email(email)
-            if user:
-                return model.update(email, status="active")
+        """Valide un compte utilisateur (client → active, freelancer → approved)"""
+        user = Client.find_by_email(email)
+        if user:
+            return Client.update(email, status="active")
+
+        user = Freelancer.find_by_email(email)
+        if user:
+            return Freelancer.update(email, status="approved")
         return None
 
     @classmethod

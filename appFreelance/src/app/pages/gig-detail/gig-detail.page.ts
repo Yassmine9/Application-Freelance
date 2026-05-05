@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GigService } from '../../services/gig.service';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
@@ -14,11 +14,13 @@ import { FormsModule } from '@angular/forms';
 export class GigDetailPage implements OnInit {
 
   gig: any = null;
+  gigId: string | null = null;
   isLoading = true;
   error = '';
 
   constructor(
     private route: ActivatedRoute,    // ← reads the id from the URL
+    private router: Router,
     private gigService: GigService
   ) {}
 
@@ -43,8 +45,8 @@ export class GigDetailPage implements OnInit {
     });
   }
 
-  orderGig() {
-    // placeholder — will be implemented later
-    console.log('order gig', this.gig._id);
+  orderGig(gigId: string) {
+
+    this.router.navigate(['/gig-order/new', gigId]);
   }
 }

@@ -201,28 +201,131 @@
       </div>
     </div>
 
-    <!-- REVIEWS -->
-    <div id="reviews" class="section">
-      <div class="reviews-header">
-        <h2 class="section-title">Latest Client Reviews</h2>
-        <span class="reviews-badge">⭐ {{ clientRating | number:'1.1-1' }} ({{ projectsCompleted }} reviews)</span>
+<!-- ==================== CLIENT REVIEWS ==================== -->
+<div id="reviews" class="section">
+
+  <!-- Header -->
+  <div class="reviews-header">
+    <h2 class="section-title">Client Reviews</h2>
+    <span class="reviews-badge">
+      ⭐ {{ clientRating | number: '1.1-1' }} ({{ reviews.length }} reviews)
+    </span>
+  </div>
+
+  <!-- ── Write a Review (only if canReview = true) ────────── -->
+  <div class="review-form" *ngIf="canReview">
+    <h3 class="review-form-title"style="color:#1a1a2e;">Leave a Review</h3>
+
+    <!-- Stars -->
+    <div class="stars-container">
+      <ion-icon
+        *ngFor="let star of stars"
+        [name]="star <= rating ? 'star' : 'star-outline'"
+        color="warning"
+        class="star-icon"
+        (click)="setRating(star)">
+      </ion-icon>
+    </div>
+
+    <!-- Star label -->
+    <p class="star-label" *ngIf="rating > 0"style="color:#1a1a2e;">
+      {{ starLabels[rating] }}
+    </p>
+    <p class="star-label muted" *ngIf="rating === 0"style="color:#1a1a2e;">
+      Tap a star to rate
+    </p>
+
+    <!-- Rating validation -->
+    <p class="validation-error" *ngIf="submitted && rating === 0"style="color:#1a1a2e;">
+      Please select a star rating
+    </p>
+
+    <!-- Comment -->
+    <ion-textarea
+      [(ngModel)]="comment"
+      placeholder="Share your experience working with this freelancer... (min 20 characters)"
+      [rows]="5"
+      maxlength="500"
+      class="review-textarea"
+      [class.invalid]="submitted && !isCommentValid" style="color:#1a1a2e;">
+    </ion-textarea>
+
+    <!-- Character counter -->
+    <p class="char-counter" [class.warn]="comment.length > 450">
+      {{ comment.length }} / 500
+    </p>
+
+    <!-- Comment validation -->
+    <p class="validation-error" *ngIf="submitted && comment.trim().length < 20" style="color:#1a1a2e;">
+      Please write at least 20 characters
+    </p>
+
+    <!-- Submit button -->
+    <ion-button
+      expand="block"
+      color="warning"
+      class="submit-review-btn"
+      [disabled]="isSubmitting"
+      (click)="submitReview()">
+      <ion-icon name="star-outline" slot="start"></ion-icon>
+      {{ isSubmitting ? 'Submitting...' : 'Submit Review' }}
+    </ion-button>
+  </div>
+
+  <!-- ── Cannot review — show reason ──────────────────────── -->
+  <div class="cannot-review" *ngIf="!canReview && cannotReason">
+    <ion-icon name="information-circle-outline" color="medium"></ion-icon>
+    <p style="color:#1a1a2e;">{{ cannotReason }}</p>
+  </div>
+
+  <!-- ── Loading reviews ───────────────────────────────────── -->
+  <div *ngIf="isLoadingReviews" style="text-align:center; padding: 20px">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- ── No reviews yet ────────────────────────────────────── -->
+  <div *ngIf="!isLoadingReviews && reviews.length === 0" class="empty-text">
+    No reviews yet
+  </div>
+
+  <!-- ── Review cards ──────────────────────────────────────── -->
+  <div
+    *ngFor="let review of reviews; trackBy: trackByIndex"
+    class="review-card">
+
+    <!-- Top row: name + stars -->
+    <div class="review-top">
+      <img src="assets/avatar.png" class="reviewer-avatar" />
+      <div class="reviewer-info">
+        <h4>{{ review.client_name }}</h4>
+        <p>{{ review.created_at | date:'mediumDate' }}</p>
       </div>
-      <div class="review-card">
-        <div class="review-top">
-          <img src="assets/avatar.png" class="reviewer-avatar" />
-          <div class="reviewer-info"><h4>Sarah Johnson</h4><p>CEO at TechStartup</p></div>
-          <span class="review-score">⭐ 5.0</span>
-        </div>
-        <p class="review-text">"Exceptional work! Delivered on time with excellent quality."</p>
+      <div class="review-stars">
+        <ion-icon
+          *ngFor="let star of stars"
+          [name]="star <= review.rating ? 'star' : 'star-outline'"
+          color="warning"
+          class="small-star">
+        </ion-icon>
       </div>
-      <div class="review-card">
-        <div class="review-top">
-          <img src="assets/avatar.png" class="reviewer-avatar" />
-          <div class="reviewer-info"><h4>Mike Chen</h4><p>Product Manager</p></div>
-          <span class="review-score">⭐ 4.9</span>
-        </div>
-        <p class="review-text">"Best developer I've worked with. Highly recommended!"</p>
+    </div>
+
+    <!-- Comment -->
+    <p class="review-text">{{ review.comment }}</p>
+
+    <!-- Freelancer reply -->
+    <div class="freelancer-reply" *ngIf="review.freelancer_reply">
+      <ion-icon name="chatbubble-outline" color="primary"></ion-icon>
+      <div>
+        <strong>Response from freelancer:</strong>
+        <p>{{ review.freelancer_reply }}</p>
       </div>
+    </div>
+
+  </div>
+
+</div>
+<div>
       <ion-button expand="block" class="testimonials-btn" (click)="openActionMenu()">
         View All Testimonials
       </ion-button>

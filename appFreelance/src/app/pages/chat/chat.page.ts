@@ -10,9 +10,9 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { send, checkmarkDoneOutline, chatbubblesOutline } from 'ionicons/icons';
-import { ApiService } from '../services/api.service';
-import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { SocketService } from '../services/socket.service';
+import { ApiService } from '../../services/api.service';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
+import { SocketService } from '../../services/socket.service';
 import { Subscription } from 'rxjs';
 
 @Component({

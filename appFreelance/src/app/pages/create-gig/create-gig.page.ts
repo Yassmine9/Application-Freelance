@@ -15,11 +15,13 @@ import { GigService } from '../../services/gig.service';
 export class CreateGigPage implements OnInit {
   gig = {
     title: '',
+    category: '',
     description: '',
     price: null,
-    tags: ''
+    tags: '',
+    duration: ''
   };
-
+categories = ['Web Development', 'Design', 'Writing', 'Data Entry', 'SEO', 'Social Media', 'Translation'];
   constructor(
     private gigService: GigService,
     private router: Router,
@@ -31,7 +33,7 @@ export class CreateGigPage implements OnInit {
 
   async onSubmit() {
     // Validation
-    if (!this.gig.title || !this.gig.description || !this.gig.price) {
+    if (!this.gig.title || !this.gig.description || !this.gig.price || !this.gig.duration) {
       const alert = await this.alertCtrl.create({
         header: 'Error',
         message: 'Please fill in all required fields.',

@@ -70,7 +70,13 @@ def create_app() -> Flask:
         app,
         resources={
             r"/*": {
-                "origins": ["http://localhost:4200", "http://127.0.0.1:4200", "http://127.0.0.1:5000"],
+                "origins": [
+                    "http://localhost:4200",
+                    "http://127.0.0.1:4200",
+                    "http://localhost:8100",
+                    "http://127.0.0.1:8100",
+                    "http://127.0.0.1:5000",
+                ],
                 "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
                 "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"],
                 "supports_credentials": True,

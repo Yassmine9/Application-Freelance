@@ -10,10 +10,10 @@ import { addIcons } from 'ionicons';
 import { documentTextOutline, chevronForwardOutline } from 'ionicons/icons';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ApiService } from '../services/api.service';
-import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
-import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { environment } from '../../environments/environment';
+import { ApiService } from '../../services/api.service';
+import { ToolBarComponent } from '../../components/Tool-bar/toolbar.component';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-my-proposals',

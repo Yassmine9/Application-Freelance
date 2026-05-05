@@ -14,9 +14,9 @@ import {
   cashOutline, calendarOutline, checkmarkCircleOutline, documentTextOutline,
   chevronForwardOutline
 } from 'ionicons/icons';
-import { ApiService } from '../services/api.service';
-import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { environment } from '../../environments/environment';
+import { ApiService } from '../../services/api.service';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-proposals',

@@ -104,25 +104,36 @@ class Review:
     def update_freelancer_stats(cls, freelancer_id):
         reviews = list(cls.collection.find({
             "freelancer_id": freelancer_id,
-            "status":        "visible"
-            }))
-        if not reviews:
-            return
-        total      = len(reviews)
-        avg_rating = round(sum(r["rating"] for r in reviews) / total, 1)
+            "status": "visible"
+        }))
 
-        # success_rate = % of reviews with rating >= 4
-        positive     = sum(1 for r in reviews if r["rating"] >= 4)
+        total = len(reviews)
+
+        if total == 0:
+            Freelancer.get_collection().update_one(
+                {"_id": ObjectId(freelancer_id)},
+                {"$set": {
+                    "client_rating": 0,
+                    "success_rate": 0
+                }}
+            )
+            return
+
+        avg_rating = round(
+            sum(r["rating"] for r in reviews) / total,
+            1
+        )
+
+        positive = sum(
+            1 for r in reviews if r["rating"] >= 4
+        )
+
         success_rate = round((positive / total) * 100)
 
-        # rating breakdown (bonus — stored alongside flat fields)
-        breakdown = {"5": 0, "4": 0, "3": 0, "2": 0, "1": 0}
-        for r in reviews:
-            breakdown[str(r["rating"])] += 1
-        Freelancer.collection.update_one(
+        Freelancer.get_collection().update_one(
             {"_id": ObjectId(freelancer_id)},
             {"$set": {
-                "client_rating":   avg_rating,
-                "success_rate":    success_rate,
-                }}
-                 )
+                "client_rating": avg_rating,
+                "success_rate": success_rate
+            }}
+        )

@@ -785,4 +785,70 @@ ion-content.profile-content {
     width: 48px;
     height: 48px;
   }
+  .freelancer-reply {
+  margin-top: 12px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-left: 3px solid #28a745;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.review-date,
+.freelancer-reply small {
+  color: #6c757d;
+  font-size: 0.75rem;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.review-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.review-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reviewer-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.reviewer-info h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.reviewer-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: gray;
+}
+
+.review-score {
+  margin-left: auto;
+  font-weight: bold;
+}
 }

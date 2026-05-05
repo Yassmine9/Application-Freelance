@@ -15,11 +15,11 @@ import {
   peopleOutline, documentTextOutline, chatbubbleOutline, briefcaseOutline,
   calendarOutline, chevronForwardOutline, pricetagOutline
 } from 'ionicons/icons';
-import { ApiService } from '../services/api.service';
-import { CategoryService } from '../services/category.service';
-import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
-import { environment } from '../../environments/environment';
+import { ApiService } from '../../services/api.service';
+import { CategoryService } from '../../services/category.service';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
+import { ToolBarComponent } from '../../components/Tool-bar/toolbar.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-offers',

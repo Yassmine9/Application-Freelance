@@ -7,6 +7,15 @@ from utils.uploads import save_upload
 
 offers_bp = Blueprint("offers", __name__)
 
+
+def _id_candidates(value):
+    values = [str(value)]
+    try:
+        values.append(ObjectId(str(value)))
+    except Exception:
+        pass
+    return values
+
 def serialize_offer(offer):
     offer["_id"] = str(offer["_id"])
     if "deadline" in offer and offer["deadline"]:
@@ -184,9 +193,14 @@ def get_offers_by_freelancer(freelancer_id):
         return jsonify([]), 200
 
     status_filter = request.args.get("proposalStatus")
-    proposal_query = {"freelancerId": freelancer_id}
+    proposal_query = {
+        "$or": [
+            {"freelancerId": {"$in": _id_candidates(freelancer_id)}},
+            {"freelancer_id": {"$in": _id_candidates(freelancer_id)}}
+        ]
+    }
     if status_filter:
-        proposal_query["status"] = status_filter
+        proposal_query["$and"] = [{"status": status_filter}]
 
     proposal_cursor = db.proposals.find(proposal_query).sort("createdAt", -1)
     proposals = []
@@ -203,6 +217,9 @@ def get_offers_by_freelancer(freelancer_id):
 
         p["_id"] = str(p["_id"])
         p["offerId"] = str(offer_id)
+        # ensure freelancerId is string for consistency
+        if p.get("freelancerId") is not None:
+            p["freelancerId"] = str(p["freelancerId"])
         if "createdAt" in p and p["createdAt"]:
             p["createdAt"] = p["createdAt"].isoformat()
         proposals.append(p)
@@ -225,6 +242,7 @@ def get_offers_by_freelancer(freelancer_id):
             "_id": p.get("_id"),
             "status": p.get("status"),
             "amount": p.get("amount"),
+            "freelancerId": p.get("freelancerId"),
             "coverLetterUrl": f"/uploads/{p['coverLetterPath']}" if p.get("coverLetterPath") else None,
             "createdAt": p.get("createdAt")
         }

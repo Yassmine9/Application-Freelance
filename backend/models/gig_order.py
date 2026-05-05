@@ -9,6 +9,34 @@ class GigOrderModel:
     # ── Helpers ─────────────────────────────────────────────
 
     @staticmethod
+    def _id_candidates(value):
+        candidates = [str(value)]
+        try:
+            candidates.append(ObjectId(str(value)))
+        except Exception:
+            pass
+        return candidates
+
+    @classmethod
+    def _worked_query(cls, client_id, freelancer_id, require_reviewable=False):
+        query = {
+            "$and": [
+                {"$or": [
+                    {"client_id": {"$in": cls._id_candidates(client_id)}},
+                    {"clientId": {"$in": cls._id_candidates(client_id)}}
+                ]},
+                {"$or": [
+                    {"freelancer_id": {"$in": cls._id_candidates(freelancer_id)}},
+                    {"freelancerId": {"$in": cls._id_candidates(freelancer_id)}}
+                ]}
+            ]
+        }
+        if require_reviewable:
+            query["$and"].append({"status": {"$in": ["completed", "closed"]}})
+            query["$and"].append({"review_submitted": False})
+        return query
+
+    @staticmethod
     def _serialize(order):
         if order:
             order["_id"] = str(order["_id"])
@@ -223,20 +251,13 @@ class GigOrderModel:
 
     @classmethod
     def get_unreviewed_order(cls, client_id, freelancer_id):
-        query = {
-            "client_id": client_id,
-            "freelancer_id": freelancer_id,
-            # "status": "completed",   # <-- optional: uncomment to require completed status
-            "review_submitted": False
-            }
+        query = cls._worked_query(client_id, freelancer_id, require_reviewable=True)
         order = cls.collection.find_one(query, sort=[("created_at", -1)])
         return cls._serialize(order) if order else None
+
     @classmethod
     def client_worked_with_freelancer(cls, client_id, freelancer_id):
-        query = {
-            "client_id": client_id,
-            "freelancer_id": freelancer_id
-            }
+        query = cls._worked_query(client_id, freelancer_id, require_reviewable=False)
         order = cls.collection.find_one(query)
         return cls._serialize(order) if order else None
     @classmethod

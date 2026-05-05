@@ -8,9 +8,9 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { briefcaseOutline, chevronForwardOutline, peopleOutline } from 'ionicons/icons';
-import { ApiService } from '../services/api.service';
-import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
-import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
+import { ApiService } from '../../services/api.service';
+import { ToolBarComponent } from '../../components/Tool-bar/toolbar.component';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
 import { addOutline } from 'ionicons/icons';
 @Component({
   selector: 'app-my-offers',

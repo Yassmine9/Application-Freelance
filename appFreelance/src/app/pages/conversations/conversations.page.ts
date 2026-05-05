@@ -9,10 +9,10 @@ import {
 import { addIcons } from 'ionicons';
 import { chatbubblesOutline, chevronForwardOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
-import { ApiService } from '../services/api.service';
-import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
-import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { SocketService } from '../services/socket.service';
+import { ApiService } from '../../services/api.service';
+import { ToolBarComponent } from '../../components/Tool-bar/toolbar.component';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
+import { SocketService } from '../../services/socket.service';
 import { Subscription } from 'rxjs';
 
 @Component({

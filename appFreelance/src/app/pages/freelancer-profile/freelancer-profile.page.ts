@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonicModule, IonContent } from '@ionic/angular';
+import { IonicModule, IonContent,AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FreelancerProfileService } from '../../services/freelancer-profile.service';
+import { ReviewService } from '../../services/review.service'
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
@@ -55,6 +56,12 @@ export class FreelancerProfilePage implements OnInit {
   isLoading = true;
   original_cv_name: string ="" ;
 
+    // [REVIEWS] Reviews properties
+  reviews: any[] = [];
+  averageRating: number = 0;
+  totalReviews: number = 0;
+  freelancer_reply :string = "";
+
   get isTopRated(): boolean {
     return this.successRate >= 90;
   }
@@ -70,7 +77,8 @@ export class FreelancerProfilePage implements OnInit {
     return labels[this.profileStatus];
   }
 
-  constructor(private profileService: FreelancerProfileService,private router:Router) {}
+  constructor(private profileService: FreelancerProfileService,private reviewService: ReviewService,
+    private alertCtrl: AlertController,private router:Router) {}
    
   ngOnInit() {
     console.log('PAGE LOADED - name is:', this.name);
@@ -114,6 +122,8 @@ export class FreelancerProfilePage implements OnInit {
       this.avatarUrl = 'assets/avatar.png';
        }
       this.isLoading = false;
+      // [REVIEWS] Load reviews after profile is loaded
+        this.loadReviews();
       
     },
     error: (err) => {
@@ -122,6 +132,63 @@ export class FreelancerProfilePage implements OnInit {
     }
   });
 }
+
+  // [REVIEWS] Load reviews for this freelancer
+  loadReviews() {
+    if (!this.id) return;
+    this.reviewService.getFreelancerReviews(this.id).subscribe({
+      next: (data: any) => {
+        this.reviews = data;
+        this.averageRating = data.averageRating || 0;
+        this.totalReviews = data.totalReviews || 0;
+      },
+      error: (err) => console.error('Failed to load reviews', err)
+    });
+  }
+
+  // [REVIEWS] Open alert to reply to a review
+  async replyToReview(reviewId: string, currentReply: string | null) {
+    const alert = await this.alertCtrl.create({
+      header: 'Reply to review',
+      inputs: [
+        {
+          name: 'reply',
+          type: 'textarea',
+          placeholder: 'Write your reply...',
+          value: currentReply || ''
+        }
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Submit',
+          handler: (data) => {
+            if (data.reply && data.reply.trim()) {
+              this.submitReply(reviewId, data.reply.trim());
+            }
+            return true;
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  // [REVIEWS] Send reply to backend and update local array
+  submitReply(reviewId: string, replyText: string) {
+    this.reviewService.replyToReview(reviewId, replyText).subscribe({
+      next: () => {
+        const review = this.reviews.find(r => r._id === reviewId);
+        if (review) {
+          review.reply = replyText;
+          review.replied_at = new Date().toISOString(); // approximate, backend will set actual
+        }
+      },
+      error: (err) => console.error('Failed to submit reply', err)
+    });
+  }
+
+
   // ---- Tab navigation ----
   async setTab(tab: string) {
     this.activeTab = tab;

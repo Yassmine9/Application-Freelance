@@ -30,8 +30,7 @@ export class SocketService {
     const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
     this.lastToken = token;
     this.socket = io(baseUrl, {
-      auth: { token },
-      transports: ['websocket']
+      auth: { token }
     });
 
     this.socket.on('message:new', (msg) => this.messageSubject.next(msg));

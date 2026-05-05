@@ -7,10 +7,10 @@ import {
   IonButton, IonInput, IonSpinner,
   ToastController
 } from '@ionic/angular/standalone';
-import { ApiService } from '../services/api.service';
-import { CategoryService } from '../services/category.service';
-import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
+import { ApiService } from '../../services/api.service';
+import { CategoryService } from '../../services/category.service';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
+import { ToolBarComponent } from '../../components/Tool-bar/toolbar.component';
 
 @Component({
   selector: 'app-post-offer',

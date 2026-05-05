@@ -4,7 +4,6 @@ import { FreelancerProfilePage } from './pages/freelancer-profile/freelancer-pro
 import { FreelancerGuard } from './guards/freelancer.guard';
 
 const routes: Routes = [
-
   {
     path: 'login',
     loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage)
@@ -41,41 +40,42 @@ const routes: Routes = [
     path: 'view-all-services',
     loadChildren: () => import('./pages/view-all-services/view-all-services.module').then(m => m.ViewAllServicesPageModule)
   },
+  /* ── FIX: loadComponent (standalone pages) ── */
   {
     path: 'offers',
-    loadChildren: () => import('./offers/offers.module').then(m => m.OffersPageModule)
+    loadComponent: () => import('./pages/offers/offers.page').then(m => m.OffersPage)
   },
   {
     path: 'my-offers',
-    loadChildren: () => import('./my-offers/my-offers.module').then(m => m.MyOffersPageModule)
+    loadComponent: () => import('./pages/my-offers/my-offers.page').then(m => m.MyOffersPage)
   },
   {
     path: 'my-proposals',
-    loadChildren: () => import('./my-proposals/my-proposals.module').then(m => m.MyProposalsPageModule)
+    loadComponent: () => import('./pages/my-proposals/my-proposals.page').then(m => m.MyProposalsPage)
   },
   {
     path: 'post-offer',
-    loadChildren: () => import('./post-offer/post-offer.module').then(m => m.PostOfferPageModule)
+    loadChildren: () => import('./pages/post-offer/post-offer.module').then(m => m.PostOfferPageModule)
   },
   {
     path: 'conversations',
-    loadChildren: () => import('./conversations/conversations.module').then(m => m.ConversationsPageModule)
+    loadComponent: () => import('./pages/conversations/conversations.page').then(m => m.ConversationsPage)
   },
   {
     path: 'proposals/:id',
-    loadChildren: () => import('./proposals/proposals.module').then(m => m.ProposalsPageModule)
+    loadChildren: () => import('./pages/proposals/proposals.module').then(m => m.ProposalsPageModule)
   },
   {
     path: 'chat/:offerId/:receiverId',
-    loadChildren: () => import('./chat/chat.module').then(m => m.ChatPageModule)
+    loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage)
   },
   {
     path: 'chat/:offerId',
-    loadChildren: () => import('./chat/chat.module').then(m => m.ChatPageModule)
+    loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage)
   },
   {
     path: 'profile/:role/:id',
-    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
+    loadComponent: () => import('./pages/profile/profile.page').then(m => m.ProfilePage)
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
@@ -96,7 +96,7 @@ const routes: Routes = [
   },
   {
     path: 'view-all-categories',
-    loadChildren: () => import('./pages/view-all-categories/view-all-categories.module').then( m => m.ViewAllCategoriesPageModule)
+    loadChildren: () => import('./pages/view-all-categories/view-all-categories.module').then(m => m.ViewAllCategoriesPageModule)
   },
   {
     path: 'admin-panel',
@@ -141,16 +141,18 @@ const routes: Routes = [
     loadChildren: () => import('./pages/freelancer-edit/freelancer-edit.module').then(m => m.FreelancerEditPageModule)
   },
   {
-  path: 'search',
-  loadChildren: () => import('./pages/search/search-routing.module').then(m => m.SearchPageRoutingModule)
+    path: 'search',
+    loadChildren: () => import('./pages/search/search-routing.module').then(m => m.SearchPageRoutingModule)
   },
   {
-  path: 'view-freelancer-profile/:id',
-  loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then(m => m.ViewFreelancerProfileRoutingModule)
+    path: 'view-freelancer-profile/:id',
+    loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then(m => m.ViewFreelancerProfileRoutingModule)
   },
-  { path: '**', redirectTo: 'login' }
-  ];
-
+  {
+    path: 'gig-order/new/:gigId',
+    loadChildren: () => import('./pages/gig-order-placement/gig-order-placement.module').then(m => m.GigOrderPlacementPageModule)
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],

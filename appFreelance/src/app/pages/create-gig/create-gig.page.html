@@ -21,20 +21,20 @@
       ></ion-input>
     </ion-item>
 
-    <!-- Category 
+    <!-- Category -->
     <ion-item>
-      <ion-label position="stacked">Related tags</ion-label>
+      <ion-label position="stacked">Tags</ion-label>
       <ion-select
-        [(ngModel)]="gig.tags"
+        [(ngModel)]="gig.category"
         name="category"
-        placeholder="Select some related tags"
+        placeholder="Select Tags"
         required
       >
         <ion-select-option *ngFor="let cat of categories" [value]="cat">
           {{ cat }}
         </ion-select-option>
       </ion-select>
-    </ion-item>-->
+    </ion-item>
 
     <!-- Description -->
     <ion-item>
@@ -60,20 +60,18 @@
       ></ion-input>
     </ion-item>
 
-    <!-- Duration 
+
+    <!-- Duration -->
     <ion-item>
       <ion-label position="stacked">Duration</ion-label>
-      <ion-select
+      <ion-textarea
         [(ngModel)]="gig.duration"
         name="duration"
-        placeholder="Sélectionnez un délai"
+        placeholder="Ex: 2 jours"
         required
       >
-        <ion-select-option *ngFor="let dur of durations" [value]="dur">
-          {{ dur }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>-->
+      </ion-textarea>
+    </ion-item>
 
     <!-- Deliverables 
     <ion-item>

@@ -12,13 +12,16 @@ from models.freelancer import Freelancer
 def serialize_proposal(p):
     p["_id"] = str(p["_id"])
     p["offerId"] = str(p["offerId"])
+    # ensure freelancerId is a string for frontend consumption
+    if p.get("freelancerId") is not None:
+        p["freelancerId"] = str(p["freelancerId"])
     if "createdAt" in p and p["createdAt"]:
         p["createdAt"] = p["createdAt"].isoformat()
     if p.get("coverLetterPath"):
         p["coverLetterUrl"] = f"/uploads/{p['coverLetterPath']}"
     
     # Look up freelancer from correct collection
-    freelancer = Freelancer.find_by_id(p["freelancerId"])
+    freelancer = Freelancer.find_by_id(p["freelancerId"]) if p.get("freelancerId") else None
     if freelancer:
         p["freelancerName"] = freelancer.get("name", "Unknown")
         p["freelancerAvatar"] = freelancer.get("avatar_filename") or freelancer.get("avatar")
@@ -146,19 +149,12 @@ def accept_proposal(proposal_id):
     if proposal["status"] != "pending":
         return jsonify({"error": "Proposal is no longer pending"}), 400
 
-    # Accept this proposal
-    db.offers.update_one(
-        {"_id": proposal["offerId"]},
-        {"$set": {"status": "closed", "acceptedFreelancerId": proposal["freelancerId"]}}
-    )
-
-    # Reject all other proposals for this offer
+    # Accept this proposal: mark other proposals rejected and set offer in progress
     db.proposals.update_many(
         {"offerId": proposal["offerId"], "_id": {"$ne": ObjectId(proposal_id)}},
         {"$set": {"status": "rejected"}}
     )
 
-    # Update offer status to in_progress
     db.offers.update_one(
         {"_id": proposal["offerId"]},
         {"$set": {"status": "in_progress", "acceptedFreelancerId": proposal["freelancerId"]}}
@@ -207,5 +203,10 @@ def get_my_proposals():
         return jsonify({"error": "Only freelancers can view their proposals"}), 403
 
     proposals = [serialize_proposal(p) for p in
-                 db.proposals.find({"freelancerId": current_user}).sort("createdAt", -1)]
+                 db.proposals.find({
+                     "$or": [
+                         {"freelancerId": current_user},
+                         {"freelancer_id": current_user}
+                     ]
+                 }).sort("createdAt", -1)]
     return jsonify(proposals), 200
