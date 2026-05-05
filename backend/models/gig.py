@@ -1,6 +1,6 @@
 from db.mongo import db
 from bson import ObjectId
-from datetime import datetime
+from datetime import datetime,timedelta
 
 
 class Gig:
@@ -122,9 +122,9 @@ class Gig:
     @classmethod
     def update(cls, gig_id, **fields):
         fields["updated_at"] = datetime.utcnow()
-        cls.collection.update_one(
-            {"_id": ObjectId(gig_id)},
-            {"$set": fields}
+        fields.pop("_id", None)
+        cls.collection.update_one({"_id": ObjectId(gig_id)},
+            {"$set": fields},
         )
         print("Updated Gig:", gig_id, fields)
         return cls.find_by_id(gig_id)
@@ -186,8 +186,8 @@ class Gig:
             }
         )
 
-    # ── Promotion management ────────────────────────────────
 
+    # ── Promotion management ────────────────────────────────
     @classmethod
     def set_promotion(cls, gig_id, plan, amount_paid, duration_days):
         """Activate a promotion for this gig."""
@@ -207,9 +207,25 @@ class Gig:
                 }
             }
         )
+        return cls.find_by_id(gig_id)
+
+    @classmethod
+    def expire_promotion(cls, gig_id):
+        """Expire a promotion — called by scheduler or admin."""
+        cls.collection.update_one(
+            {"_id": ObjectId(gig_id)},
+            {
+                "$set": {
+                    "promotion.is_promoted": False,
+                    "promotion.status": "expired",
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
 
     @classmethod
     def disable_promotion(cls, gig_id):
+        """Admin manually disables a promotion."""
         cls.collection.update_one(
             {"_id": ObjectId(gig_id)},
             {
@@ -220,3 +236,37 @@ class Gig:
                 }
             }
         )
+
+    @classmethod
+    def find_approved_with_promotion(cls):
+        """Return approved gigs — promoted ones first."""
+        promoted = [
+            cls._serialize(g)
+            for g in cls.collection.find({
+                "status": "approved",
+                "promotion.status": "active"
+            })
+        ]
+        regular = [
+            cls._serialize(g)
+            for g in cls.collection.find({
+                "status": "approved",
+                "$or": [
+                    {"promotion.status": {"$ne": "active"}},
+                    {"promotion": {"$exists": False}}
+                ]
+            })
+        ]
+        return promoted + regular
+
+    @classmethod
+    def find_expirable_promotions(cls):
+        """Find all gigs with active promotions that have passed end_date."""
+        now = datetime.utcnow()
+        return [
+            cls._serialize(g)
+            for g in cls.collection.find({
+                "promotion.status": "active",
+                "promotion.end_date": {"$lt": now}
+            })
+        ]

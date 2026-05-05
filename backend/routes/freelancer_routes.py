@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 freelancer_routes = Blueprint('freelancer_routes', __name__)
 
-CV_FOLDER     = os.path.join(os.getcwd(), 'uploads', 'cvs')
+CV_FOLDER     = os.path.join(os.getcwd(), 'uploads', 'cv')
 AVATAR_FOLDER = os.path.join(os.getcwd(), 'uploads', 'avatars')
 
 ALLOWED_CV     = {'pdf', 'doc', 'docx'}
@@ -166,11 +166,28 @@ def upload_cv():
 
 # ── DOWNLOAD CV ──────────────────────────────────────────────
 @freelancer_routes.route('/freelancer/profile/cv/download', methods=['GET'])
-
+@jwt_required()
 def download_cv():
+    user_id = get_jwt_identity()
+    user = Freelancer.find_by_id(user_id)
+    if not user or not user.get("cv_filename"):
+        return jsonify({"error": "No CV available"}), 404
+    cv_filename = user.get("cv_filename")
+    print(f"[DEBUG] CV filename: {cv_filename}")  # check if None or empty
 
-    return send_from_directory(CV_FOLDER, user["cv_filename"])
+    if not cv_filename:
+        return jsonify({"error": "No CV filename in user profile"}), 404
 
+    # Print the full expected path
+    full_path = os.path.join(CV_FOLDER, cv_filename)
+    print(f"[DEBUG] Looking for file at: {full_path}")
+    print(f"[DEBUG] Does file exist? {os.path.exists(full_path)}")
+
+    try:
+        return send_from_directory(CV_FOLDER, cv_filename, as_attachment=True)
+    except Exception as e:
+        print(f"[ERROR] send_from_directory failed: {e}")
+        return jsonify({"error": str(e)}), 500
 
 # ── GET all approved freelancers (public) ───────────────────
 @freelancer_routes.route('/freelancers', methods=['GET'])

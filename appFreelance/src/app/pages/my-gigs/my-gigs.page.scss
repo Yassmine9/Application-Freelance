@@ -66,3 +66,44 @@
   font-weight: 700;
   color: var(--ion-color-primary);
 }
+// Promotion badge and info blocks
+.promotion-active {
+  margin: 12px 0 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .sponsored-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    background: var(--ion-color-warning);
+    color: var(--ion-color-warning-contrast);
+  }
+
+  .promotion-expiry {
+    font-size: 0.75rem;
+  }
+}
+
+.promotion-expired {
+  margin: 8px 0;
+  a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+// Promotion action buttons row
+.action-buttons-promo {
+  margin-top: 12px;
+  
+  ion-button {
+    margin: 0;
+  }
+}
