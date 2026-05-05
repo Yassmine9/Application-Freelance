@@ -19,7 +19,7 @@ def allowed_file(filename, allowed):
 
 
 # ── GET my profile ──────────────────────────────────────────
-@freelancer_routes.route('/freelancers/myprofile', methods=['GET'])
+@freelancer_routes.route('/freelancer/myprofile', methods=['GET'])
 @jwt_required()
 def get_profile():
     user_id = get_jwt_identity()
@@ -29,9 +29,7 @@ def get_profile():
         return jsonify({"error": "Utilisateur introuvable"}), 404
     if user.get("role") != "freelancer":
         return jsonify({"error": "Accès refusé"}), 403
-    gigs, gigs_err = fetch_my_gigs(user_id)
-    if gigs_err:
-        gigs = []
+    gigs = fetch_my_gigs(user_id)
     return jsonify({
         "user": {
         "id":                 user["_id"],
@@ -60,7 +58,7 @@ def get_profile():
     }}), 200
 
 # ── GET public profile ──────────────────────────────────────────
-@freelancer_routes.route('/freelancers/<freelancer_id>', methods=['GET'])
+@freelancer_routes.route('/freelancer/<freelancer_id>', methods=['GET'])
 def get_public_profile_route(freelancer_id):
 
     """
@@ -72,9 +70,7 @@ def get_public_profile_route(freelancer_id):
         return jsonify({"error": err[0]}), err[1]
     
     # Add gigs to the profile
-    gigs, gigs_err = fetch_my_gigs(freelancer_id)
-    if gigs_err:
-        gigs = []
+    gigs = fetch_my_gigs(freelancer_id)
     profile["gigs"] = gigs
     
     return jsonify({"user": profile}), 200
@@ -86,7 +82,7 @@ def get_public_profile_route(freelancer_id):
 
 
 # ── UPDATE my profile ────────────────────────────────────────
-@freelancer_routes.route('/freelancers/profile', methods=['PUT'])
+@freelancer_routes.route('/freelancer/profile', methods=['PUT'])
 @jwt_required()
 def update_profile():
     user_id = get_jwt_identity()
@@ -98,7 +94,7 @@ def update_profile():
     if user.get("role") != "freelancer":
         return jsonify({"error": "Accès refusé"}), 403
 
-    # freelancers can only update these fields
+    # freelancer can only update these fields
     allowed_fields = [
         "title", "bio", "skills",
         "hourly_rate", "phone",
@@ -119,7 +115,7 @@ def update_profile():
 
 
 # ── UPLOAD AVATAR ────────────────────────────────────────────
-@freelancer_routes.route('/freelancers/profile/avatar', methods=['POST'])
+@freelancer_routes.route('/freelancer/profile/avatar', methods=['POST'])
 @jwt_required()
 def upload_avatar():
     user_id = get_jwt_identity()
@@ -144,7 +140,7 @@ def upload_avatar():
 
 
 # ── UPLOAD CV ────────────────────────────────────────────────
-@freelancer_routes.route('/freelancers/profile/cv', methods=['POST'])
+@freelancer_routes.route('/freelancer/profile/cv', methods=['POST'])
 @jwt_required()
 def upload_cv():
     user_id = get_jwt_identity()
@@ -196,13 +192,8 @@ def download_cv():
 # ── GET all approved freelancers (public) ───────────────────
 @freelancer_routes.route('/freelancers', methods=['GET'])
 def get_all_freelancers():
-    try:
-        results = Freelancer.find_approved()
-        print(f"[Freelancer] Returning {len(results) if results else 0} freelancers")
-        return jsonify({"freelancers": results if results else []}), 200
-    except Exception as e:
-        print(f"[ERROR] Error in get_all_freelancers: {e}")
-        return jsonify({"error": str(e), "freelancers": []}), 500
+    freelancers = Freelancer.find_approved()
+    return jsonify(freelancers), 200
     
     
 @freelancer_routes.route('/uploads/avatars/<filename>', methods=['GET'])

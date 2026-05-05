@@ -3,9 +3,8 @@ import { IonicModule, IonContent, ActionSheetController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { freelancersProfileService } from '../../services/freelancer-profile.service';
+import { FreelancerProfileService } from '../../services/freelancer-profile.service';
 import { ReviewService } from '../../services/review.service';
-import { AuthService } from 'src/app/services/auth.service';
 export interface Project {
   title: string;
   description: string;
@@ -19,35 +18,34 @@ export interface Gig {
 export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'blocked';
 
 @Component({
-  selector: 'app-view-freelancers-profile',
+  selector: 'app-view-freelancer-profile',
   templateUrl: './view-freelancer-profile.page.html',
   styleUrls: ['./view-freelancer-profile.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
   providers: [ReviewService],
 })
-export class ViewfreelancersProfilePage implements OnInit {
+export class ViewFreelancerProfilePage implements OnInit {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
 
-  // Profile data
-  id               = '';
-  name             = '';
-  email            = '';
-  phone            = '';
-  title            = '';
-  bio              = '';
-  original_cv_name = '';
-  skillList:  string[]  = [];
-  hourlyRate       = 0;
-  experienceYears  = 0;
-  projectsCompleted= 0;
-  clientRating     = 0;
-  successRate      = 0;
-  cvName           = '';
-  avatarUrl        = 'assets/avatar.png';
+  // ---- Profile fields ----
+  id: string = '';
+  name: string = '';
+  email: string = '';
+  phone: string = '';
+  title: string = '';
+  bio: string = '';
+  skillList: string[] = [];
+  hourlyRate: number = 0;
+  experienceYears: number = 0;
+  projectsCompleted: number = 0;
+  clientRating: number = 0;
+  successRate: number = 0;
+  cvName: string = '';
+  avatarUrl: string = 'assets/avatar.png';
   projects: Project[] = [];
-  gigs:     Gig[]     = [];
   profileStatus: ProfileStatus = 'draft';
+  gigs: Gig[] = [];
 
   // ---- Review state ----
   reviews:          any[]    = [];
@@ -67,21 +65,22 @@ export class ViewfreelancersProfilePage implements OnInit {
     5: 'Excellent'
   };
 
-  // UI
-  activeTab = 'bio';
+  // ---- UI state ----
+  activeTab: string = 'bio';
   isLoading = true;
-  freelancerId = '';
+  freelancerId: string = '';
+  original_cv_name: string = '';
 
-  /** true when the logged-in freelancer is viewing their own profile */
-  isOwner = false;
-  
+  get isTopRated(): boolean {
+    return this.successRate >= 90;
+  }
 
   get statusLabel(): string {
     const labels: Record<ProfileStatus, string> = {
-      draft:   'Draft',
+      draft: 'Draft',
       pending: '⏳ Pending',
-      approved:'✅ Approved',
-      rejected:'❌ Rejected',
+      approved: '✅ Approved',
+      rejected: '❌ Rejected',
       blocked: '🚫 Blocked',
     };
     return labels[this.profileStatus];
@@ -96,9 +95,8 @@ export class ViewfreelancersProfilePage implements OnInit {
     return this.rating > 0 && this.isCommentValid;
   }
   constructor(
-    private route:  ActivatedRoute,
-    private profileService: freelancersProfileService,
-    private authService:    AuthService,
+    private route: ActivatedRoute,
+    private profileService: FreelancerProfileService,
     private router: Router,
     private actionSheetController: ActionSheetController,
     private reviewService: ReviewService,
@@ -106,12 +104,8 @@ export class ViewfreelancersProfilePage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       this.freelancerId = params.get('id') || '';
-      // Check ownership — same ID as logged-in user AND role is freelancer
-      const loggedId = this.authService.getUserId();
-      this.isOwner   = this.authService.isfreelancers() && loggedId === this.freelancerId;
-
       if (this.freelancerId) {
         this.loadFreelancerProfile(this.freelancerId);
         this.loadReviews(this.freelancerId);
@@ -122,11 +116,11 @@ export class ViewfreelancersProfilePage implements OnInit {
     });
   }
 
- loadFreelancerProfile(id: string): void {
+  loadFreelancerProfile(id: string): void {
     this.isLoading = true;
     console.log('Loading freelancer profile for ID:', id);
 
-    this.profileService.getfreelancersProfile(id).subscribe({
+    this.profileService.getFreelancerProfile(id).subscribe({
       next: (data) => {
         console.log('Freelancer profile data:', data);
 
@@ -164,8 +158,6 @@ export class ViewfreelancersProfilePage implements OnInit {
       },
     });
   }
- 
-
   // ---- Reviews ------------------------------------------------
 
   loadReviews(freelancerId: string): void {
@@ -252,44 +244,59 @@ downloadCv()
   setTab(tab: string): void {
     this.activeTab = tab;
     setTimeout(() => {
-      const el = document.getElementById(tab);
-      if (el && this.content) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const element = document.getElementById(tab);
+      if (element && this.content) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
   }
 
-  goToEdit():    void { this.router.navigateByUrl('/freelancer-edit'); }
-  goToMyGigs():  void { this.router.navigateByUrl('/my-gigs'); }
+  async openActionMenu(): Promise<void> {
+    const actionSheet = await this.actionSheetController.create({
+      header: `Connect with ${this.name}`,
+      buttons: [
+        {
+          text: 'Send Message',
+          icon: 'chatbubble-outline',
+          handler: () => {
+            this.router.navigateByUrl(`/messages/${this.freelancerId}`);
+          },
+        },
+        {
+          text: 'View All Gigs',
+          icon: 'briefcase-outline',
+          handler: () => {
+            this.router.navigateByUrl(`/freelancer-gigs/${this.freelancerId}`);
+          },
+        },
+        {
+          text: 'Hire Now',
+          icon: 'checkmark-circle-outline',
+          handler: () => {
+            this.router.navigateByUrl(`/create-project/${this.freelancerId}`);
+          },
+        },
+        {
+          text: 'Report',
+          icon: 'flag-outline',
+          handler: () => {
+            this.router.navigateByUrl(`/report/${this.freelancerId}`);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
 
-  viewAllGigs(): void {
+    await actionSheet.present();
+  }
+  async getfreelancersgigs(): Promise<void> {
     this.router.navigateByUrl(`/gigs?freelancerId=${this.freelancerId}`);
   }
-  goToMessages(): void {
-    this.router.navigateByUrl('/conversations');
-  }
-  async openActionMenu(): Promise<void> {
-    // Owner gets a management sheet; visitor gets a contact sheet
-    const buttons = this.isOwner
-      ? [
-          { text: 'Edit Profile',  icon: 'create-outline',    handler: () => this.goToEdit() },
-          { text: 'My Gigs',       icon: 'briefcase-outline', handler: () => this.goToMyGigs() },
-          { text: 'Cancel', role: 'cancel' },
-        ]
-      : [
-          { text: 'Send Message',  icon: 'chatbubble-outline',    handler: () => this.router.navigateByUrl(`/messages/${this.freelancerId}`) },
-          { text: 'View All Gigs', icon: 'briefcase-outline',     handler: () => this.viewAllGigs() },
-          { text: 'Hire Now',      icon: 'checkmark-circle-outline', handler: () => this.router.navigateByUrl(`/create-project/${this.freelancerId}`) },
-          { text: 'Report',        icon: 'flag-outline',          handler: () => this.router.navigateByUrl(`/report/${this.freelancerId}`) },
-          { text: 'Cancel', role: 'cancel' },
-        ];
 
-    const sheet = await this.actionSheetController.create({
-      header: this.isOwner ? 'My Profile' : `Connect with ${this.name}`,
-      buttons,
-    });
-    await sheet.present();
+  trackByIndex(index: number): number {
+    return index;
   }
-
-  trackByIndex(i: number): number { return i; }
 }

@@ -3,10 +3,10 @@ from models.freelancer import Freelancer
 from models.admin import Admin
 from datetime import datetime
 
-def verify_freelancers(user_id):
+def verify_freelancer(user_id):
     user = Freelancer.find_by_id(user_id)
     if not user:
-        return None, ("freelancer Not Found", 404)
+        return None, ("Freelancer Not Found", 404)
     return user, None
 
 def verify_admin(user_id):
@@ -34,14 +34,14 @@ def fetch_gigs():
     return Gig.find_approved()
 
 def fetch_my_gigs(user_id):
-    user , err = verify_freelancers(user_id)
+    user , err = verify_freelancer(user_id)
     if err:
         return None , err
     my_gigs = Gig.find_by_freelancer(user_id)
     return my_gigs , None
 
 def create_new_gig(user_id,data):
-    user , err = verify_freelancers(user_id)
+    user , err = verify_freelancer(user_id)
     if err:
         return None,err
     required = ["title", "description", "price", "tags"]
@@ -66,14 +66,14 @@ def update_existing_gig(gig_id,user_id,data):
     return updated_gig,None
 
 def delete_existing_gig(gig_id,user_id):
-    user , err = verify_freelancers(user_id)
+    user , err = verify_freelancer(user_id)
     if err:
         return None,err
     gig , err = verify_gig(gig_id,user_id)
     if err:
         return None,err
     Gig.delete(gig_id)
-    return {"message": "Gig Deleted Successfully"}, None
+    return (f"Gig Deleted Successfully")
 
 def get_gig_details(gig_id):
     gig = Gig.find_by_id(gig_id)
@@ -82,7 +82,7 @@ def get_gig_details(gig_id):
     return None, ("Gig Not Found" , 404)
 
 def get_my_gig_details(gig_id,user_id):
-    user , err = verify_freelancers(user_id)
+    user , err = verify_freelancer(user_id)
     if err:
         return None,err
     gig , err = verify_gig(gig_id,user_id)
@@ -104,7 +104,7 @@ def approve_existing_gig(gig_id,user_id):
     user , err = verify_admin(user_id)
     if err:
         return None,err
-    gig = Gig.find_by_id(gig_id)
+        gig = Gig.find_by_id(gig_id)
     if not gig:
         return None, ("Gig Not Found" , 404)
     Gig.approve(gig_id)

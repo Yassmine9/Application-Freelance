@@ -30,26 +30,26 @@ export class GigService {
     });
   }
 
-  // ── freelancers endpoints (token added by interceptor) ───
+  // ── Freelancer endpoints (token added by interceptor) ───
 
   getMyGigs(): Observable<any> {
-    return this.http.get(`${this.base}/freelancers/gigs`);
+    return this.http.get(`${this.base}/freelancer/gigs`);
   }
 
   getMyGigDetails(gigId: string): Observable<any> {
-    return this.http.get(`${this.base}/freelancers/gigs/${gigId}`);
+    return this.http.get(`${this.base}/freelancer/gigs/${gigId}`);
   }
 
   createGig(data: any): Observable<any> {
-    return this.http.post(`${this.base}/freelancers/gigs`, data);
+    return this.http.post(`${this.base}/freelancer/gigs`, data);
   }
 
   updateGig(gigId: string, data: any): Observable<any> {
-    return this.http.put(`${this.base}/freelancers/gigs/${gigId}`, data);
+    return this.http.put(`${this.base}/freelancer/gigs/${gigId}`, data);
   }
 
   deleteGig(gigId: string): Observable<any> {
-    return this.http.delete(`${this.base}/freelancers/gigs/${gigId}`);
+    return this.http.delete(`${this.base}/freelancer/gigs/${gigId}`);
   }
   downloadCv(gigId: string): Observable<any> {
     return this.http.get(`${this.base}/freelancer/profile/cv/download`);

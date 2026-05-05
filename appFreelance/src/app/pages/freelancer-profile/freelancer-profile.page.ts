@@ -2,10 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonicModule, IonContent,AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { freelancersProfileService } from '../../services/freelancer-profile.service';
+import { FreelancerProfileService } from '../../services/freelancer-profile.service';
 import { ReviewService } from '../../services/review.service'
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
 
 export interface Project {
   title: string;
@@ -19,13 +18,13 @@ export interface Gig {
 export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'blocked';
 
 @Component({
-  selector: 'app-freelancers-profile',
+  selector: 'app-freelancer-profile',
   templateUrl: './freelancer-profile.page.html',
   styleUrls: ['./freelancer-profile.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
 })
-export class freelancersProfilePage implements OnInit {
+export class FreelancerProfilePage implements OnInit {
 
   @ViewChild(IonContent, { static: false }) content!: IonContent;
 
@@ -77,7 +76,7 @@ export class freelancersProfilePage implements OnInit {
     return labels[this.profileStatus];
   }
 
-  constructor(private profileService: freelancersProfileService ,private reviewService: ReviewService,
+  constructor(private profileService: FreelancerProfileService,private reviewService: ReviewService,
     private alertCtrl: AlertController,private router:Router) {}
    
   ngOnInit() {
@@ -91,7 +90,7 @@ export class freelancersProfilePage implements OnInit {
   this.isLoading = true;
   console.log("inside the load profile");
   this.profileService.getProfile().subscribe({
-    next: (data: any) => {
+    next: (data) => {
       console.log('DATA FROM API:', data);
       
       this.id = data.user.id
@@ -116,17 +115,17 @@ export class freelancersProfilePage implements OnInit {
       this.profileStatus     = data.user.status || 'draft';
       
       if (data.user.avatar_filename) {
-        this.avatarUrl = `${environment.apiUrl}/uploads/avatars/${data.user.avatar_filename}`;
+        this.avatarUrl = `http://127.0.0.1:5000/api/uploads/avatars/${data.user.avatar_filename}`;
       }
       else {
-      this.avatarUrl = 'assets/avatar.png';
+      this.avatarUrl = 'appFreelance/src/assets/avatar.png';
        }
       this.isLoading = false;
       // [REVIEWS] Load reviews after profile is loaded
         this.loadReviews();
       
     },
-    error: (err: any) => {
+    error: (err) => {
       console.error('Failed to load profile', err);
       this.isLoading = false;
     }
@@ -203,7 +202,7 @@ export class freelancersProfilePage implements OnInit {
   // ---- Edit mode ----
   toggleEdit() {
     //this.editMode = !this.editMode;
-     this.router.navigate(['/freelancers-edit']);
+     this.router.navigate(['/freelancer-edit']);
   }
 
   // ---- CV ----
@@ -286,27 +285,27 @@ downloadCv()
     };
 
     this.profileService.updateProfile(payload).subscribe({
-      next: (res: any) => {
+      next: (res) => {
         this.profileStatus = res.status;
         this.editMode = false;
         console.log('Profile saved');
       },
-      error: (err: any) => console.error('Failed to save profile', err)
+      error: (err) => console.error('Failed to save profile', err)
     });
 
     // upload CV if new file selected
     if (this.cvFile) {
       this.profileService.uploadCV(this.cvFile).subscribe({
-        next: (res: any) => this.cvName = res.cv_filename,
-        error: (err: any) => console.error('CV upload failed', err)
+        next: (res) => this.cvName = res.cv_filename,
+        error: (err) => console.error('CV upload failed', err)
       });
     }
 
     // upload avatar if new file selected
     if (this.avatarFile) {
       this.profileService.uploadAvatar(this.avatarFile).subscribe({
-        next: (res: any) => console.log('Avatar uploaded', res),
-        error: (err: any) => console.error('Avatar upload failed', err)
+        next: (res) => console.log('Avatar uploaded', res),
+        error: (err) => console.error('Avatar upload failed', err)
       });
     }
   }

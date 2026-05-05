@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class freelancersProfileService {
+export class FreelancerProfileService {
 
-  private base = environment.apiUrl;
+  private base = 'http://127.0.0.1:5000/api';
 
   constructor(private http: HttpClient) {}
 
@@ -16,22 +15,22 @@ export class freelancersProfileService {
   }
 
   getProfile(): Observable<any> {
-    return this.http.get(`${this.base}/freelancers/myprofile`, this.headers());
+    return this.http.get(`${this.base}/freelancer/myprofile`, this.headers());
   }
 
-  getfreelancersProfile(freelancersId: string): Observable<any> {
-    return this.http.get(`${this.base}/freelancers/${freelancersId}`);
+  getFreelancerProfile(freelancerId: string): Observable<any> {
+    return this.http.get(`${this.base}/freelancer/${freelancerId}`);
   }
 
   updateProfile(data: any): Observable<any> {
-    return this.http.put(`${this.base}/freelancers/profile`, data, this.headers());
+    return this.http.put(`${this.base}/freelancer/profile`, data, this.headers());
   }
 
   uploadCV(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('cv', file);
     const token = localStorage.getItem('auth_token');
-    return this.http.post(`${this.base}/freelancers/profile/cv`, formData, {
+    return this.http.post(`${this.base}/freelancer/profile/cv`, formData, {
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` })
     });
   }
@@ -44,7 +43,7 @@ export class freelancersProfileService {
     const formData = new FormData();
     formData.append('avatar', file);
     const token = localStorage.getItem('auth_token');
-    return this.http.post(`${this.base}/freelancers/profile/avatar`, formData, {
+    return this.http.post(`${this.base}/freelancer/profile/avatar`, formData, {
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` })
     });
   }

@@ -174,7 +174,7 @@
     <div id="services" class="section">
       <div class="portfolio-header">
         <h2 class="section-title">Services</h2>
-        <span class="view-stack-link" (click)="viewAllGigs()">VIEW ALL</span>
+        <span class="view-stack-link" (click)="getfreelancersgigs()">VIEW ALL</span>
       </div>
       <div *ngIf="gigs.length === 0" class="empty-text">No services added</div>
       <div *ngFor="let gig of gigs; trackBy: trackByIndex" class="project-card">

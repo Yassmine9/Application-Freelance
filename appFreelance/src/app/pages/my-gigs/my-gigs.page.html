@@ -1,50 +1,61 @@
 <ion-header>
-  <ion-toolbar class="custom-header">
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" class="icon-button"></ion-back-button>
+      <ion-back-button defaultHref="/freelancer-profile"></ion-back-button>
     </ion-buttons>
     <ion-title>My Gigs</ion-title>
+
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="gigs-content" [fullscreen]="true" [forceOverscroll]="false">
-  <div class="page-shell">
+<ion-content class="ion-padding">
 
-    <!-- loading -->
-    <div *ngIf="isLoading" class="center">
-      <ion-spinner name="crescent"></ion-spinner>
-    </div>
+  <!-- loading -->
+  <div *ngIf="isLoading" class="center">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
-    <!-- error -->
-    <div *ngIf="error && !isLoading" class="center">
-      <ion-icon name="alert-circle-outline"></ion-icon>
-      <p>{{ error }}</p>
-      <ion-button fill="outline" (click)="loadMyGigs()">Retry</ion-button>
-    </div>
+  <!-- error -->
+  <div *ngIf="error && !isLoading" class="center">
+    <ion-icon name="alert-circle-outline" size="large" color="danger"></ion-icon>
+    <p>{{ error }}</p>
+    <ion-button fill="outline" (click)="loadMyGigs()">Retry</ion-button>
+  </div>
 
-    <!-- empty state -->
-    <div *ngIf="!isLoading && !error && gigs.length === 0" class="center">
-      <ion-icon name="briefcase-outline"></ion-icon>
-      <p>You have no gigs yet</p>
-      <ion-button (click)="goToCreate()">Create your first gig</ion-button>
-    </div>
+  <!-- empty state -->
+  <div *ngIf="!isLoading && !error && gigs.length === 0" class="center">
+    <ion-icon name="briefcase-outline" size="large" color="medium"></ion-icon>
+    <p>You have no gigs yet</p>
+    <ion-button (click)="goToCreate()">Create your first gig</ion-button>
+  </div>
 
-    <!-- gig list -->
-    <div class="gigs-list" *ngIf="!isLoading && !error && gigs.length > 0">
-      <article class="gig-card" *ngFor="let gig of gigs">
+  <!-- gig list -->
+  <div *ngIf="!isLoading && !error && gigs.length > 0">
+    <ion-card *ngFor="let gig of gigs" class="gig-card">
+
+      <ion-card-content>
 
         <!-- status badge -->
         <div class="card-header">
-          <span class="status-badge" [ngClass]="gig.status">
+          <ion-badge [color]="getStatusColor(gig.status)">
             {{ gig.status }}
-          </span>
+          </ion-badge>
+          <!-- action buttons -->
           <div class="actions">
-            <button class="action-btn edit" (click)="goToEdit(gig._id)">
-              <ion-icon name="create-outline"></ion-icon>
-            </button>
-            <button class="action-btn delete" (click)="confirmDelete(gig._id)">
-              <ion-icon name="trash-outline"></ion-icon>
-            </button>
+            <ion-button
+              fill="clear"
+              size="small"
+              color="primary"
+              (click)="goToEdit(gig._id)">
+              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button
+              fill="clear"
+              size="small"
+              color="danger"
+              (click)="confirmDelete(gig._id)">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-button>
           </div>
         </div>
 
@@ -53,7 +64,13 @@
 
         <!-- tags -->
         <div class="tags">
-          <span class="tag" *ngFor="let tag of gig.tags">{{ tag }}</span>
+          <ion-chip
+            *ngFor="let tag of gig.tags"
+            color="primary"
+            outline="true"
+            size="small">
+            {{ tag }}
+          </ion-chip>
         </div>
 
         <!-- price -->
@@ -95,11 +112,12 @@
       </ion-card-content>
     </ion-card>
   </div>
+
 </ion-content>
 
-<!-- fab button -->
+<!-- fab button — alternative way to create -->
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button class="app-fab" (click)="goToCreate()">
+  <ion-fab-button color="primary" (click)="goToCreate()">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>
