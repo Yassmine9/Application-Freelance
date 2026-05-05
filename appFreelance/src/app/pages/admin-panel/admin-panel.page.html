@@ -170,7 +170,6 @@
 
   <ion-icon
     [name]="openedSection === 'clients'
-      ? 'chevron-up-outline'
       : 'chevron-down-outline'"
     class="p-chevron">
   </ion-icon>
@@ -323,35 +322,6 @@
       <div class="mgmt-icon si-pink">
         <ion-icon name="cube-outline"></ion-icon>
       </div>
-      <span class="mgmt-title">Products</span>
-      <span class="mgmt-arrow">
-        View all <ion-icon name="arrow-forward-outline"></ion-icon>
-      </span>
-    </div>
-
-    <div class="mgmt-card" (click)="navigateTo('admin/offers')">
-      <div class="mgmt-icon si-accent">
-        <ion-icon name="pricetags-outline"></ion-icon>
-      </div>
-      <span class="mgmt-title">Offers</span>
-      <span class="mgmt-arrow">
-        View all <ion-icon name="arrow-forward-outline"></ion-icon>
-      </span>
-    </div>
-
-    <div class="mgmt-card" (click)="navigateTo('admin/purchases')">
-      <div class="mgmt-icon si-teal">
-        <ion-icon name="receipt-outline"></ion-icon>
-      </div>
-      <span class="mgmt-title">Purchases</span>
-      <span class="mgmt-arrow">
-        View all <ion-icon name="arrow-forward-outline"></ion-icon>
-      </span>
-    </div>
-
-    </div>
-
-
     <div style="height: 40px;"></div>
   </div>
 

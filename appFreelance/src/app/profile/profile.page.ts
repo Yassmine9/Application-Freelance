@@ -15,7 +15,7 @@ import {
 } from 'ionicons/icons';
 import { ApiService } from '../services/api.service';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { SideBarComponent } from '../components/side-bar/side-bar.component';
+import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -28,7 +28,7 @@ import { environment } from '../../environments/environment';
     IonHeader, IonToolbar, IonTitle, IonContent, IonButtons,
     IonBackButton, IonIcon, IonSpinner, IonButton,
     IonModal, IonInput, IonItem, IonLabel,
-    SideBarComponent
+    ToolBarComponent
   ]
 })
 export class ProfilePage implements OnInit {
@@ -37,7 +37,9 @@ export class ProfilePage implements OnInit {
   profile: any = null;
   isLoading = true;
   offersLoading = false;
-  freelancersOffers: any[] = [];
+  freelancerOffers: any[] = [];
+  clientOffers: any[] = [];
+  clientOffersLoading = false;
   proposalFilter = 'all';
   isOwnerClient = false;
   showOfferModal = false;
@@ -45,6 +47,11 @@ export class ProfilePage implements OnInit {
   newOffer = { title: '', budget: null as number | null };
   cahierChargeFile: File | null = null;
   apiUrl = environment.apiUrl.replace(/\/api\/?$/, '');
+  avatarUrl = '';
+  displayName = '';
+  headline = '';
+  ratingValue = 0;
+  totalProjects = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -60,18 +67,25 @@ export class ProfilePage implements OnInit {
     this.role   = this.route.snapshot.paramMap.get('role') || 'client';
     this.isOwnerClient = this.role === 'client' && this.auth.isClient() && this.auth.getUserId() === this.userId;
     this.loadProfile();
-    if (this.role === 'freelancers') {
-      this.loadfreelancersOffers();
+    if (this.role === 'freelancer') {
+      this.loadFreelancerOffers();
+    }
+    if (this.role === 'client') {
+      this.loadClientOffers();
     }
   }
 
   loadProfile() {
     this.isLoading = true;
     this.api.getUserProfile(this.userId).subscribe({
-      next: (res) => { this.profile = res; this.isLoading = false; },
+      next: (res) => {
+        this.profile = this.normalizeProfile(res);
+        this.isLoading = false;
+      },
       error: () => {
         // Fallback placeholder so the page still renders
         this.profile = { name: 'User #' + this.userId?.slice(-6), role: this.role };
+        this.normalizeProfile(this.profile);
         this.isLoading = false;
       }
     });
@@ -93,6 +107,35 @@ export class ProfilePage implements OnInit {
       error: () => {
         this.freelancersOffers = [];
         this.offersLoading = false;
+      }
+    });
+  }
+
+  loadClientOffers() {
+    if (this.isOwnerClient) {
+      this.clientOffersLoading = true;
+      this.api.getMyOffers().subscribe({
+        next: (res) => {
+          this.clientOffers = res || [];
+          this.clientOffersLoading = false;
+        },
+        error: () => {
+          this.clientOffers = [];
+          this.clientOffersLoading = false;
+        }
+      });
+      return;
+    }
+
+    this.clientOffersLoading = true;
+    this.api.getOffers(undefined, this.userId).subscribe({
+      next: (res) => {
+        this.clientOffers = res || [];
+        this.clientOffersLoading = false;
+      },
+      error: () => {
+        this.clientOffers = [];
+        this.clientOffersLoading = false;
       }
     });
   }
@@ -143,6 +186,23 @@ export class ProfilePage implements OnInit {
         await this.toast(err?.error?.error || 'Failed to create offer', 'danger');
       }
     });
+  }
+
+  private normalizeProfile(profile: any) {
+    const name = profile?.name || profile?.username || ('User #' + this.userId?.slice(-6));
+    const roleLabel = profile?.role || this.role;
+    this.displayName = name;
+    this.headline = roleLabel === 'client' ? 'Client profile' : 'Freelance professional';
+    this.ratingValue = Number(profile?.client_rating || profile?.rating || 0);
+    this.totalProjects = Number(profile?.projects_completed || profile?.projects || 0);
+
+    if (profile?.avatar_filename) {
+      this.avatarUrl = `${environment.apiUrl}/uploads/avatars/${profile.avatar_filename}`;
+    } else {
+      this.avatarUrl = '';
+    }
+
+    return profile;
   }
 
   private async toast(message: string, color: string) {

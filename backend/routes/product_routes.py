@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import get_jwt_identity, jwt_required
+from models.admin import Admin
 from models.product import Product
 from models.purchase import Purchase
 
@@ -22,8 +24,17 @@ def get_product(product_id):
     return jsonify(product), 200
 
 @product_bp.route("/", methods=["POST"])
+@jwt_required()
 def create_product():
-    data = request.json
+    admin_id = get_jwt_identity()
+    if not Admin.find_by_id(admin_id):
+        return jsonify({"error": "Access denied"}), 403
+
+    data = request.json or {}
+    required = ["creator_id", "title", "description", "version", "license", "price", "file_path", "category_id"]
+    missing = [field for field in required if data.get(field) in (None, "")]
+    if missing:
+        return jsonify({"error": f"Missing fields: {', '.join(missing)}"}), 400
 
     product = Product.create(
         creator_id=data["creator_id"],
@@ -68,7 +79,12 @@ def download_product(product_id):
     }
 
 @product_bp.route("/<product_id>", methods=["DELETE"])
+@jwt_required()
 def delete_product(product_id):
+    admin_id = get_jwt_identity()
+    if not Admin.find_by_id(admin_id):
+        return jsonify({"error": "Access denied"}), 403
+
     success = Product.delete(product_id)
 
     if success:

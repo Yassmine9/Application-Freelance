@@ -4,8 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = environment.apiUrl.replace(/\/api\/?$/, '');
 
 @Component({
   selector: 'app-store',

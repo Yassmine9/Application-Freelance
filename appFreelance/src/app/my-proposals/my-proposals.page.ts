@@ -11,7 +11,7 @@ import { documentTextOutline, chevronForwardOutline } from 'ionicons/icons';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ApiService } from '../services/api.service';
-import { SideBarComponent } from '../components/side-bar/side-bar.component';
+import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
 import { environment } from '../../environments/environment';
 
@@ -25,7 +25,7 @@ import { environment } from '../../environments/environment';
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonList, IonItem, IonLabel, IonBadge, IonIcon,
     IonSpinner, IonButton,
-    SideBarComponent
+    ToolBarComponent
   ]
 })
 export class MyProposalsPage implements OnInit {

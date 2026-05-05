@@ -47,7 +47,7 @@ export class FeedbackPage {
     await loading.present();
 
     this.http
-      .post(`${this.apiUrl}/feedback`, {
+      .post(`${this.apiUrl}/auth/feedback`, {
         subject: this.subject.trim(),
         message: this.message.trim(),
         contactEmail: this.contactEmail.trim() || undefined,

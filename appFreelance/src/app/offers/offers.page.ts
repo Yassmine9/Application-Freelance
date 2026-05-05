@@ -16,8 +16,9 @@ import {
   calendarOutline, chevronForwardOutline, pricetagOutline
 } from 'ionicons/icons';
 import { ApiService } from '../services/api.service';
+import { CategoryService } from '../services/category.service';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { SideBarComponent } from '../components/side-bar/side-bar.component';
+import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -31,7 +32,7 @@ import { environment } from '../../environments/environment';
     IonIcon, IonSpinner, IonModal, IonInput, IonRefresher,
     IonRefresherContent, IonList, IonItem, IonLabel, IonBadge, IonSearchbar,
     IonFab, IonFabButton,
-    SideBarComponent
+    ToolBarComponent
   ]
 })
 export class OffersPage implements OnInit {
@@ -43,26 +44,20 @@ export class OffersPage implements OnInit {
   isClient = false;
   isfreelancers = false;
   searchQuery = '';
-  activeFilter = 'all';
   apiUrl = environment.apiUrl.replace(/\/api\/?$/, '');
+  
   // Category filtering
-  categories: string[] = ['All', 'Design', 'Marketing', 'Development', 'Writing'];
+  categories: string[] = ['All'];
   selectedCategory = 'All';
   showCategoryRow = true;
-  // bottom browse tiles
-  browseCategories = [
-    { key: 'Design', label: 'Design', icon: 'brush' },
-    { key: 'Marketing', label: 'Marketing', icon: 'megaphone' },
-    { key: 'Development', label: 'Development', icon: 'code' },
-    { key: 'Writing', label: 'Writing', icon: 'document-text' },
-    { key: 'Accounting', label: 'Accounting', icon: 'calculator' }
-  ];
+  browseCategories: any[] = [];
 
   newOffer = { title: '', budget: null as number | null, deadline: '', category: '' };
   cahierChargeFile: File | null = null;
 
   constructor(
     private api: ApiService,
+    private categoryService: CategoryService,
     private auth: FreelanceAuthHelper,
     private route: ActivatedRoute,
     private toastCtrl: ToastController,
@@ -72,13 +67,36 @@ export class OffersPage implements OnInit {
   }
 
   openCreate() {
-    // ensure modal opens even if client flag has issues in auth during testing
     this.showCreateModal = true;
   }
 
   ngOnInit() {
     this.isClient = this.auth.isClient();
-    this.isfreelancers = this.auth.isfreelancers();
+    this.isFreelancer = this.auth.isFreelancer();
+    
+    // Load categories dynamically from backend
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => {
+        const categoryNames = cats.map(c => c.name || c.title || c.key).filter(Boolean);
+        this.categories = ['All', ...categoryNames];
+        this.browseCategories = categoryNames.map((cat, idx) => ({
+          key: cat,
+          label: cat,
+          icon: ['brush', 'megaphone', 'code', 'document-text', 'calculator'][idx % 5]
+        }));
+      },
+      error: () => {
+        this.categories = ['All', 'Design', 'Marketing', 'Development', 'Writing', 'Accounting'];
+        this.browseCategories = [
+          { key: 'Design', label: 'Design', icon: 'brush' },
+          { key: 'Marketing', label: 'Marketing', icon: 'megaphone' },
+          { key: 'Development', label: 'Development', icon: 'code' },
+          { key: 'Writing', label: 'Writing', icon: 'document-text' },
+          { key: 'Accounting', label: 'Accounting', icon: 'calculator' }
+        ];
+      }
+    });
+    
     this.loadOffers();
 
     this.route.queryParamMap.subscribe((params) => {
@@ -90,7 +108,6 @@ export class OffersPage implements OnInit {
   }
 
   onSearch(ev: any) {
-    // ion-searchbar fires CustomEvent — value is always in detail.value
     this.searchQuery = ev?.detail?.value ?? '';
     this.applyFilter();
   }
@@ -100,9 +117,9 @@ export class OffersPage implements OnInit {
     this.applyFilter();
   }
 
+ 
   loadOffers(event?: any) {
     this.isLoading = true;
-    // Always load ALL offers; filtering is done client-side
     this.api.getOffers().subscribe({
       next: (res) => {
         this.offers = res;
@@ -117,55 +134,40 @@ export class OffersPage implements OnInit {
       }
     });
   }
+applyFilter() {
+  let result = [...this.offers];
 
-  setFilter(filter: string) {
-    this.activeFilter = filter;
-    this.applyFilter();
+  // Search: match title or description
+  const q = this.searchQuery.trim().toLowerCase();
+  if (q) {
+    result = result.filter(o =>
+      (o.title || '').toLowerCase().includes(q) ||
+      (o.description || '').toLowerCase().includes(q)
+    );
   }
 
-  filterOffers() { this.applyFilter(); }
-
-  applyFilter() {
-    let result = [...this.offers];
-
-    // Status filter
-    if (this.activeFilter !== 'all') {
-      result = result.filter(o => o.status === this.activeFilter);
-    }
-
-    // Search: match title
-    const q = this.searchQuery.trim().toLowerCase();
-    if (q) {
-      result = result.filter(o =>
-        (o.title || '').toLowerCase().includes(q)
-      );
-    }
-
-    // Category: match stored field OR fallback to title text
-    if (this.selectedCategory && this.selectedCategory !== 'All') {
-      const cat = this.selectedCategory.toLowerCase();
-      result = result.filter(o =>
-        (o.category || '').toLowerCase() === cat ||
-        (o.title || '').toLowerCase().includes(cat)
-      );
-    }
-
-    this.filteredOffers = result;
+  // Category filter — match exact category, or fallback to title contains
+  if (this.selectedCategory && this.selectedCategory !== 'All') {
+    const cat = this.selectedCategory.toLowerCase();
+    result = result.filter(o => {
+      const offerCat = (o.category || '').toLowerCase();
+      const offerTitle = (o.title || '').toLowerCase();
+      // Exact category match OR title contains category name
+      return offerCat === cat || offerTitle.includes(cat);
+    });
   }
 
+  this.filteredOffers = result;
+}
   clearFilters() {
     this.selectedCategory = 'All';
     this.searchQuery = '';
-    this.applyFilter(); // just re-filter, no reload needed
+    this.applyFilter();
   }
 
   setCategory(cat: string) {
     this.selectedCategory = cat;
-    this.applyFilter(); // client-side only, no reload
-  }
-
-  getCountByStatus(status: string): number {
-    return this.offers.filter(o => o.status === status).length;
+    this.applyFilter();
   }
 
   getInitials(clientId: string): string {
@@ -232,7 +234,6 @@ export class OffersPage implements OnInit {
     if (this.isClient) {
       return ['/chat', offer._id, offer.acceptedfreelancersId || ''];
     }
-
     return ['/chat', offer._id, offer.clientId || ''];
   }
 

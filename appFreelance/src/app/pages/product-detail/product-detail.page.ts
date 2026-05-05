@@ -3,11 +3,10 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { FreelanceAuthHelper } from '../../services/freelance-auth-helper.service';
 
-const API_URL = 'http://localhost:5000';
-
-// Replace with real auth later — hardcoded for simulation
-const MOCK_BUYER_ID = 'buyer_001';
+const API_URL = environment.apiUrl.replace(/\/api\/?$/, '');
 
 @Component({
   selector: 'app-product-detail',
@@ -27,7 +26,8 @@ export class ProductDetailPage implements OnInit {
   constructor(
     private route:  ActivatedRoute,
     private router: Router,
-    private http:   HttpClient
+    private http:   HttpClient,
+    private auth: FreelanceAuthHelper
   ) {}
 
   ngOnInit() {
@@ -50,7 +50,7 @@ export class ProductDetailPage implements OnInit {
 
     this.http.post<any>(`${API_URL}/products/purchase`, {
       productId: this.product._id,
-      buyerId:   MOCK_BUYER_ID
+      buyerId: this.auth.getUserId() || 'anonymous-buyer'
     }).subscribe({
       next: (res) => {
         this.isPurchasing = false;

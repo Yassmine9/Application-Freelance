@@ -20,9 +20,7 @@ interface freelancersApiItem {
   hourly_rate?: number;
 }
 
-interface freelancersApiResponse {
-  freelancers: freelancersApiItem[];
-}
+type FreelancersApiResponse = FreelancerApiItem[] | { freelancers?: FreelancerApiItem[] };
 
 @Component({
   selector: 'app-view-all-freelancers',
@@ -43,11 +41,12 @@ export class ViewAllfreelancersPage {
   private loadfreelancers(): void {
     this.isLoading = true;
 
-    this.http.get<freelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
+    this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/auth/freelancers?status=all`).subscribe({
       next: (response) => {
-        this.freelancers = (response.freelancers ?? [])
-          .map((freelancers) => this.mapfreelancers(freelancers))
-          .filter((freelancers): freelancers is freelancersCard => freelancers !== null);
+        const rawFreelancers = Array.isArray(response) ? response : (response.freelancers ?? []);
+        this.freelancers = rawFreelancers
+          .map((freelancer) => this.mapFreelancer(freelancer))
+          .filter((freelancer): freelancer is FreelancerCard => freelancer !== null);
         this.isLoading = false;
       },
       error: () => {

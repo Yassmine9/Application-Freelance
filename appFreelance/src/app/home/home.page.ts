@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PreferencesService } from '../services/preferences.service';
 import { environment } from '../../environments/environment';
-
+import { AuthService } from '../services/auth.service';
 interface HomeFeature {
   title: string;
   icon: string;
@@ -22,13 +22,34 @@ interface freelancersApiItem {
   _id: string;
   name?: string;
   skills?: string[];
+  avatar_filename?: string;
 }
 
-interface freelancersApiResponse {
-  freelancers: freelancersApiItem[];
+type FreelancersApiResponse = FreelancerApiItem[] | { freelancers?: FreelancerApiItem[] };
+
+interface CategoryApiItem {
+  _id: string;
+  name?: string;
+  type?: string;
 }
+
+type CategoriesApiResponse = CategoryApiItem[];
+
+interface GigApiItem {
+  _id: string;
+  title?: string;
+  description?: string;
+  tags?: string[] | string;
+  freelancer_name?: string;
+  freelancer_id?: string;
+  price?: number;
+  image_filename?: string;
+}
+
+type GigsApiResponse = GigApiItem[];
 
 interface HomeService {
+  id: string;
   title: string;
   icon: string;
   description: string;
@@ -47,111 +68,28 @@ type SearchScope = 'all' | 'freelancers' | 'services';
   styleUrls: ['home.page.scss'],
   standalone: false,
 })
+
 export class HomePage {
   searchTerm = '';
   searchScope: SearchScope = 'all';
   private preferredCategories: string[] = [];
+  private readonly apiRoot = environment.apiUrl.replace(/\/api\/?$/, '');
 
-  readonly allFeatures: HomeFeature[] = [
+  allFeatures: HomeFeature[] = [];
+  allFreelancers: HomeFreelancer[] = [];
+  allServices: HomeService[] = [];
 
-    {
-      title: 'Web Development',
-      icon: 'code-slash-outline',
-    },
-
-
-    {
-      title: 'Mobile Development',
-      icon: 'phone-portrait-outline',
-    },
-    {
-      title: 'SEO Optimization',
-      icon: 'trending-up-outline',
-    },
-
-    {
-      title: 'Data Entry',
-      icon: 'document-text-outline',
-    },
-
- 
-    {
-      title: 'Cybersecurity',
-      icon: 'shield-checkmark-outline',
-    },
-    {
-      title: 'AI Automation',
-      icon: 'sparkles-outline',
-    },
-  ];
-  allfreelancers: Homefreelancers[] = [];
-  readonly allServices: HomeService[] = [
-    {
-      title: 'Graphic Design',
-      icon: 'color-palette-outline',
-      description: 'Branding, posters, and visual identities with a clean finish.',
-      provider: 'Nour Ben Ali',
-      profession: 'Graphic Designer',
-      rating: 4.9,
-      coverImage: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=NB&backgroundColor=977dff&color=ffffff&fontSize=35&fontWeight=700',
-    },
-    {
-      title: 'Rim Gharbi',
-      icon: 'megaphone-outline',
-      description: 'Campaigns, social content, and growth-focused strategy.',
-      provider: 'Amira Kacem',
-      profession: 'Marketing Specialist',
-      rating: 4.8,
-      coverImage: 'https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=900&q=80',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=AK&backgroundColor=0600ab&color=ffffff&fontSize=35&fontWeight=700',
-    },
-    {
-      title: 'Hiba Mansouri',
-      icon: 'code-slash-outline',
-      description: 'Responsive websites and front-end builds that feel fast.',
-      provider: 'Sami Trabelsi',
-      profession: 'Front-end Developer',
-      rating: 4.9,
-      coverImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=ST&backgroundColor=6b7dff&color=ffffff&fontSize=35&fontWeight=700',
-    },
-    {
-      title: 'Nour Ben Ali',
-      icon: 'film-outline',
-      description: 'Short-form and promo edits with a polished rhythm.',
-      provider: 'Hiba Mansouri',
-      profession: 'Video Editor',
-      rating: 4.7,
-      coverImage: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=900&q=80',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=HM&backgroundColor=4f46e5&color=ffffff&fontSize=35&fontWeight=700',
-    },
-    {
-      title: 'Content ',
-      icon: 'create-outline',
-      description: 'Copy that is concise, persuasive, and easy to trust.',
-      provider: 'Rim Gharbi',
-      profession: 'Content Writer',
-      rating: 4.8,
-      coverImage: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=RG&backgroundColor=7c7dff&color=ffffff&fontSize=35&fontWeight=700',
-    },
-    {
-      title: 'UI / UX Design',
-      icon: 'phone-portrait-outline',
-      description: 'Product flows and interfaces built for clarity.',
-      provider: 'Ines Chatti',
-      profession: 'UI/UX Designer',
-      rating: 5.0,
-      coverImage: 'https://images.unsplash.com/photo-1558655146-364adaf1fcc9?auto=format&fit=crop&w=900&q=80',
-      avatarImage: 'https://api.dicebear.com/9.x/initials/svg?seed=IC&backgroundColor=5555ff&color=ffffff&fontSize=35&fontWeight=700',
-    },
-  ];
+  // Loading states for smooth UX
+  isLoadingFeatures = true;
+  isLoadingFreelancers = true;
+  isLoadingServices = true;
+  userName = '';  
   constructor(
     private readonly router: Router,
     private readonly actionSheetController: ActionSheetController,
     private readonly preferencesService: PreferencesService,
     private readonly http: HttpClient,
+    private readonly authService: AuthService, 
   ) {}
 
   ionViewWillEnter(): void {
@@ -159,24 +97,145 @@ export class HomePage {
       this.router.navigateByUrl('/preferences', { replaceUrl: true });
       return;
     }
-
+    this.userName = this.authService.getStoredUser()?.name ?? ''; 
     this.preferredCategories = this.preferencesService.getPreferences().categories;
-    this.loadfreelancers();
+    this.userName = this.authService.getStoredUser()?.name ?? '';
+    this.loadFeatures();
+    this.loadFreelancers();
+    this.loadServices();
   }
 
-  private loadfreelancers(): void {
-    this.http.get<freelancersApiResponse>(`${environment.apiUrl}/freelancers`).subscribe({
+  private loadFeatures(): void {
+    this.isLoadingFeatures = true;
+    this.http.get<CategoriesApiResponse>(`${this.apiRoot}/categories/`).subscribe({
       next: (response) => {
-        const mapped = (response.freelancers ?? [])
-          .map((freelancers) => this.mapfreelancersFromApi(freelancers))
-          .filter((freelancers): freelancers is Homefreelancers => freelancers !== null);
+        const categories = (response ?? [])
+          .map((category) => (category.name || '').trim())
+          .filter((name) => !!name);
 
-        this.allfreelancers = mapped;
+        this.allFeatures = this.mapFeaturesFromNames(categories);
+        this.isLoadingFeatures = false;
       },
       error: () => {
-        this.allfreelancers = [];
+        this.allFeatures = [];
+        this.isLoadingFeatures = false;
       },
     });
+  }
+
+  private loadFreelancers(): void {
+    this.isLoadingFreelancers = true;
+    this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/auth/freelancers?status=all`).subscribe({
+      next: (response) => {
+        this.allFreelancers = this.mapFreelancersFromApi(response);
+        this.isLoadingFreelancers = false;
+      },
+      error: () => {
+        this.http.get<FreelancersApiResponse>(`${environment.apiUrl}/auth/freelancers?status=approved`).subscribe({
+          next: (response) => {
+            this.allFreelancers = this.mapFreelancersFromApi(response);
+            this.isLoadingFreelancers = false;
+          },
+          error: () => {
+            this.allFreelancers = [];
+            this.isLoadingFreelancers = false;
+          },
+        });
+      },
+    });
+  }
+
+  private loadServices(): void {
+    this.isLoadingServices = true;
+    this.http.get<GigsApiResponse>(`${environment.apiUrl}/gigs`).subscribe({
+      next: (response) => {
+        this.allServices = (response ?? [])
+          .map((gig) => this.mapServiceFromGig(gig))
+          .filter((service): service is HomeService => service !== null);
+
+        if (this.allFeatures.length === 0) {
+          const extractedCategories = this.allServices.map((service) => service.profession);
+          this.allFeatures = this.mapFeaturesFromNames(extractedCategories);
+        }
+        this.isLoadingServices = false;
+      },
+      error: () => {
+        this.allServices = [];
+        this.isLoadingServices = false;
+      },
+    });
+  }
+
+  private mapFeaturesFromNames(names: string[]): HomeFeature[] {
+    const seen = new Set<string>();
+    const normalized = names
+      .map((name) => name.trim())
+      .filter((name) => {
+        const key = name.toLowerCase();
+        if (!key || seen.has(key)) {
+          return false;
+        }
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 9);
+
+    if (normalized.length === 0) {
+      return [
+        { title: 'Web Development', icon: 'code-slash-outline' },
+        { title: 'Mobile Development', icon: 'phone-portrait-outline' },
+        { title: 'UI / UX Design', icon: 'color-palette-outline' },
+      ];
+    }
+
+    return normalized.map((title) => ({
+      title,
+      icon: this.iconForCategory(title),
+    }));
+  }
+
+  private mapFreelancersFromApi(response: FreelancersApiResponse): HomeFreelancer[] {
+    const rawFreelancers = Array.isArray(response) ? response : (response.freelancers ?? []);
+
+    return rawFreelancers
+      .map((freelancer) => this.mapFreelancerFromApi(freelancer))
+      .filter((freelancer): freelancer is HomeFreelancer => freelancer !== null);
+  }
+
+  private mapFeaturesFromNames(names: string[]): HomeFeature[] {
+    const seen = new Set<string>();
+    const normalized = names
+      .map((name) => name.trim())
+      .filter((name) => {
+        const key = name.toLowerCase();
+        if (!key || seen.has(key)) {
+          return false;
+        }
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 9);
+
+    if (normalized.length === 0) {
+      return [
+        { title: 'Web Development', icon: 'code-slash-outline' },
+        { title: 'Mobile Development', icon: 'phone-portrait-outline' },
+        { title: 'UI / UX Design', icon: 'color-palette-outline' },
+      ];
+    }
+
+    return normalized.map((title) => ({
+      title,
+      icon: this.iconForCategory(title),
+    }));
+  }
+
+  private mapFreelancersFromApi(response: FreelancersApiResponse): HomeFreelancer[] {
+    const rawFreelancers = Array.isArray(response) ? response : (response.freelancers ?? []);
+
+    return rawFreelancers
+      .map((freelancer) => this.mapFreelancerFromApi(freelancer))
+      .filter((freelancer): freelancer is HomeFreelancer => freelancer !== null);
   }
 
   private mapfreelancersFromApi(freelancers: freelancersApiItem): Homefreelancers | null {
@@ -193,8 +252,51 @@ export class HomePage {
       name,
       category,
       icon: this.iconForCategory(category),
-      avatarImage: this.avatarForName(name),
+      avatarImage: freelancer.avatar_filename
+        ? `${environment.apiUrl}/uploads/avatars/${freelancer.avatar_filename}`
+        : this.avatarForName(name),
     };
+  }
+
+  private mapServiceFromGig(gig: GigApiItem): HomeService | null {
+    const title = gig.title?.trim();
+    if (!title || !gig._id) {
+      return null;
+    }
+
+    const firstTag = Array.isArray(gig.tags)
+      ? (gig.tags[0] || '').toString().trim()
+      : (gig.tags || '').toString().trim();
+
+    const category = firstTag || 'Service';
+    const provider = (gig.freelancer_name || 'Freelancer').trim();
+    const profession = firstTag || 'Freelance service';
+    const price = Number(gig.price || 0);
+    const rating = Number((price > 0 ? Math.min(5, Math.max(4, 4 + (price % 10) / 10)) : 4.5).toFixed(1));
+
+    return {
+      id: gig._id,
+      title,
+      icon: this.iconForCategory(category),
+      description: gig.description?.trim() || 'Service available now.',
+      provider,
+      profession,
+      rating,
+      coverImage: this.coverForCategory(category),
+      avatarImage: this.avatarForName(provider),
+    };
+  }
+
+  private coverForCategory(category: string): string {
+    const label = category.toLowerCase();
+
+    if (label.includes('design')) return 'https://images.unsplash.com/photo-1558655146-364adaf1fcc9?auto=format&fit=crop&w=900&q=80';
+    if (label.includes('market')) return 'https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=900&q=80';
+    if (label.includes('web') || label.includes('dev')) return 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80';
+    if (label.includes('video')) return 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=900&q=80';
+    if (label.includes('content') || label.includes('writing')) return 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80';
+
+    return 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=80';
   }
 
   private iconForCategory(category: string): string {
@@ -220,6 +322,19 @@ export class HomePage {
 
   get features(): HomeFeature[] {
     return this.prioritizeByPreferences(this.allFeatures, (feature) => feature.title);
+  }
+
+  get metrics(): { talents: number; services: number; rating: number } {
+    const ratings = this.allServices.map((service) => service.rating).filter((rating) => Number.isFinite(rating));
+    const averageRating = ratings.length
+      ? ratings.reduce((sum, value) => sum + value, 0) / ratings.length
+      : 0;
+
+    return {
+      talents: this.allFreelancers.length,
+      services: this.allServices.length,
+      rating: Number(averageRating.toFixed(1)),
+    };
   }
 
   get searchPlaceholder(): string {
@@ -256,7 +371,7 @@ export class HomePage {
 
   get filteredServices(): HomeService[] {
     const term = this.searchTerm.trim().toLowerCase();
-    const personalized = this.prioritizeByPreferences(this.allServices, (service) => service.title);
+    const personalized = this.prioritizeByPreferences(this.allServices, (service) => service.profession || service.title);
 
     return personalized.filter((service) => {
       if (this.searchScope !== 'all' && this.searchScope !== 'services') {
@@ -271,7 +386,8 @@ export class HomePage {
         service.title.toLowerCase().includes(term) ||
         service.description.toLowerCase().includes(term) ||
         service.provider.toLowerCase().includes(term) ||
-        service.profession.toLowerCase().includes(term)
+        service.profession.toLowerCase().includes(term) ||
+        service.icon.toLowerCase().includes(term)
       );
     });
   }
@@ -300,8 +416,17 @@ export class HomePage {
     return this.searchScope !== 'services';
   }
 
-  navigateTofreelancersProfile(freelancersId: string): void {
-    this.router.navigateByUrl(`/view-freelancers-profile/${freelancersId}`);
+  navigateToFreelancerProfile(freelancerId: string): void {
+    this.router.navigateByUrl(`/view-freelancer-profile/${freelancerId}`);
+  }
+
+  navigateToService(serviceId: string): void {
+    if (!serviceId) {
+      this.router.navigateByUrl('/gigs');
+      return;
+    }
+
+    this.router.navigateByUrl(`/gig-detail/${serviceId}`);
   }
 
   get showServicesSection(): boolean {

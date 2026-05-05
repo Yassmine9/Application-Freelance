@@ -8,8 +8,9 @@ import {
   ToastController
 } from '@ionic/angular/standalone';
 import { ApiService } from '../services/api.service';
+import { CategoryService } from '../services/category.service';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
-import { SideBarComponent } from '../components/side-bar/side-bar.component';
+import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
 
 @Component({
   selector: 'app-post-offer',
@@ -20,17 +21,18 @@ import { SideBarComponent } from '../components/side-bar/side-bar.component';
     CommonModule, FormsModule, RouterModule,
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonButton, IonInput, IonSpinner,
-    SideBarComponent
+    ToolBarComponent
   ]
 })
 export class PostOfferPage implements OnInit {
   isSubmitting = false;
   newOffer = { title: '', budget: null as number | null, deadline: '', category: '' };
   cahierChargeFile: File | null = null;
-  categories: string[] = ['Design', 'Marketing', 'Development', 'Writing', 'Accounting'];
+  categories: string[] = [];
 
   constructor(
     private api: ApiService,
+    private categoryService: CategoryService,
     private auth: FreelanceAuthHelper,
     private router: Router,
     private toastCtrl: ToastController
@@ -44,7 +46,19 @@ export class PostOfferPage implements OnInit {
 
     if (!this.auth.isClient()) {
       this.router.navigateByUrl('/offers');
+      return;
     }
+
+    // Load categories dynamically from backend
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => {
+        this.categories = cats.map(c => c.name || c.title || c.key).filter(Boolean);
+      },
+      error: () => {
+        // Fallback categories if backend fails
+        this.categories = ['Design', 'Marketing', 'Development', 'Writing', 'Accounting'];
+      }
+    });
   }
 
   onCahierChargeSelected(event: Event) {

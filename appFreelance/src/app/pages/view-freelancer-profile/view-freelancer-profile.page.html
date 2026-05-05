@@ -5,20 +5,22 @@
     </ion-buttons>
     <ion-title class="header-title">{{ name }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button class="action-btn" (click)="openActionMenu()">
-        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+      <!-- Owner sees an edit pen; visitors see the ellipsis -->
+      <ion-button class="action-btn" (click)="isOwner ? goToEdit() : openActionMenu()">
+        <ion-icon [name]="isOwner ? 'create-outline' : 'ellipsis-vertical-outline'"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="profile-content" #content>
-  <div *ngIf="isLoading" style="display: flex; justify-content: center; padding-top: 40px">
+  <div *ngIf="isLoading" style="display:flex;justify-content:center;padding-top:40px">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 
   <ng-container *ngIf="!isLoading">
-    <!-- HERO SECTION -->
+
+    <!-- HERO -->
     <div class="hero-section">
       <div class="hero-bg"></div>
       <div class="hero-inner">
@@ -31,15 +33,22 @@
         </div>
       </div>
 
-  
-      <!-- QUICK STATS -->
+      <!-- Status badge — visible to owner only -->
+      <div class="status-row" *ngIf="isOwner">
+        <div class="status-badge" [ngClass]="'status-' + profileStatus">
+          <span class="status-dot"></span>
+          <span class="status-label">{{ statusLabel }}</span>
+        </div>
+      </div>
+
+      <!-- Quick stats -->
       <div class="quick-stats">
         <div class="stat">
           <strong>{{ hourlyRate }}</strong>
           <span>/hr</span>
         </div>
         <div class="stat">
-          <strong>{{ clientRating | number: '1.1-1' }}</strong>
+          <strong>{{ clientRating | number:'1.1-1' }}</strong>
           <span>rating</span>
         </div>
         <div class="stat">
@@ -49,31 +58,42 @@
       </div>
     </div>
 
-    <!-- ACTION BUTTONS -->
-    <div class="action-buttons-section">
-      <ion-button expand="block" class="hire-btn" >
+    <!-- ACTION BUTTONS — visitors only -->
+    <div class="action-buttons-section" *ngIf="!isOwner">
+      <ion-button expand="block" class="hire-btn">
         <ion-icon name="sparkles-outline" slot="start"></ion-icon>
         Hire Now
       </ion-button>
-      <ion-button expand="block" class="message-btn" fill="outline">
+      <ion-button expand="block" class="message-btn" fill="outline"
+        (click)="goToMessages()">
         <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
         Send Message
       </ion-button>
     </div>
 
-    <!-- TAB BUTTONS -->
+    <!-- OWNER QUICK ACTIONS -->
+    <div class="action-buttons-section" *ngIf="isOwner">
+      <ion-button expand="block" class="hire-btn" (click)="goToEdit()">
+        <ion-icon name="create-outline" slot="start"></ion-icon>
+        Edit Profile
+      </ion-button>
+      <ion-button expand="block" class="message-btn" fill="outline" (click)="goToMyGigs()">
+        <ion-icon name="briefcase-outline" slot="start"></ion-icon>
+        My Gigs
+      </ion-button>
+    </div>
+
+    <!-- TABS -->
     <div class="tab-bar-wrapper">
       <div class="tab-bar">
-        <button class="tab-btn" [class.active]="activeTab === 'bio'" (click)="setTab('bio')">Bio</button>
-        <button class="tab-btn" [class.active]="activeTab === 'portfolio'" (click)="setTab('portfolio')">
-          Portfolio
-        </button>
-        <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="setTab('reviews')">Reviews</button>
-        <button class="tab-btn" [class.active]="activeTab === 'stats'" (click)="setTab('stats')">Stats</button>
+        <button class="tab-btn" [class.active]="activeTab==='bio'"       (click)="setTab('bio')">Bio</button>
+        <button class="tab-btn" [class.active]="activeTab==='portfolio'" (click)="setTab('portfolio')">Portfolio</button>
+        <button class="tab-btn" [class.active]="activeTab==='reviews'"   (click)="setTab('reviews')">Reviews</button>
+        <button class="tab-btn" [class.active]="activeTab==='stats'"     (click)="setTab('stats')">Stats</button>
       </div>
     </div>
 
-    <!-- ==================== BIO ==================== -->
+    <!-- BIO -->
     <div id="bio" class="section">
       <div class="section-header bio-header">
         <div class="section-accent"></div>
@@ -82,7 +102,7 @@
       <p class="bio-text">{{ bio || 'No biography available.' }}</p>
     </div>
 
-    <!-- ==================== SKILLS ==================== -->
+    <!-- SKILLS -->
     <div id="competences" class="section">
       <div class="skills-header">
         <h2 class="section-title">Skills</h2>
@@ -95,12 +115,29 @@
       </div>
     </div>
 
-    <!-- ==================== PORTFOLIO ==================== -->
+    <!-- CV — owner only -->
+    <div id="cv" class="section" *ngIf="isOwner && cvName">
+      <div class="section-header bio-header">
+        <div class="section-accent"></div>
+        <h2 class="section-title">CV</h2>
+      </div>
+      <div class="cv-file-card">
+        <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
+        <div class="cv-info">
+          <a [href]="'http://127.0.0.1:5000/api/freelancer/profile/cv/download'"
+             target="_blank" class="cv-filename-link">
+            {{ original_cv_name }}
+          </a>
+          <span class="cv-type">PDF Document</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PORTFOLIO -->
     <div id="portfolio" class="section">
       <div class="portfolio-header">
         <h2 class="section-title">Portfolio</h2>
       </div>
-
       <div *ngIf="projects.length === 0" class="empty-text">No projects added</div>
       <div *ngFor="let project of projects; trackBy: trackByIndex" class="project-card">
         <div class="project-top">
@@ -113,13 +150,12 @@
           </div>
         </div>
         <a *ngIf="project.link" [href]="project.link" class="project-link" target="_blank">
-          <ion-icon name="link-outline"></ion-icon>
-          View Project
+          <ion-icon name="link-outline"></ion-icon> View Project
         </a>
       </div>
     </div>
 
-    <!-- ==================== PROFILE INSIGHTS ==================== -->
+    <!-- STATS -->
     <div id="stats" class="section">
       <h2 class="section-title">Profile Insights</h2>
       <div class="insights-scroll">
@@ -130,8 +166,8 @@
         </div>
         <div class="insight-card">
           <ion-icon name="star-outline" class="insight-icon purple"></ion-icon>
-          <p class="insight-label">CLIENT RATING</p>
-          <h3 class="insight-value">{{ clientRating | number: '1.1-1' }}</h3>
+          <p class="insight-label">RATING</p>
+          <h3 class="insight-value">{{ clientRating | number:'1.1-1' }}</h3>
         </div>
         <div class="insight-card">
           <ion-icon name="ribbon-outline" class="insight-icon blue"></ion-icon>
@@ -140,17 +176,17 @@
         </div>
         <div class="insight-card">
           <ion-icon name="trending-up-outline" class="insight-icon pink"></ion-icon>
-          <p class="insight-label">SUCCESS RATE</p>
+          <p class="insight-label">SUCCESS</p>
           <h3 class="insight-value">{{ successRate }}%</h3>
         </div>
       </div>
     </div>
 
-    <!-- ==================== GIGS ==================== -->
+    <!-- GIGS -->
     <div id="services" class="section">
       <div class="portfolio-header">
         <h2 class="section-title">Services</h2>
-        <span class="view-stack-link" (click)="getfreelancersgigs()">VIEW ALL</span>
+        <span class="view-stack-link" (click)="viewAllGigs()">VIEW ALL</span>
       </div>
       <div *ngIf="gigs.length === 0" class="empty-text">No services added</div>
       <div *ngFor="let gig of gigs; trackBy: trackByIndex" class="project-card">
@@ -165,49 +201,33 @@
       </div>
     </div>
 
-    <!-- ==================== CLIENT REVIEWS ==================== -->
+    <!-- REVIEWS -->
     <div id="reviews" class="section">
       <div class="reviews-header">
         <h2 class="section-title">Latest Client Reviews</h2>
-        <span class="reviews-badge">⭐ {{ clientRating | number: '1.1-1' }} ({{ projectsCompleted }} reviews)</span>
+        <span class="reviews-badge">⭐ {{ clientRating | number:'1.1-1' }} ({{ projectsCompleted }} reviews)</span>
       </div>
-
       <div class="review-card">
         <div class="review-top">
           <img src="assets/avatar.png" class="reviewer-avatar" />
-          <div class="reviewer-info">
-            <h4>Sarah Johnson</h4>
-            <p>CEO at TechStartup</p>
-          </div>
+          <div class="reviewer-info"><h4>Sarah Johnson</h4><p>CEO at TechStartup</p></div>
           <span class="review-score">⭐ 5.0</span>
         </div>
-        <p class="review-text">
-          "Exceptional work! Delivered the project on time with excellent quality. John is a true professional who understands
-          requirements perfectly."
-        </p>
+        <p class="review-text">"Exceptional work! Delivered on time with excellent quality."</p>
       </div>
-
       <div class="review-card">
         <div class="review-top">
           <img src="assets/avatar.png" class="reviewer-avatar" />
-          <div class="reviewer-info">
-            <h4>Mike Chen</h4>
-            <p>Product Manager</p>
-          </div>
+          <div class="reviewer-info"><h4>Mike Chen</h4><p>Product Manager</p></div>
           <span class="review-score">⭐ 4.9</span>
         </div>
-        <p class="review-text">
-          "Best developer I've worked with. Great communication, problem-solving skills, and attention to detail. Highly
-          recommended!"
-        </p>
+        <p class="review-text">"Best developer I've worked with. Highly recommended!"</p>
       </div>
-
       <ion-button expand="block" class="testimonials-btn" (click)="openActionMenu()">
         View All Testimonials
       </ion-button>
     </div>
 
-    <!-- SPACER -->
-    <div style="height: 100px"></div>
+    <div style="height:100px"></div>
   </ng-container>
 </ion-content>

@@ -112,7 +112,6 @@ class Gig:
             {"_id": ObjectId(gig_id)},
             {"$set": fields}
         )
-        print("Updated Gig:", gig_id, fields)
         return cls.find_by_id(gig_id)
 
     # ── Admin actions ───────────────────────────────────────

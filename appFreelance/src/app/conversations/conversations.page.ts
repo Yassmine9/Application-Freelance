@@ -10,7 +10,7 @@ import { addIcons } from 'ionicons';
 import { chatbubblesOutline, chevronForwardOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
-import { SideBarComponent } from '../components/side-bar/side-bar.component';
+import { ToolBarComponent } from '../components/Tool-bar/toolbar.component';
 import { FreelanceAuthHelper } from '../services/freelance-auth-helper.service';
 import { SocketService } from '../services/socket.service';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,7 @@ import { Subscription } from 'rxjs';
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonList, IonItem, IonLabel, IonBadge, IonIcon,
     IonSpinner,
-    SideBarComponent
+    ToolBarComponent
   ]
 })
 export class ConversationsPage implements OnInit, OnDestroy {
@@ -79,6 +79,17 @@ export class ConversationsPage implements OnInit, OnDestroy {
     if (convo?.lastMessage?.content) return convo.lastMessage.content;
     if (!convo?.otherUserId) return 'Chat available once a freelancers is accepted.';
     return 'No messages yet.';
+  }
+
+  getInitials(label: string): string {
+    if (!label) return '??';
+    return label
+      .split(' ')
+      .filter(Boolean)
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   }
 
   private upsertConversation(update: any) {

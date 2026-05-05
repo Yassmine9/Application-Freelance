@@ -13,6 +13,18 @@ gig_routes = Blueprint('gig_routes',__name__)
 def get_gigs():
     return fetch_gigs()
 
+
+@gig_routes.route("/gigs/search", methods=['GET'])
+#@jwt_required()
+def search_gig():
+    query = request.args.get("query", "").strip()
+    if not query:
+        return jsonify({"error": "No JSON received"}), 400
+    result, err = fetch_gigs_query(query)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
+    return jsonify(result), 200
+
 # get a gig's details :
 @gig_routes.route("/gigs/<gig_id>", methods=['GET'])
 #@jwt_required()
@@ -22,17 +34,7 @@ def get_gig(gig_id):
         return jsonify({"error": err[0]}), err[1]
     return jsonify(result) , 200
 
-@gig_routes.route("/gigs/search", methods=['GET'])
-#@jwt_required()
-def search_gig():
-    query = request.args.get("query", "").strip() 
-    if not query:
-        return jsonify({"error": "No JSON received"}), 400
-    result , err =  fetch_gigs_query(query)
-    if err:
-        return jsonify({"error": err[0]}), err[1]
-    return jsonify(result) , 200
-# ---- gigs endpoints related to freelancers (get,create,put,delete) ----
+# ---- gigs endpoints related to freelancer (get,create,put,delete) ----
 
 # Get all gigs related to a freelancers by id 
 @gig_routes.route("/freelancers/gigs" , methods=['GET'])
@@ -85,7 +87,9 @@ def update_gig(gig_id):
 @jwt_required()
 def delete_gig(gig_id):
     user_id = get_jwt_identity()
-    result = delete_existing_gig(gig_id, user_id)
+    result, err = delete_existing_gig(gig_id, user_id)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
     return jsonify(result), 200
 
 
@@ -98,21 +102,27 @@ def reject_gig():         # PUT    /admin/gigs/<id>/reject"""
 @jwt_required()
 def get_pending_gigs():
     user_id = get_jwt_identity()
-    result = fetch_pending_gigs(user_id)
+    result, err = fetch_pending_gigs(user_id)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
     return jsonify(result), 200
 
 @gig_routes.route("/admin/gigs/<gig_id>/approve" , methods=['PUT'])
 @jwt_required()
 def approve_gig(gig_id):
     user_id = get_jwt_identity()
-    result = approve_existing_gig(gig_id, user_id)
+    result, err = approve_existing_gig(gig_id, user_id)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
     return jsonify(result), 200
 
 @gig_routes.route("/admin/gigs/<gig_id>/reject" , methods=['PUT'])
 @jwt_required()
 def reject_gig(gig_id):
     user_id = get_jwt_identity()
-    result = reject_existing_gig(gig_id, user_id)
+    result, err = reject_existing_gig(gig_id, user_id)
+    if err:
+        return jsonify({"error": err[0]}), err[1]
     return jsonify(result), 200
 
 """

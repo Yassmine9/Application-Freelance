@@ -1,213 +1,155 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="header">
+  <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
-      </ion-button>
+      <ion-back-button defaultHref="/freelancer-profile" class="back-btn"></ion-back-button>
     </ion-buttons>
-    <ion-title>Edit Profile</ion-title>
+    <ion-title class="header-title">Edit Profile</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="saveProfile()" [disabled]="isSaving">
-        <ion-icon name="checkmark-outline" slot="icon-only"></ion-icon>
+      <ion-button class="save-top-btn" (click)="saveProfile()">
+        <ion-icon name="checkmark-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="edit-content" [fullscreen]="true" [forceOverscroll]="false">
+  <div class="page-shell">
 
-  <!-- loading -->
-  <div *ngIf="isLoading" class="center">
-    <ion-spinner name="crescent"></ion-spinner>
-  </div>
-
-  <div *ngIf="!isLoading">
-
-    <!-- ── Avatar ─────────────────────────────────────── -->
-    <div class="avatar-section">
-      <div class="avatar-wrapper">
-        <img [src]="avatarUrl" class="avatar-img" />
-        <label class="avatar-edit-btn">
-          <ion-icon name="camera-outline"></ion-icon>
-          <input
-            type="file"
-            accept="image/jpg,image/jpeg,image/png"
-            (change)="onAvatarSelected($event)"
-            hidden />
-        </label>
+    <!-- Avatar -->
+    <div class="hero-card">
+      <div class="avatar-edit" (click)="avatarInput.click()">
+        <img [src]="avatarUrl" *ngIf="avatarUrl" />
+        <ion-icon name="camera-outline" *ngIf="!avatarUrl"></ion-icon>
+        <input #avatarInput type="file" accept="image/*" hidden (change)="onAvatarSelected($event)" />
       </div>
       <p class="avatar-hint">Tap to change photo</p>
     </div>
 
-    <!-- ── Basic Info ──────────────────────────────────── -->
-    <div class="section-card">
-      <h2 class="section-title">Basic Info</h2>
-
-      <ion-item lines="full">
-        <ion-label position="stacked">Professional Title</ion-label>
-        <ion-input
-          [(ngModel)]="title"
-          placeholder="e.g. Full Stack Developer">
-        </ion-input>
-      </ion-item>
-
-      <ion-item lines="full">
-        <ion-label position="stacked">Phone</ion-label>
-        <ion-input
-          [(ngModel)]="phone"
-          type="tel"
-          placeholder="+213 ...">
-        </ion-input>
-      </ion-item>
-
-      <ion-item lines="none">
-        <ion-label position="stacked">Hourly Rate ($)</ion-label>
-        <ion-input
-          [(ngModel)]="hourlyRate"
-          type="number"
-          placeholder="0">
-        </ion-input>
-      </ion-item>
-    </div>
-
-    <!-- ── Bio ────────────────────────────────────────── -->
-    <div class="section-card">
-      <h2 class="section-title">Bio</h2>
-      <ion-item lines="none">
-        <ion-textarea
-          [(ngModel)]="bio"
-          placeholder="Tell clients about yourself..."
-          [autoGrow]="true"
-          rows="4">
-        </ion-textarea>
-      </ion-item>
-    </div>
-
-    <!-- ── Skills ─────────────────────────────────────── -->
-    <div class="section-card">
-      <h2 class="section-title">Skills</h2>
-      <ion-item lines="none">
-        <ion-input
-          [(ngModel)]="skills"
-          placeholder="Flask, Python, MongoDB...">
-        </ion-input>
-      </ion-item>
-      <p class="hint">Separate skills with commas</p>
-    </div>
-
-    <!-- ── Experience ─────────────────────────────────── -->
-    <div class="section-card">
-      <h2 class="section-title">Experience</h2>
-
-      <ion-item lines="full">
-        <ion-label position="stacked">Years of Experience</ion-label>
-        <ion-input
-          [(ngModel)]="experienceYears"
-          type="number"
-          placeholder="0">
-        </ion-input>
-      </ion-item>
-
-      <ion-item lines="none">
-        <ion-label position="stacked">Projects Completed</ion-label>
-        <ion-input
-          [(ngModel)]="projectsCompleted"
-          type="number"
-          placeholder="0">
-        </ion-input>
-      </ion-item>
-    </div>
-
-    <!-- ── CV ─────────────────────────────────────────── -->
-    <div class="section-card">
-      <h2 class="section-title">CV</h2>
-
-      <!-- current cv -->
-      <div *ngIf="cvName && !cvFile" class="cv-card">
-        <ion-icon name="document-text-outline" color="primary"></ion-icon>
-        <span class="cv-name">{{ cvName }}</span>
-        <ion-button fill="clear" color="danger" size="small" (click)="removeCv()">
-          <ion-icon name="close-outline" slot="icon-only"></ion-icon>
-        </ion-button>
+    <!-- Basic Info -->
+    <div class="form-card">
+      <div class="section-header">
+        <div class="section-accent"></div>
+        <h2 class="section-title">Basic Info</h2>
       </div>
 
-      <!-- new cv selected -->
-      <div *ngIf="cvFile" class="cv-card new">
-        <ion-icon name="document-text-outline" color="success"></ion-icon>
-        <span class="cv-name">{{ cvName }}</span>
-        <ion-button fill="clear" color="danger" size="small" (click)="removeCv()">
-          <ion-icon name="close-outline" slot="icon-only"></ion-icon>
-        </ion-button>
+      <div class="field-group">
+        <label class="field-label">Display Name</label>
+        <ion-input [(ngModel)]="name" placeholder="Your name" class="app-input"></ion-input>
       </div>
 
-      <!-- upload button -->
-      <label class="upload-btn">
-        <ion-icon name="cloud-upload-outline"></ion-icon>
-        <span>{{ cvName ? 'Change CV' : 'Upload CV' }}</span>
-        <input
-          type="file"
-          accept=".pdf,.doc,.docx"
-          (change)="onCvSelected($event)"
-          hidden />
-      </label>
+      <div class="field-group">
+        <label class="field-label">Professional Title</label>
+        <ion-input [(ngModel)]="title" placeholder="e.g. Full-Stack Developer" class="app-input"></ion-input>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Bio</label>
+        <ion-textarea [(ngModel)]="bio" placeholder="Tell clients about yourself..." [autoGrow]="true" class="app-input app-textarea"></ion-textarea>
+      </div>
     </div>
 
-    <!-- ── Portfolio ───────────────────────────────────── -->
-    <div class="section-card">
-      <div class="section-header-row">
-        <h2 class="section-title">Portfolio</h2>
-        <ion-button fill="clear" size="small" (click)="addProject()">
-          <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-          Add
-        </ion-button>
+    <!-- Skills -->
+    <div class="form-card">
+      <div class="section-header">
+        <div class="section-accent"></div>
+        <h2 class="section-title">Skills</h2>
+      </div>
+      <div class="field-group">
+        <ion-input [(ngModel)]="skills" placeholder="Angular, Ionic, Node.js" class="app-input"></ion-input>
+        <p class="input-hint">Separate skills with commas</p>
+      </div>
+      <div class="skills-preview" *ngIf="skillList.length">
+        <span class="skill-pill" *ngFor="let skill of skillList">{{ skill }}</span>
+      </div>
+    </div>
+
+    <!-- Rates & Stats -->
+    <div class="form-card">
+      <div class="section-header">
+        <div class="section-accent"></div>
+        <h2 class="section-title">Rates & Experience</h2>
       </div>
 
-      <div *ngIf="portfolio.length === 0" class="empty-text">
-        No projects added yet
-      </div>
-
-      <div *ngFor="let project of portfolio; let i = index" class="project-card">
-        <div class="project-header">
-          <span class="project-num">Project {{ i + 1 }}</span>
-          <ion-button fill="clear" color="danger" size="small" (click)="removeProject(i)">
-            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-          </ion-button>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Hourly Rate ($)</label>
+          <ion-input [(ngModel)]="hourlyRate" type="number" placeholder="0" class="app-input"></ion-input>
         </div>
+        <div class="field-group">
+          <label class="field-label">Experience (years)</label>
+          <ion-input [(ngModel)]="experienceYears" type="number" placeholder="0" class="app-input"></ion-input>
+        </div>
+      </div>
 
-        <ion-item lines="full">
-          <ion-label position="stacked">Title</ion-label>
-          <ion-input [(ngModel)]="project.title" placeholder="Project title"></ion-input>
-        </ion-item>
-
-        <ion-item lines="full">
-          <ion-label position="stacked">Description</ion-label>
-          <ion-textarea
-            [(ngModel)]="project.description"
-            placeholder="Short description..."
-            [autoGrow]="true">
-          </ion-textarea>
-        </ion-item>
-
-        <ion-item lines="none">
-          <ion-label position="stacked">Link</ion-label>
-          <ion-input [(ngModel)]="project.link" placeholder="https://..."></ion-input>
-        </ion-item>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Projects Completed</label>
+          <ion-input [(ngModel)]="projectsCompleted" type="number" placeholder="0" class="app-input"></ion-input>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Success Rate (%)</label>
+          <ion-input [(ngModel)]="successRate" type="number" placeholder="0" class="app-input"></ion-input>
+        </div>
       </div>
     </div>
 
-    <!-- ── Save button ─────────────────────────────────── -->
-    <ion-button
-      expand="block"
-      color="primary"
-      class="save-btn"
-      (click)="saveProfile()"
-      [disabled]="isSaving">
-      <ion-spinner *ngIf="isSaving" name="crescent" slot="start"></ion-spinner>
-      {{ isSaving ? 'Saving...' : 'Save Profile' }}
-    </ion-button>
+    <!-- CV -->
+    <div class="form-card">
+      <div class="section-header">
+        <div class="section-accent"></div>
+        <h2 class="section-title">CV / Resume</h2>
+      </div>
+
+      <label class="file-label" *ngIf="!cvName">
+        <ion-icon name="cloud-upload-outline"></ion-icon>
+        <div>
+          <span>Upload CV</span>
+          <small>PDF, DOC, DOCX</small>
+        </div>
+        <input type="file" accept=".pdf,.doc,.docx" hidden (change)="onFileSelected($event)" />
+      </label>
+
+      <div class="cv-file-card" *ngIf="cvName">
+        <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
+        <div class="cv-info">
+          <span class="cv-filename">{{ cvName }}</span>
+          <span class="cv-type">PDF Document</span>
+        </div>
+        <ion-icon name="close-circle-outline" class="cv-remove" (click)="removeCV()"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Portfolio -->
+    <div class="form-card">
+      <div class="section-header">
+        <div class="section-accent"></div>
+        <h2 class="section-title">Portfolio</h2>
+      </div>
+
+      <div *ngFor="let project of projects; let i = index" class="project-edit-card">
+        <div class="project-edit-header">
+          <span class="project-num">Project {{ i + 1 }}</span>
+          <ion-icon name="trash-outline" class="remove-project" (click)="removeProject(i)"></ion-icon>
+        </div>
+        <ion-input [(ngModel)]="project.title" placeholder="Project title" class="app-input"></ion-input>
+        <ion-textarea [(ngModel)]="project.description" placeholder="Short description..." [autoGrow]="true" class="app-input app-textarea"></ion-textarea>
+        <ion-input [(ngModel)]="project.link" placeholder="https://..." class="app-input"></ion-input>
+      </div>
+
+      <ion-button expand="block" fill="clear" class="add-btn" (click)="addProject()">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        Add Project
+      </ion-button>
+    </div>
+
+    <!-- Save -->
+    <div class="form-card" style="padding-bottom: 24px;">
+      <ion-button expand="block" class="save-btn" (click)="saveProfile()">
+        <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+        Save Changes
+      </ion-button>
+    </div>
 
     <div style="height: 40px;"></div>
-
   </div>
-
 </ion-content>

@@ -1,0 +1,99 @@
+<!-- FREELANCER ACTION POPUP -->
+<div class="action-backdrop" *ngIf="showActionMenu" (click)="closeActionMenu()"></div>
+
+<div class="action-popup" [class.visible]="showActionMenu && isLoggedIn && userRole === 'freelancer'">
+  <button class="popup-item" (click)="goToMyJobs(); closeActionMenu()">
+    <span class="popup-icon"><ion-icon name="hammer-outline"></ion-icon></span>
+    <span>My Jobs</span>
+  </button>
+  <button class="popup-item" (click)="goToMyGigs(); closeActionMenu()">
+    <span class="popup-icon"><ion-icon name="briefcase-outline"></ion-icon></span>
+    <span>My Gigs</span>
+  </button>
+  <button class="popup-item" (click)="goToOffers(); closeActionMenu()">
+    <span class="popup-icon"><ion-icon name="document-text-outline"></ion-icon></span>
+    <span>Offers</span>
+  </button>
+</div>
+
+<div class="custom-navbar">
+
+  <!-- ── NOT LOGGED IN ── -->
+  <ng-container *ngIf="!isLoggedIn">
+    <button type="button" class="nav-item" [class.active]="activeTab === 'home'" (click)="goHome()">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Home</span>
+    </button>
+
+    <button type="button" class="nav-item nav-item-center" (click)="openContactSheet()">
+      <span class="center-chip">
+        <ion-icon name="log-in-outline"></ion-icon>
+      </span>
+      <span>Join us</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'store'" (click)="goToStore()">
+      <ion-icon name="storefront-outline"></ion-icon>
+      <span>Store</span>
+    </button>
+  </ng-container>
+
+  <!-- ── FREELANCER ── -->
+  <ng-container *ngIf="isLoggedIn && userRole === 'freelancer'">
+    <button type="button" class="nav-item" [class.active]="activeTab === 'home'" (click)="goHome()">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Home</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'store'" (click)="goToStore()">
+      <ion-icon name="storefront-outline"></ion-icon>
+      <span>Store</span>
+    </button>
+
+    <button type="button" class="nav-item nav-item-center" (click)="toggleActionMenu()">
+      <span class="center-chip" [class.chip-open]="showActionMenu">
+        <ion-icon [name]="showActionMenu ? 'close-outline' : 'add-outline'"></ion-icon>
+      </span>
+      <span>{{ showActionMenu ? 'Close' : 'Actions' }}</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'messages'" (click)="goToMessages()">
+      <ion-icon name="chatbubbles-outline"></ion-icon>
+      <span>Messages</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'profile'" (click)="goToProfile()">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <span>Profile</span>
+    </button>
+  </ng-container>
+
+  <!-- ── CLIENT ── -->
+  <ng-container *ngIf="isLoggedIn && userRole === 'client'">
+    <button type="button" class="nav-item" [class.active]="activeTab === 'home'" (click)="goHome()">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Home</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'store'" (click)="goToStore()">
+      <ion-icon name="storefront-outline"></ion-icon>
+      <span>Store</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'offers'" (click)="goToOffers()">
+      <ion-icon name="briefcase-outline"></ion-icon>
+      <span>My Offers</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'messages'" (click)="goToMessages()">
+      <ion-icon name="chatbubbles-outline"></ion-icon>
+      <span>Messages</span>
+    </button>
+
+    <button type="button" class="nav-item" [class.active]="activeTab === 'profile'" (click)="goToProfile()">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <span>Profile</span>
+    </button>
+  </ng-container>
+
+</div>

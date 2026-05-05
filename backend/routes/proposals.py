@@ -7,6 +7,8 @@ from utils.uploads import save_upload
 
 proposals_bp = Blueprint("proposals", __name__)
 
+from models.freelancer import Freelancer
+
 def serialize_proposal(p):
     p["_id"] = str(p["_id"])
     p["offerId"] = str(p["offerId"])
@@ -14,16 +16,16 @@ def serialize_proposal(p):
         p["createdAt"] = p["createdAt"].isoformat()
     if p.get("coverLetterPath"):
         p["coverLetterUrl"] = f"/uploads/{p['coverLetterPath']}"
-    # attach freelancers profile info if available
-    try:
-        user = db.users.find_one({"_id": p["freelancersId"]}) or db.users.find_one({"userId": p["freelancersId"]})
-        if user:
-            p["freelancersAvatar"] = user.get("avatar")
-            p["avatar"] = user.get("avatar")
-            p["freelancersName"] = user.get("name")
-    except Exception:
-        # no users collection or lookup failed — ignore
-        pass
+    
+    # Look up freelancer from correct collection
+    freelancer = Freelancer.find_by_id(p["freelancerId"])
+    if freelancer:
+        p["freelancerName"] = freelancer.get("name", "Unknown")
+        p["freelancerAvatar"] = freelancer.get("avatar_filename") or freelancer.get("avatar")
+    else:
+        p["freelancerName"] = "Unknown"
+        p["freelancerAvatar"] = None
+    
     return p
 
 
@@ -145,9 +147,9 @@ def accept_proposal(proposal_id):
         return jsonify({"error": "Proposal is no longer pending"}), 400
 
     # Accept this proposal
-    db.proposals.update_one(
-        {"_id": ObjectId(proposal_id)},
-        {"$set": {"status": "accepted"}}
+    db.offers.update_one(
+        {"_id": proposal["offerId"]},
+        {"$set": {"status": "closed", "acceptedFreelancerId": proposal["freelancerId"]}}
     )
 
     # Reject all other proposals for this offer

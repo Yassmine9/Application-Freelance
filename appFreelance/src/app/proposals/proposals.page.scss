@@ -1,36 +1,70 @@
-/* ============================================
-   PROPOSALS PAGE - Matches Offers Page Style
-============================================ */
+:host {
+  display: block;
+  --text-primary: #1a1f36;
+  --text-secondary: #6b7a99;
+  --card-border: #e3e7f2;
+}
 
+// =============================================
+// CONTENT
+// =============================================
 ion-content {
-  --background: #f4f5f7;
+  --background: #f4f6fb;
 }
 
-/* ===== Header ===== */
-ion-header ion-toolbar {
-  --background: linear-gradient(135deg, #0f1c4d, #1e2a78);
-  --color: #ffffff;
-  --border-width: 0;
-
-  ion-title { font-weight: 700; font-size: 1.1rem; }
-  ion-back-button { --color: #ffffff; }
-  ion-button { --color: #ffffff; }
+ion-content::part(scroll) {
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
 }
 
-/* ===== Shared layout ===== */
-.app-content { --background: #f4f5f7; }
+// =============================================
+// HEADER
+// =============================================
+ion-header {
+  ion-toolbar {
+    --background: #ffffff;
+    --color: var(--text-primary);
+    --border-width: 0;
+    border-bottom: 1px solid var(--card-border);
 
-.section { padding: 16px 16px 0; }
+    ion-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+    }
+
+    ion-back-button {
+      --color: #1e2a78;
+      --padding-start: 10px;
+      --padding-end: 10px;
+    }
+
+    ion-button {
+      --color: #1e2a78;
+    }
+  }
+}
+
+// =============================================
+// SECTIONS
+// =============================================
+.section {
+  padding: 16px 16px 0;
+}
 
 .app-card {
   background: #ffffff;
   border-radius: 18px;
+  border: 1px solid var(--card-border);
   padding: 18px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
   margin-bottom: 16px;
 }
 
-/* ===== Job summary card ===== */
+// =============================================
+// JOB CARD
+// =============================================
 .job-card {
   .card-header {
     display: flex;
@@ -40,22 +74,41 @@ ion-header ion-toolbar {
   }
 
   .status-chip {
-    padding: 5px 12px;
-    border-radius: 14px;
-    font-size: 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.65rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 
-    &.open        { background: #e6f4ea; color: #1a7f37; }
-    &.in-progress { background: #fff4e5; color: #b26a00; }
-    &.closed      { background: #f3f3f3; color: #888; }
+    &.open {
+      background: rgba(34, 197, 94, 0.12);
+      color: #15803d;
+    }
+
+    &.in-progress {
+      background: #fff3d9;
+      color: #9a6b00;
+    }
+
+    &.closed {
+      background: #f0f2f8;
+      color: var(--text-secondary);
+    }
   }
 
-  .post-date { font-size: 0.7rem; color: #999; }
+  .post-date {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
 
   .job-title {
     font-size: 1.15rem;
-    font-weight: 700;
-    color: #111;
+    font-weight: 800;
+    color: var(--text-primary);
     margin: 10px 0 14px;
     line-height: 1.3;
   }
@@ -71,9 +124,10 @@ ion-header ion-toolbar {
 
       .label {
         font-size: 0.68rem;
-        color: #999;
+        font-weight: 700;
+        color: var(--text-secondary);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.1em;
         margin-bottom: 2px;
       }
 
@@ -85,25 +139,29 @@ ion-header ion-toolbar {
     }
   }
 
-  .job-desc {
-    font-size: 0.85rem;
-    color: #666;
-    line-height: 1.6;
-    margin: 0;
-  }
-
   .file-row {
     margin-top: 8px;
   }
+
+  .file-link {
+    color: #1e2a78;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
 }
 
-/* ===== Submit proposal card ===== */
+// =============================================
+// SUBMIT PROPOSAL CARD
+// =============================================
 .submit-card {
   .card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #111;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-primary);
     margin: 0 0 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
   .form-group {
@@ -115,67 +173,87 @@ ion-header ion-toolbar {
     label {
       font-size: 0.82rem;
       font-weight: 700;
-      color: #1e2a78;
+      color: var(--text-primary);
     }
 
-    ion-input, ion-textarea {
-      --background: #f4f5f7;
-      --color: #111;
-      --placeholder-color: #aaa;
-      --border-radius: 10px;
-      --border-color: #d0d5e8;
-      --border-width: 1.5px;
+    ion-input,
+    ion-textarea {
+      --background: #ffffff;
+      --color: var(--text-primary);
+      --placeholder-color: #8e8e93;
+      --border-radius: 14px;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
       font-size: 0.92rem;
+      min-height: 48px;
     }
 
     .file-input {
       width: 100%;
-      border: 1.5px dashed #d0d5e8;
-      background: #fafbff;
-      border-radius: 12px;
-      padding: 10px;
+      border: 1.5px dashed var(--card-border);
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 12px;
       font-size: 0.85rem;
-      color: #333;
+      color: var(--text-secondary);
     }
   }
 
   ion-button {
-    --background: linear-gradient(135deg, #1e2a78, #4e5bd4);
-    --border-radius: 12px;
-    --box-shadow: 0 4px 15px rgba(30, 42, 120, 0.3);
+    --background: #1e2a78;
+    --background-hover: #0f1c4d;
+    --border-radius: 14px;
+    --box-shadow: 0 2px 8px rgba(30, 42, 120, 0.15);
+    --color: #ffffff;
     font-weight: 700;
     font-size: 0.95rem;
     height: 50px;
+    margin: 0;
   }
 }
 
-/* ===== Already submitted notice ===== */
+// =============================================
+// ALREADY SUBMITTED NOTICE
+// =============================================
 .notice-submitted {
-  margin: 0 16px 0;
-  padding: 12px 16px;
-  background: #e6f4ea;
+  margin: 0 16px 16px;
+  padding: 14px 16px;
+  background: rgba(34, 197, 94, 0.08);
   border-radius: 14px;
-  border: 1px solid #a5d6a7;
+  border: 1px solid rgba(34, 197, 94, 0.2);
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 0.85rem;
-  font-weight: 600;
-  color: #1a7f37;
+  font-weight: 700;
+  color: #15803d;
 
-  ion-icon { font-size: 1.1rem; flex-shrink: 0; }
-  p { margin: 0; }
+  ion-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    color: #22c55e;
+  }
+
+  p {
+    margin: 0;
+  }
 }
 
-/* ===== Section title ===== */
+// =============================================
+// SECTION TITLE
+// =============================================
 .section-title {
-  font-size: 0.95rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  color: #111;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4e5bd4;
   margin: 20px 16px 10px;
 }
 
-/* ===== Loading / Empty ===== */
+// =============================================
+// LOADING / EMPTY
+// =============================================
 .center-box {
   display: flex;
   justify-content: center;
@@ -186,16 +264,27 @@ ion-header ion-toolbar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
+  padding: 48px 20px;
   gap: 8px;
-  color: #aaa;
+  color: var(--text-secondary);
   text-align: center;
 
-  ion-icon { font-size: 3rem; color: #d0d5e8; }
-  p { font-size: 0.95rem; font-weight: 600; color: #555; margin: 0; }
+  ion-icon {
+    font-size: 2.5rem;
+    color: #d0d5e8;
+  }
+
+  p {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
 }
 
-/* ===== Proposal cards ===== */
+// =============================================
+// PROPOSAL CARDS
+// =============================================
 .proposals-list {
   padding: 0 16px 32px;
   display: flex;
@@ -206,19 +295,30 @@ ion-header ion-toolbar {
 .proposal-card {
   background: #ffffff;
   border-radius: 18px;
+  border: 1px solid var(--card-border);
   padding: 18px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-  transition: 0.2s ease;
+  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-  &.accepted { background: #f1fff6; border: 1px solid #a5d6a7; }
-  &.rejected  { opacity: 0.5; }
+  &:active {
+    transform: scale(0.98);
+  }
 
-  /* freelancers row */
+  &.accepted {
+    background: #f1fff6;
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  &.rejected {
+    opacity: 0.5;
+  }
+
   .proposal-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 14px;
+    gap: 12px;
   }
 
   .freelancers-row {
@@ -229,23 +329,28 @@ ion-header ion-toolbar {
     border-radius: 10px;
     padding: 4px 6px 4px 0;
     transition: background 0.15s;
+    flex: 1;
+    min-width: 0;
 
-    &:active { background: #f0f2f6; }
+    &:active {
+      background: #f4f6fb;
+    }
 
     .chevron-fwd {
-      color: #bbb;
+      color: #b0b8d0;
       font-size: 1rem;
       margin-left: auto;
+      flex-shrink: 0;
     }
 
     .freelancers-avatar {
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+      background: linear-gradient(145deg, #1e2a78 0%, #0f1c4d 100%);
       color: #fff;
       font-size: 0.85rem;
-      font-weight: 700;
+      font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -255,44 +360,65 @@ ion-header ion-toolbar {
     .freelancers-name {
       font-size: 0.88rem;
       font-weight: 700;
-      color: #111;
+      color: var(--text-primary);
       display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .proposal-date {
-      font-size: 0.7rem;
-      color: #999;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-secondary);
       display: block;
       margin-top: 2px;
     }
   }
 
   .status-chip {
-    padding: 5px 12px;
-    border-radius: 14px;
-    font-size: 0.68rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.65rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     flex-shrink: 0;
 
-    &.pending  { background: #fff4e5; color: #b26a00; }
-    &.accepted { background: #e6f4ea; color: #1a7f37; }
-    &.rejected { background: #f3f3f3; color: #888; }
+    &.pending {
+      background: #fff3d9;
+      color: #9a6b00;
+    }
+
+    &.accepted {
+      background: rgba(34, 197, 94, 0.12);
+      color: #15803d;
+    }
+
+    &.rejected {
+      background: #f0f2f8;
+      color: var(--text-secondary);
+    }
   }
 
-  /* Bid */
   .proposal-bid {
     font-size: 1.5rem;
     font-weight: 800;
     color: #1e2a78;
     margin-bottom: 10px;
 
-    span { font-size: 0.85rem; color: #999; font-weight: 400; }
+    span {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
   }
 
-  /* Message */
   .proposal-message {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--text-secondary);
     line-height: 1.6;
     margin: 0 0 14px;
   }
@@ -301,27 +427,77 @@ ion-header ion-toolbar {
     margin: 0 0 14px;
   }
 
+  .file-link {
+    color: #1e2a78;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
 
-.file-link {
-  color: #1e2a78;
-  font-weight: 600;
-  text-decoration: none;
-}
-  /* Actions */
   .actions {
     display: flex;
     gap: 10px;
 
     ion-button {
       flex: 1;
-      --border-radius: 12px;
+      --border-radius: 14px;
       font-weight: 700;
       font-size: 0.85rem;
+      height: 40px;
+      margin: 0;
 
-      &[color="success"] {
-        --background: linear-gradient(135deg, #1a7f37, #2e9d4f);
-        --box-shadow: 0 4px 12px rgba(26,127,55,0.25);
+      &[color='success'] {
+        --background: #15803d;
+        --background-hover: #166534;
+        --box-shadow: 0 2px 8px rgba(21, 128, 61, 0.2);
+        --color: #ffffff;
+      }
+
+      &[color='danger'] {
+        --border-color: #ef4444;
+        --color: #ef4444;
+        --background: transparent;
+        --background-hover: rgba(239, 68, 68, 0.05);
+      }
+
+      &[color='primary'] {
+        --background: #1e2a78;
+        --background-hover: #0f1c4d;
+        --box-shadow: 0 2px 8px rgba(30, 42, 120, 0.15);
+        --color: #ffffff;
       }
     }
+  }
+}
+
+// =============================================
+// SKELETON
+// =============================================
+@keyframes shimmer {
+  0% {
+    background-position: -800px 0;
+  }
+  100% {
+    background-position: 800px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  height: 11px;
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 4px;
+  margin-top: 8px;
+
+  &:first-child {
+    margin-top: 0;
   }
 }

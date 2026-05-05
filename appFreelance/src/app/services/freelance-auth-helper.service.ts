@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 
-/**
- * Person C auth helper.
- * Reads token/userId/role from localStorage — set by DevLoginPage.
- * No dependency on Person A's AuthService or StorageService.
- * When merging with Person A, just update getToken() to call their service.
- */
+
 @Injectable({ providedIn: 'root' })
 export class FreelanceAuthHelper {
 

@@ -3,10 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { FreelancerGuard } from './guards/freelancer.guard';
 
 const routes: Routes = [
-  {
-    path: 'dev-login',
-    loadComponent: () => import('./dev-login/dev-login.page').then(m => m.DevLoginPage)
-  },
+
   {
     path: 'login',
     loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage)
@@ -164,6 +161,11 @@ const routes: Routes = [
     canActivate: [FreelancerGuard]
   },
   {
+    path: 'my-jobs',
+    loadComponent: () => import('./pages/my-jobs/my-jobs.page').then(m => m.MyJobsPage),
+    canActivate: [FreelancerGuard]
+  },
+  {
     path: 'create-gig',
     loadChildren: () => import('./pages/create-gig/create-gig-routing.module').then(m => m.CreateGigPageModule),
     canActivate: [FreelancerGuard]
@@ -178,19 +180,16 @@ const routes: Routes = [
     loadChildren: () => import('./pages/freelancer-edit/freelancer-edit.module').then(m => m.freelancersEditPageModule)
   },
   {
-    path: 'search',
-    loadChildren: () => import('./pages/search/search-routing.module').then( m => m.SearchPageRoutingModule)
+  path: 'search',
+  loadChildren: () => import('./pages/search/search-routing.module').then(m => m.SearchPageRoutingModule)
   },
   {
-    path: 'view-freelancers-profile/:id',
-    loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewfreelancersProfileRoutingModule)
-  }
+  path: 'view-freelancer-profile/:id',
+  loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then(m => m.ViewFreelancerProfileRoutingModule)
+  },
+  { path: '**', redirectTo: 'login' }
+  ];
 
-
-
-
-
-];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],

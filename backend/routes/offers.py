@@ -74,13 +74,18 @@ def create_offer():
 @offers_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_offers():
-    status_filter = request.args.get("status")         # ?status=open
-    client_filter = request.args.get("clientId")       # ?clientId=...
-    category_filter = request.args.get("category")     # ?category=Design
+    status_filter = request.args.get("status")        
+    client_filter = request.args.get("clientId")      
+    category_filter = request.args.get("category")     
 
     query = {}
-    if status_filter:
+    
+    # CRITICAL: If no status specified, only show open offers (available for bidding)
+    if not status_filter:
+        query["status"] = "open"
+    elif status_filter != "all":
         query["status"] = status_filter
+        
     if client_filter:
         query["clientId"] = client_filter
     if category_filter:
@@ -226,3 +231,22 @@ def get_offers_by_freelancers(freelancers_id):
         results.append(offer)
 
     return jsonify(results), 200
+
+
+# ─── Get My Jobs (Freelancer dashboard) ──────────────────────────────────────
+@offers_bp.route("/my/jobs", methods=["GET"])
+@jwt_required()
+def get_my_jobs():
+    """Get offers where the current freelancer was accepted"""
+    current_user = get_jwt_identity()
+    claims = get_jwt()
+    
+    if claims.get("role") != "freelancer":
+        return jsonify({"error": "Only freelancers can view their jobs"}), 403
+    
+    offers = [serialize_offer(o) for o in db.offers.find({
+        "acceptedFreelancerId": current_user,
+        "status": {"$in": ["in_progress", "closed"]}
+    }).sort("createdAt", -1)]
+    
+    return jsonify(offers), 200

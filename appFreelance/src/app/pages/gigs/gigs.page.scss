@@ -1,25 +1,91 @@
-.center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  color: var(--ion-color-medium);
-  gap: 12px;
+:host {
+  display: block;
+  --text-primary: #1a1f36;
+  --text-secondary: #6b7a99;
+  --card-border: #e3e7f2;
 }
 
+// ── Content background ────────────────────────────────────────
+ion-content.gigs-content {
+  --background: #f4f6fb;
+}
+
+// ── Header ───────────────────────────────────────────────────
+.custom-header {
+  --background: #ffffff;
+  --color: var(--text-primary);
+  border-bottom: 1px solid #e3e7f2;
+}
+
+.icon-button {
+  --color: #1e2a78;
+  --padding-start: 10px;
+  --padding-end: 10px;
+}
+
+.search-toolbar {
+  --background: #ffffff;
+  --border-width: 0;
+  border-bottom: 1px solid #e3e7f2;
+}
+
+.search-bar {
+  --background: #f4f6fb;
+  --box-shadow: none;
+  --border-radius: 14px;
+  --placeholder-color: #8e8e93;
+  --color: #1a1f36;
+  --icon-color: #1e2a78;
+  padding-inline: 0;
+}
+
+// ── Page shell ────────────────────────────────────────────────
+.page-shell {
+  padding: 0 16px calc(24px + env(safe-area-inset-bottom));
+}
+
+// ── Section heading ───────────────────────────────────────────
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 20px 0 12px;
+}
+
+.section-kicker {
+  display: inline-block;
+  color: #4e5bd4;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.results-count {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+// ── Grid ──────────────────────────────────────────────────────
 .gigs-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+  margin-top: 4px;
 }
 
+// ── Gig card ──────────────────────────────────────────────────
 .gig-card {
-  margin: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
   cursor: pointer;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: transform 0.2s;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 
   &:active {
     transform: scale(0.97);
@@ -27,30 +93,45 @@
 }
 
 .gig-image {
-  height: 100px;
-  background: var(--ion-color-light);
+  height: 110px;
+  background: #eef2ff;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom: 1px solid var(--card-border);
+
+  ion-icon {
+    font-size: 2rem;
+    color: #1e2a78;
+    opacity: 0.25;
+  }
 }
 
-.freelancers-name {
-  font-size: 12px;
-  color: var(--ion-color-medium);
+.card-body {
+  padding: 12px;
+}
+
+.freelancer-name {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 4px;
   margin: 0 0 6px 0;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 0.8rem;
+    color: #4e5bd4;
+  }
 }
 
 .gig-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ion-color-dark);
   margin: 0 0 8px 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
   line-height: 1.3;
-
-  // limit to 2 lines
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -62,12 +143,19 @@
   flex-wrap: wrap;
   gap: 4px;
   margin-bottom: 10px;
+}
 
-  ion-chip {
-    font-size: 10px;
-    height: 22px;
-    margin: 0;
-  }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(30, 42, 120, 0.07);
+  border: 1px solid rgba(30, 42, 120, 0.1);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #1e2a78;
+  white-space: nowrap;
 }
 
 .price-row {
@@ -76,16 +164,82 @@
   align-items: center;
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px solid var(--ion-color-light);
+  border-top: 1px solid #f0f2f8;
 }
 
 .price-label {
-  font-size: 11px;
-  color: var(--ion-color-medium);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 600;
 }
 
 .price {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ion-color-primary);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1e2a78;
+}
+
+// ── Empty / Error states ──────────────────────────────────────
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  color: var(--text-secondary);
+  gap: 12px;
+  text-align: center;
+
+  ion-icon {
+    font-size: 2.5rem;
+    color: #1e2a78;
+    opacity: 0.25;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  ion-button {
+    --border-color: #1e2a78;
+    --color: #1e2a78;
+    --background-hover: rgba(30, 42, 120, 0.05);
+    font-weight: 700;
+    margin-top: 4px;
+  }
+}
+
+// ── Skeleton shimmer ──────────────────────────────────────────
+@keyframes shimmer {
+  0%   { background-position: -800px 0; }
+  100% { background-position: 800px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  height: 11px;
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 4px;
+  margin-top: 8px;
+
+  &:first-child { margin-top: 0; }
+}
+
+.skeleton-card { pointer-events: none; }
+
+// ── Responsive ────────────────────────────────────────────────
+@media (max-width: 400px) {
+  .gigs-grid {
+    grid-template-columns: 1fr;
+  }
 }
