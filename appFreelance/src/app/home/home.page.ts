@@ -25,7 +25,7 @@ interface freelancersApiItem {
   avatar_filename?: string;
 }
 
-type FreelancersApiResponse = FreelancerApiItem[] | { freelancers?: FreelancerApiItem[] };
+type FreelancersApiResponse = freelancersApiItem[] | { freelancers?: freelancersApiItem[] };
 
 interface CategoryApiItem {
   _id: string;
@@ -76,7 +76,7 @@ export class HomePage {
   private readonly apiRoot = environment.apiUrl.replace(/\/api\/?$/, '');
 
   allFeatures: HomeFeature[] = [];
-  allFreelancers: HomeFreelancer[] = [];
+  allFreelancers: Homefreelancers[] = [];
   allServices: HomeService[] = [];
 
   // Loading states for smooth UX
@@ -194,25 +194,25 @@ export class HomePage {
     }));
   }
 
-  private mapFreelancersFromApi(response: FreelancersApiResponse): HomeFreelancer[] {
+  private mapFreelancersFromApi(response: FreelancersApiResponse): Homefreelancers[] {
     const rawFreelancers = Array.isArray(response) ? response : (response.freelancers ?? []);
 
     return rawFreelancers
       .map((freelancer) => this.mapFreelancerFromApi(freelancer))
-      .filter((freelancer): freelancer is HomeFreelancer => freelancer !== null);
+      .filter((freelancer): freelancer is Homefreelancers => freelancer !== null);
   }
 
-  private mapFreelancerFromApi(freelancer: FreelancerApiItem): HomeFreelancer | null {
+  private mapFreelancerFromApi(freelancer: freelancersApiItem): Homefreelancers | null {
     const name = freelancer.name?.trim();
 
     if (!name) {
       return null;
     }
 
-    const category = freelancers.skills?.[0]?.trim() || 'freelancers';
+    const category = freelancer.skills?.[0]?.trim() || 'freelancers';
 
     return {
-      id: freelancers._id,
+      id: freelancer._id,
       name,
       category,
       icon: this.iconForCategory(category),
@@ -314,7 +314,7 @@ export class HomePage {
 
   get filteredfreelancers(): Homefreelancers[] {
     const term = this.searchTerm.trim().toLowerCase();
-    const personalized = this.prioritizeByPreferences(this.allfreelancers, (freelancers) => freelancers.category);
+    const personalized = this.prioritizeByPreferences(this.allFreelancers, (freelancers) => freelancers.category);
 
     return personalized.filter((freelancers) => {
       if (this.searchScope !== 'all' && this.searchScope !== 'freelancers') {

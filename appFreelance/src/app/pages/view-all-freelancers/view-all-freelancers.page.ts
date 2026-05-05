@@ -20,7 +20,7 @@ interface freelancersApiItem {
   hourly_rate?: number;
 }
 
-type FreelancersApiResponse = FreelancerApiItem[] | { freelancers?: FreelancerApiItem[] };
+type FreelancersApiResponse = freelancersApiItem[] | { freelancers?: freelancersApiItem[] };
 
 @Component({
   selector: 'app-view-all-freelancers',
@@ -45,8 +45,8 @@ export class ViewAllfreelancersPage {
       next: (response) => {
         const rawFreelancers = Array.isArray(response) ? response : (response.freelancers ?? []);
         this.freelancers = rawFreelancers
-          .map((freelancer) => this.mapFreelancer(freelancer))
-          .filter((freelancer): freelancer is FreelancerCard => freelancer !== null);
+          .map((freelancer) => this.mapfreelancers(freelancer))
+          .filter((freelancer): freelancer is freelancersCard => freelancer !== null);
         this.isLoading = false;
       },
       error: () => {

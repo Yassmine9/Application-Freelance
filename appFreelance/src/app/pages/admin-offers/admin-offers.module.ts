@@ -4,16 +4,16 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AdminFeedbackPageRoutingModule } from './admin-feedback-routing.module';
+import { AdminOffersPageRoutingModule } from './admin-offers-routing.module';
 
-import { AdminFeedbackPage } from './admin-feedback.page';
+import { AdminOffersPage } from './admin-offers.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AdminFeedbackPageRoutingModule
+    AdminOffersPageRoutingModule
   ]
 })
-export class AdminFeedbackPageModule {}
+export class AdminOffersPageModule {}

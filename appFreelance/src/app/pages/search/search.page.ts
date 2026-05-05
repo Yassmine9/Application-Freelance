@@ -10,7 +10,7 @@ import { ToolBarComponent } from '../../components/Tool-bar/toolbar.component';
 import { environment } from '../../../environments/environment';
 
 interface SearchResult {
-  type: 'gig' | 'freelancers' | 'category';
+  type: 'gig' | 'freelancer' | 'category';
   id: string;
   title: string;
   subtitle?: string;
@@ -131,7 +131,7 @@ export class SearchPage implements OnInit {
         description: freelancer.bio || 'Freelancer profile',
         rating: Number(freelancer.client_rating || 0),
       }));
-    allResults.push(...freelancersResults);
+    allResults.push(...freelancerResults);
 
     this.searchResults = allResults.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     this.isLoading = false;
@@ -143,7 +143,7 @@ export class SearchPage implements OnInit {
     }
     const typeMap: Record<string, string> = {
       gigs: 'gig',
-      freelancers: 'freelancers',
+      freelancers: 'freelancer',
       categories: 'category',
     };
     const resultType = typeMap[this.activeTab];
@@ -159,7 +159,7 @@ export class SearchPage implements OnInit {
       case 'gig':
         this.router.navigateByUrl(`/gig-detail/${result.id}`);
         break;
-      case 'freelancers':
+      case 'freelancer':
         this.router.navigateByUrl(`/view-freelancers-profile/${result.id}`);
         break;
       case 'category':

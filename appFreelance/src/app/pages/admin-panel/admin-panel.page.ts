@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
-const API_URL = environment.apiUrl.replace(/\/api\/?$/, '');
+const API_URL = 'http://localhost:5000';
 
 export interface ActivityItem {
   text: string;
@@ -48,11 +47,6 @@ export class AdminPanelPage implements OnInit {
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
-    // Redirect if no token
-    if (!this.getToken()) {
-      this.router.navigate(['/admin-login']);
-      return;
-    }
     this.loadStats();
     this.loadPendingCounts();
   }
@@ -75,6 +69,7 @@ export class AdminPanelPage implements OnInit {
   }
 
   // ── Pending counts ─────────────────────────────────────
+  // Call your existing endpoints and derive counts from the response.
   // Adjust the endpoint paths / filter logic to match your API.
  loadPendingCounts() {
   this.http.get<any[]>(`${API_URL}/admin/freelancers`)
@@ -91,6 +86,17 @@ export class AdminPanelPage implements OnInit {
 
         this.pendingClients =
           this.pendingClientsList.length;
+      }
+    });
+
+  this.http.get<any[]>(`${API_URL}/admin/gigs`)
+    .subscribe({
+      next: data => {
+        this.pendingGigsList =
+          data.filter(g => g.status === 'pending');
+
+        this.pendingGigs =
+          this.pendingGigsList.length;
       }
     });
 }

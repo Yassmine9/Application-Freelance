@@ -1,15 +1,18 @@
 from models.base_user import BaseUser
-
+from db.mongo import db
 
 class Freelancer(BaseUser):
     """Modèle Freelancer – collection 'freelancer'"""
     _collection_name = "freelancer"
+    collection = db["freelancer"] if db is not None else None
 
     @classmethod
     def create(cls, email, password, name, phone, skills=None, hourly_rate=0, bio=""):
         skills = skills or []
         return super().create(
-            email, password, name,
+            email=email,
+            password=password,
+            name=name,
             role="freelancer",
             phone=phone,
             title="",

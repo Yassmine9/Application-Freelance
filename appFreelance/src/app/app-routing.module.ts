@@ -113,12 +113,6 @@ const routes: Routes = [
             .then(m => m.AdminGigsPage)
       },
       {
-        path: 'feedback',
-        loadComponent: () =>
-          import('./pages/admin-feedback/admin-feedback.page')
-            .then(m => m.AdminFeedbackPage)
-      },
-      {
         path: 'reviews',
         loadComponent: () => 
           import('./pages/admin-reviews/admin-reviews.page')
@@ -135,11 +129,23 @@ const routes: Routes = [
         loadComponent: () => 
           import('./pages/admin-users/admin-users.page')
         .then( m => m.AdminUsersPage)
+      },
+      {
+        path: 'purchases',
+        loadComponent: () => 
+          import('./pages/admin-purchases/admin-purchases.page')
+          .then( m => m.AdminPurchasesPage)
+      },
+      {
+        path: 'offers',
+        loadComponent: () => 
+          import('./pages/admin-offers/admin-offers.page')
+          .then( m => m.AdminOffersPage)
       }
     ]
   },
   {
-    path: 'freelancers-profile',
+    path: 'freelancer-profile',
     loadChildren: () => import('./pages/freelancer-profile/freelancer-profile.module').then(m => m.freelancersProfilePageModule),
     canActivate: [FreelancerGuard]
   },
@@ -184,11 +190,18 @@ const routes: Routes = [
   loadChildren: () => import('./pages/search/search-routing.module').then(m => m.SearchPageRoutingModule)
   },
   {
-  path: 'view-freelancer-profile/:id',
-  loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then(m => m.ViewFreelancerProfileRoutingModule)
+    path: 'view-freelancer-profile/:id',
+    loadChildren: () => import('./pages/view-freelancer-profile/view-freelancer-profile-routing.module').then( m => m.ViewfreelancersProfileRoutingModule)
   },
+  {
+  path: 'gig-order/new/:gigId',
+  loadChildren: () => import('./pages/gig-order-placement/gig-order-placement.module').then(m => m.GigOrderPlacementPageModule)
+},
   { path: '**', redirectTo: 'login' }
-  ];
+
+  
+
+];
 
 
 @NgModule({

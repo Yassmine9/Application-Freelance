@@ -1,0 +1,173 @@
+<!-- admin-purchases.page.html -->
+<ion-header class="admin-header ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="header-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="header-title">Manage Purchases</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button class="header-btn" (click)="loadPurchases()">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content" [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="admin-container">
+
+    <!-- Hero -->
+    <div class="welcome-section">
+      <div class="admin-avatar">
+        <ion-icon name="cart-outline"></ion-icon>
+      </div>
+
+      <div class="welcome-text">
+        <p class="welcome-label">Administration</p>
+        <h1 class="welcome-title">Purchases</h1>
+        <p class="hero-sub">{{ purchases.length }} total purchases</p>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="section-card">
+      <p class="section-label">Search</p>
+
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Search by buyer or product..."
+          [(ngModel)]="search"
+          (input)="onSearch()"
+        />
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="skeleton-list">
+      <div class="product-card skeleton-card" *ngFor="let s of [1,2,3]">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line w60"></div>
+          <div class="skeleton-line w40"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div class="activity-empty" *ngIf="!loading && filteredPurchases.length === 0">
+      <ion-icon name="cart-outline"></ion-icon>
+      <span>No purchases found</span>
+    </div>
+
+    <!-- List -->
+    <div *ngIf="!loading && filteredPurchases.length > 0" class="products-list">
+
+      <div class="product-card"
+        *ngFor="let p of filteredPurchases"
+        [class.expanded]="openedPurchase === p._id">
+
+        <!-- Header -->
+        <div class="product-card-header" (click)="togglePurchase(p._id)">
+
+          <div class="product-icon">
+            <ion-icon name="receipt-outline"></ion-icon>
+          </div>
+
+          <div class="product-info">
+            <h3>Purchase #{{ p._id | slice:0:8 }}</h3>
+
+            <p class="product-category">
+              Buyer: {{ p.buyerId }}
+            </p>
+
+            <div class="meta-row">
+              <span class="meta-chip">
+                <ion-icon name="time-outline"></ion-icon>
+                {{ p.purchaseDate | date:'shortDate' }}
+              </span>
+
+              <span class="meta-chip status-chip">
+                <ion-icon name="download-outline"></ion-icon>
+                {{ p.downloaded ? 'Downloaded' : 'Pending' }}
+              </span>
+            </div>
+          </div>
+
+          <ion-icon
+            class="chev"
+            [name]="openedPurchase === p._id ? 'chevron-up-outline' : 'chevron-down-outline'">
+          </ion-icon>
+
+        </div>
+
+        <!-- Expanded -->
+        <div class="expanded-content" *ngIf="openedPurchase === p._id">
+
+          <div class="details-grid">
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="key-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Purchase ID</small>
+                <strong>{{ p._id }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="person-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Buyer</small>
+                <strong>{{ p.buyerId }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="cube-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Product ID</small>
+                <strong>{{ p.productId }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="calendar-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Date</small>
+                <strong>{{ p.purchaseDate | date:'medium' }}</strong>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="file-info">
+            <ion-icon name="download-outline"></ion-icon>
+            <span>
+              Status: {{ p.downloaded ? 'Already downloaded' : 'Not downloaded yet' }}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>

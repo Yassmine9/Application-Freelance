@@ -43,11 +43,11 @@ def create_new_gig(user_id,data):
     user , err = verify_freelancers(user_id)
     if err:
         return None,err
-    required = ["title", "description", "price", "tags"]
+    required = ["title", "description", "price", "tags","delievery_days"]
     missing = [f for f in required if f not in data]
     if missing:
         return None, (f"Missing Fields: {missing}", 400)
-    gig = Gig.create(user_id,user["name"],data["title"],data["description"],data["price"],data["tags"])
+    gig = Gig.create(user_id,user["name"],data["title"],data["description"],data["price"],data["tags"],data["duration"])
     return gig , None
 
 

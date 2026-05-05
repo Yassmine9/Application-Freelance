@@ -49,17 +49,23 @@
         </ion-chip>
       </div>
 
-      <ion-item-divider></ion-item-divider>
+      
 
-      <!-- description -->
-      <div class="section">
+      <!-- description section – forced to be a block -->
+      <div class="section description-section">
         <h2 class="section-title">About this gig</h2>
-        <p class="description">{{ gig.description }}</p>
+        <p class="description-text">{{ gig.description }}</p>
       </div>
 
-      <ion-item-divider></ion-item-divider>
+      <!-- delivery days section -->
+      <div class="section delivery-section">
+        <h2 class="section-title">Estimated delievery duration</h2>
+        <p class="delievery-badge">{{ gig.duration }}</p>
+      </div>
 
-      <!-- contact button — active now -->
+      
+
+      <!-- contact button -->
       <div class="section">
         <h2 class="section-title">Contact</h2>
         <ion-button expand="block" fill="outline" color="primary">
@@ -73,7 +79,7 @@
 
 </ion-content>
 
-<!-- order button — fixed at bottom -->
+<!-- order button fixed at bottom -->
 <ion-footer *ngIf="gig && !isLoading">
   <ion-toolbar>
     <div class="order-bar ion-padding">
@@ -81,10 +87,14 @@
         <span class="price-label">Starting at</span>
         <span class="price">${{ gig.price }}</span>
       </div>
+      <div class="orders-info">
+    <span class="price-label">orders</span>
+    <span class="orders-count">{{ gig.stats.total_orders }}</span>
+  </div>
       <ion-button
         color="primary"
-        (click)="orderGig()"
-        [disabled]="true">      
+        (click)="orderGig(gig._id)"
+        [disabled]="false">      
         Order Now
       </ion-button>
     </div>

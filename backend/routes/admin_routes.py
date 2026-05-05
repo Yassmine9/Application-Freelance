@@ -1,27 +1,17 @@
 from bson import ObjectId
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import get_jwt_identity, jwt_required
 from models.admin import Admin
 from models.freelancer import Freelancer
 from models.client import Client
 from models.product import Product
 from models.purchase import Purchase
-from models.gig import Gig          # add this model if not yet created
+from models.gig import Gig 
+from db.mongo import db         # add this model if not yet created
 #from models.feedback import Feedback  # add this model if not yet created
 #from models.review import Review
 admin_bp = Blueprint("admin", __name__)
 
-
-def _require_admin():
-    admin_id = get_jwt_identity()
-    admin = Admin.find_by_id(admin_id)
-    if not admin or admin.get("role") != "admin":
-        return None
-    return admin
-
-
 @admin_bp.route("/freelancers", methods=["GET"])
-@jwt_required()
 def get_pending_freelancers():
     try:
         # Already built in Admin model
@@ -52,7 +42,6 @@ def approve_freelancers(user_id):
         print(f"[ADMIN ERROR] Error approving user: {e}")
         return jsonify({"error": str(e)}), 500
 
-
 @admin_bp.route("/reject/<user_id>", methods=["PATCH"])
 def reject_freelancers(user_id):
     try:
@@ -72,24 +61,8 @@ def reject_freelancers(user_id):
         print(f"[ADMIN ERROR] Error rejecting user: {e}")
         return jsonify({"error": str(e)}), 500
 
-
 @admin_bp.route("/stats", methods=["GET"])
-@jwt_required()
 def get_stats():
-    if not _require_admin():
-        return jsonify({"error": "Access denied"}), 403
-
-    try:
-        total_users = (
-            Client.get_collection().count_documents({}) +
-            Freelancer.get_collection().count_documents({})
-        )
-        total_freelancers = Freelancer.get_collection().count_documents({})
-        total_products = Product.get_collection().count_documents({}) if hasattr(Product, 'get_collection') else 0
-        total_purchases = Purchase.get_collection().count_documents({}) if hasattr(Purchase, 'get_collection') else 0
-    except Exception as e:
-        return jsonify({"error": f"Stats error: {str(e)}"}), 500
-
     return jsonify({
         "total_users":       (Client.collection.count_documents({}) if Client.collection is not None else 0) +
                              (Freelancer.collection.count_documents({}) if Freelancer.collection is not None else 0),

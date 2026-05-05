@@ -72,7 +72,7 @@ export class OffersPage implements OnInit {
 
   ngOnInit() {
     this.isClient = this.auth.isClient();
-    this.isFreelancer = this.auth.isFreelancer();
+    this.isfreelancers = this.auth.isfreelancers();
     
     // Load categories dynamically from backend
     this.categoryService.getCategories().subscribe({

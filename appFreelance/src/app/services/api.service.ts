@@ -78,7 +78,7 @@ export class ApiService {
   getOffersByFreelancer(freelancerId: string, proposalStatus?: string): Observable<any[]> {
     let params = new HttpParams();
     if (proposalStatus) params = params.set('proposalStatus', proposalStatus);
-    return this.http.get<any[]>(`${this.base}/offers/by-freelancers/${freelancersId}`, { headers: this.headers(), params });
+    return this.http.get<any[]>(`${this.base}/offers/by-freelancers/${freelancerId}`, { headers: this.headers(), params });
   }
 
   /** Freelancer: get my accepted jobs */

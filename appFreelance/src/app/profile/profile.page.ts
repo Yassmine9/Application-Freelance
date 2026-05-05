@@ -68,7 +68,7 @@ export class ProfilePage implements OnInit {
     this.isOwnerClient = this.role === 'client' && this.auth.isClient() && this.auth.getUserId() === this.userId;
     this.loadProfile();
     if (this.role === 'freelancer') {
-      this.loadFreelancerOffers();
+      this.loadfreelancersOffers();
     }
     if (this.role === 'client') {
       this.loadClientOffers();
@@ -99,13 +99,13 @@ export class ProfilePage implements OnInit {
   loadfreelancersOffers() {
     this.offersLoading = true;
     const status = this.proposalFilter === 'all' ? undefined : this.proposalFilter;
-    this.api.getOffersByfreelancers(this.userId, status).subscribe({
+    this.api.getOffersByFreelancer(this.userId, status).subscribe({
       next: (res) => {
-        this.freelancersOffers = res || [];
+        this.freelancerOffers = res || [];
         this.offersLoading = false;
       },
       error: () => {
-        this.freelancersOffers = [];
+        this.freelancerOffers = [];
         this.offersLoading = false;
       }
     });
