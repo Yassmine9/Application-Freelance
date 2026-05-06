@@ -266,8 +266,9 @@ Avis :
 visible | hidden
 
 
-17. Architecture de projet FreelanceHub
+## Architecture de projet FreelanceHub
 
+```text
 backend/
 ├── routes/
 │   ├── admin_routes.py
@@ -316,7 +317,6 @@ backend/
 ├── config.py
 └── cleanup_collections.py
 
-
 appFreelance/
 └── src/
     └── app/
@@ -326,8 +326,7 @@ appFreelance/
         ├── guards/
         ├── home/
         └── interceptors/
-
-
+```
 18. Conclusion
 
 FreelanceHub repose sur une architecture moderne combinant :
