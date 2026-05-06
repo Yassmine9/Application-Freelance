@@ -1,0 +1,854 @@
+// =============================================
+// PROFILE PAGE — Enhanced Styles
+// =============================================
+
+// --- Variables ---
+$purple-dark: #0600ab;
+$purple-mid: #977dff;
+$purple-light: #a78cfa;
+$purple-gradient: linear-gradient(160deg, #977dff 0%, #0600ab 60%, #0600ab 100%);
+$bg: #f8f9fc;
+$white: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #8e8e93;
+$text-light: #8e8e93;
+$border: rgba(232, 232, 232, 0.95);
+$card-radius: 16px;
+
+// =============================================
+// HEADER
+// =============================================
+ion-header.header {
+  ion-toolbar {
+    --background: linear-gradient(135deg, #977dff, #0600ab);
+    --color: #{$white};
+    --border-width: 0;
+    padding: 4px 8px;
+  }
+
+  .header-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: $white;
+  }
+
+  .back-btn,
+  .edit-btn {
+    --color: #{$white};
+    --border-radius: 50%;
+    --background: rgba(255, 255, 255, 0.18);
+    --padding-start: 8px;
+    --padding-end: 8px;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+// =============================================
+// CONTENT
+// =============================================
+ion-content.profile-content {
+  --background: #{$bg};
+}
+
+// =============================================
+// HERO SECTION
+// =============================================
+.hero-section {
+  position: relative;
+  background: $purple-gradient;
+  padding: 20px 24px 28px;
+  overflow: hidden;
+  border-bottom-left-radius:20px ;
+  border-bottom-right-radius:20px ;
+
+
+  .hero-bg {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    flex-shrink: 0;
+
+    .avatar-img {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+      object-fit: cover;
+    }
+
+    
+  }
+
+  .hero-info {
+    flex: 1;
+    min-width: 0;
+
+    .hero-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: $white;
+      margin: 0 0 4px;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+
+    .hero-role {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0 0 6px;
+      font-weight: 500;
+
+      .code-tag {
+        opacity: 0.7;
+        margin-right: 4px;
+      }
+    }
+
+    .hero-badge {
+      font-size: 11px;
+      color: #fde68a;
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+  }
+}
+
+// =============================================
+// STATUS BADGE
+// =============================================
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.status-draft {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+    .status-dot { background: #d1d5db; }
+  }
+
+  &.status-pending {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+    .status-dot { background: #fbbf24; }
+  }
+
+  &.status-approved {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    .status-dot { background: #22c55e; }
+  }
+
+  &.status-rejected {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    .status-dot { background: #ef4444; }
+  }
+}
+
+
+
+// =============================================
+// TAB BAR (4 tabs now)
+// =============================================
+.tab-bar-wrapper {
+  background: transparent;
+  padding: 0 20px 16px;
+}
+
+.tab-bar {
+  background: $white;
+  border-radius: 40px;
+  display: flex;
+  padding: 5px;
+  gap: 3px;
+  box-shadow: 0 4px 20px rgba(151, 125, 255, 0.2);
+
+  .tab-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    border-radius: 30px;
+    padding: 9px 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: $text-secondary;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+
+    &.active {
+      background: $purple-gradient;
+      color: $white;
+      box-shadow: 0 4px 12px rgba(151, 125, 255, 0.4);
+    }
+  }
+}
+
+// =============================================
+// SECTIONS
+// =============================================
+.section {
+  padding: 20px;
+
+  & + .section {
+    padding-top: 0;
+  }
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: $text-primary;
+  margin: 0 0 14px;
+  letter-spacing: -0.3px;
+}
+
+// =============================================
+// BIOGRAPHY
+// =============================================
+.bio-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+
+  .section-accent {
+    width: 4px;
+    height: 24px;
+    border-radius: 4px;
+    background: $purple-gradient;
+    flex-shrink: 0;
+  }
+
+  .section-title { margin: 0; }
+}
+
+.bio-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: $text-secondary;
+}
+
+.bio-textarea {
+  --background: #{$white};
+  --border-radius: 12px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  font-size: 14px;
+  border: 1.5px solid $border;
+  border-radius: 12px;
+}
+
+// =============================================
+// SKILLS / COMPÉTENCES
+// =============================================
+.skills-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+
+  .section-title { margin: 0; }
+
+  .view-stack-link {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: $purple-mid;
+    text-transform: uppercase;
+  }
+}
+
+.skills-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-chip {
+  --background: #{$white};
+  --color: #{$text-primary};
+  border: 1.5px solid $border;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+
+  .chip-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: $purple-mid;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+}
+
+.skills-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skills-input {
+  --background: #{$white};
+  --border-radius: 12px;
+  --padding-start: 14px;
+  border: 1.5px solid $border;
+  border-radius: 12px;
+}
+
+.input-hint {
+  font-size: 11px;
+  color: $text-light;
+  margin: 0;
+  padding-left: 4px;
+}
+
+// =============================================
+// CV
+// =============================================
+.cv-display { margin-top: 4px; }
+
+.cv-file-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: $white;
+  border-radius: $card-radius;
+  padding: 16px;
+  border: 1.5px solid $border;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+  .cv-icon {
+    font-size: 32px;
+    color: $purple-mid;
+    flex-shrink: 0;
+  }
+
+  .cv-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    .cv-filename {
+      font-size: 14px;
+      font-weight: 700;
+      color: $text-primary;
+    }
+
+    .cv-type {
+      font-size: 11px;
+      color: $text-light;
+    }
+  }
+
+  .cv-download {
+    font-size: 22px;
+    color: $purple-mid;
+    flex-shrink: 0;
+  }
+
+  .cv-remove {
+    font-size: 22px;
+    color: #ef4444;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+}
+
+.cv-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .file-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px;
+    background: $white;
+    border: 2px dashed $purple-mid;
+    border-radius: 12px;
+    cursor: pointer;
+    color: $purple-mid;
+    font-weight: 600;
+    font-size: 14px;
+
+    ion-icon { font-size: 26px; flex-shrink: 0; }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      small {
+        font-size: 11px;
+        color: $text-light;
+        font-weight: 400;
+      }
+    }
+  }
+}
+
+.empty-text {
+  font-size: 14px;
+  color: $text-light;
+  text-align: center;
+  padding: 20px 0;
+}
+
+// =============================================
+// PORTFOLIO — past projects
+// =============================================
+.portfolio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+
+  .section-title { margin: 0; }
+
+  .add-project-btn {
+    --color: #{$purple-mid};
+    font-size: 13px;
+    font-weight: 700;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+}
+
+.project-card {
+  background: $white;
+  border-radius: $card-radius;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+
+  .project-top {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+
+    .project-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(151, 125, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      ion-icon {
+        font-size: 20px;
+        color: $purple-mid;
+      }
+    }
+
+    .project-info {
+      flex: 1;
+      min-width: 0;
+
+      h4 {
+        margin: 0 0 4px;
+        font-size: 15px;
+        font-weight: 700;
+        color: $text-primary;
+      }
+
+      p {
+        margin: 0;
+        font-size: 13px;
+        color: $text-secondary;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .project-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: $purple-mid;
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+
+    ion-icon { flex-shrink: 0; }
+  }
+
+  // Edit mode card
+  &.edit {
+    border: 1.5px solid $border;
+    box-shadow: none;
+  }
+
+  .project-edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .project-num {
+      font-size: 12px;
+      font-weight: 700;
+      color: $purple-mid;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .remove-project {
+      font-size: 20px;
+      color: #ef4444;
+      cursor: pointer;
+    }
+  }
+
+  .project-input {
+    --background: #{$bg};
+    --border-radius: 10px;
+    --padding-start: 12px;
+    border: 1.5px solid $border;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .project-textarea {
+    --background: #{$bg};
+    --border-radius: 10px;
+    --padding-start: 12px;
+    --padding-top: 10px;
+    border: 1.5px solid $border;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+}
+
+// =============================================
+// PROFILE INSIGHTS — Horizontal Scroll
+// =============================================
+.insights-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar { display: none; }
+  scrollbar-width: none;
+}
+
+.insight-card {
+  background: $white;
+  border-radius: $card-radius;
+  padding: 18px 20px;
+  min-width: 130px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .insight-icon {
+    font-size: 26px;
+    &.blue   { color: #977dff; }
+    &.purple { color: #0600ab; }
+    &.pink   { color: #ec4899; }
+  }
+
+  .insight-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: $text-light;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .insight-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: $text-primary;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+}
+
+// =============================================
+// CLIENT REVIEWS
+// =============================================
+.reviews-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  .section-title { margin: 0; }
+
+  .reviews-badge {
+    font-size: 12px;
+    font-weight: 700;
+    color: $purple-mid;
+    background: rgba(151, 125, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+}
+
+.review-card {
+  background: $white;
+  border-radius: $card-radius;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+
+  .review-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .reviewer-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .reviewer-info {
+      flex: 1;
+      min-width: 0;
+
+      h4 {
+        margin: 0 0 2px;
+        font-size: 15px;
+        font-weight: 700;
+        color: $text-primary;
+      }
+
+      p {
+        margin: 0;
+        font-size: 12px;
+        color: $text-secondary;
+      }
+    }
+
+    .review-score {
+      font-size: 13px;
+      font-weight: 700;
+      color: $text-primary;
+      flex-shrink: 0;
+    }
+  }
+
+  .review-text {
+    font-size: 13px;
+    line-height: 1.65;
+    color: $text-secondary;
+    font-style: italic;
+    margin: 0;
+  }
+}
+
+// =============================================
+// BUTTONS
+// =============================================
+.testimonials-btn {
+  --background: linear-gradient(135deg, #977dff 0%, #0600ab 100%);
+  --border-radius: 40px;
+  --color: #{$white};
+  --box-shadow: 0 8px 24px rgba(151, 125, 255, 0.4);
+  height: 56px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.save-btn {
+  --background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  --border-radius: 40px;
+  --color: #{$white};
+  --box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
+  height: 52px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+// =============================================
+// FLOATING BOTTOM NAV
+// =============================================
+.floating-toolbar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 48px);
+  max-width: 360px;
+  background: $white;
+  border-radius: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+  z-index: 999;
+
+  .nav-btn {
+    --color: #{$text-light};
+    --padding-start: 12px;
+    --padding-end: 12px;
+    font-size: 22px;
+    position: relative;
+    transition: all 0.2s;
+
+    &.active { --color: #{$purple-mid}; }
+  }
+
+  .notification-btn {
+    .dot {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ef4444;
+      border: 2px solid $white;
+    }
+  }
+}
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  ion-spinner {
+    color: $purple-mid;
+    width: 48px;
+    height: 48px;
+  }
+  .freelancer-reply {
+  margin-top: 12px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-left: 3px solid #28a745;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.review-date,
+.freelancer-reply small {
+  color: #6c757d;
+  font-size: 0.75rem;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.review-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.review-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reviewer-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.reviewer-info h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.reviewer-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: gray;
+}
+
+.review-score {
+  margin-left: auto;
+  font-weight: bold;
+}
+}

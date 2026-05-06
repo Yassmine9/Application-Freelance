@@ -1,0 +1,84 @@
+<ion-header>
+  <ion-toolbar class="page-toolbar">
+    <ion-buttons slot="start">
+      <ion-button routerLink="/home" class="back-button">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>freelancers</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button routerLink="/view-all-services" class="toolbar-link">
+        Services
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content" [fullscreen]="true" [forceOverscroll]="false">
+  <div class="page-shell">
+    <section class="hero-card">
+      <div class="hero-badge">Talent board</div>
+      <h1>All freelancers in one polished view</h1>
+      <p>
+        Compare profiles, ratings, and locations to shortlist the right people faster.
+      </p>
+      <div class="hero-stats">
+        <div>
+          <strong>{{ freelancers.length }}</strong>
+          <span>profiles</span>
+        </div>
+        <div>
+          <strong>{{ averageRating }}</strong>
+          <span>avg rating</span>
+        </div>
+        <div>
+          <strong>24h</strong>
+          <span>response</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="results-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">freelancers</span>
+          <h2>Ready to collaborate</h2>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="isLoading">
+        Loading freelancers...
+      </div>
+
+      <div class="freelancers-grid" *ngIf="!isLoading && freelancers.length > 0">
+        <article class="freelancers-card" *ngFor="let freelancers of freelancers; let index = index; trackBy: trackByIndex" (click)="navigateTofreelancersProfile(freelancers.id)">
+          <div class="avatar" [ngClass]="getAccentClass(index)">
+            {{ getInitials(freelancers.name) }}
+          </div>
+          <div class="copy">
+            <div class="copy-top">
+              <div>
+                <h3>{{ freelancers.name }}</h3>
+                <p>{{ freelancers.primarySkill }}</p>
+                <div class="skills-row">
+                  <span class="skill-chip" *ngFor="let skill of freelancers.skills">{{ skill }}</span>
+                </div>
+              </div>
+              <ion-icon [name]="freelancers.icon"></ion-icon>
+            </div>
+            <div class="meta-row">
+              <span>{{ freelancers.location }}</span>
+              <span class="rating">{{ freelancers.rating | number: '1.1-1' }} ★</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading && freelancers.length === 0">
+        No freelancers available from database.
+      </div>
+    </section>
+  </div>
+</ion-content>

@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Proposals</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="center-box" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="!isLoading && proposals.length">
+    <ion-item *ngFor="let proposal of proposals" [routerLink]="['/proposals', proposal.offerId]" detail="true">
+      <ion-icon name="document-text-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>{{ proposal.offer?.title || 'Offer #' + proposal.offerId?.slice(-6) }}</h2>
+        <p *ngIf="proposal.coverLetterUrl">
+          <a [href]="apiUrl + proposal.coverLetterUrl" target="_blank" rel="noopener">Cover letter</a>
+        </p>
+        <p class="meta">Bid ${{ proposal.amount | number }} · {{ proposal.status | titlecase }}</p>
+      </ion-label>
+      <ion-badge color="medium" slot="end">{{ proposal.status | titlecase }}</ion-badge>
+    </ion-item>
+  </ion-list>
+
+  <div class="empty-state" *ngIf="!isLoading && proposals.length === 0">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <p>No proposals yet</p>
+    <span>Apply to offers to see them here.</span>
+  </div>
+</ion-content>
+
+<app-toolbar activeTab="action"></app-toolbar>

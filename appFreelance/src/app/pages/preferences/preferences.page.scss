@@ -1,0 +1,81 @@
+:host {
+  display: block;
+}
+
+.preferences-toolbar {
+  --background: rgba(255, 255, 255, 0.96);
+  --color: #1a1f36;
+  border-bottom: 1px solid rgba(227, 231, 242, 0.9);
+}
+
+.preferences-content {
+  --background:
+  radial-gradient(circle at top left, rgba(78, 91, 212, 0.12), transparent 28%),
+  radial-gradient(circle at right top, rgba(30, 42, 120, 0.1), transparent 24%),
+  linear-gradient(180deg, #f4f6fb 0%, #eef2f8 100%);
+}
+
+.preferences-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 26px 16px 28px;
+}
+
+.hero-block h1 {
+  margin: 0;
+  color: #1a1f36;
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.hero-block p {
+  margin: 10px 0 0;
+  color: #4b5875;
+  font-size: 0.96rem;
+  line-height: 1.5;
+}
+
+.chips-grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.category-chip {
+  border: 1px solid rgba(227, 231, 242, 0.9);
+  background: rgba(255, 255, 255, 0.94);
+  color: #1a1f36;
+  border-radius: 14px;
+  min-height: 52px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.category-chip.active {
+  border-color: rgba(30, 42, 120, 0.34);
+  background: rgba(30, 42, 120, 0.12);
+  color: #1e2a78;
+}
+
+.continue-btn {
+  margin-top: 20px;
+  --background: linear-gradient(135deg, #1e2a78, #4e5bd4);
+  --background-hover: linear-gradient(135deg, #1a2568, #3f4cca);
+  --border-radius: 14px;
+  height: 50px;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .preferences-shell {
+    padding: 34px 22px 36px;
+  }
+
+  .chips-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

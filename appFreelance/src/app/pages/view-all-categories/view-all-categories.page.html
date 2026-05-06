@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar class="categories-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>All Service Categories</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="categories-content" [fullscreen]="true" [forceOverscroll]="false">
+  <div class="categories-shell">
+    <div class="section-heading">
+      <div>
+        <span class="section-kicker">Service category</span>
+        <h2>Browse all categories</h2>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature-card" *ngFor="let category of categories; trackBy: trackByIndex">
+        <div class="feature-icon">
+          <ion-icon [name]="category.icon"></ion-icon>
+        </div>
+        <h3>{{ category.title }}</h3>
+      </article>
+    </div>
+  </div>
+</ion-content>

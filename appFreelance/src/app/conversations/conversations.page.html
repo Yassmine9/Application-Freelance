@@ -1,0 +1,45 @@
+<ion-header class="messages-header">
+  <ion-toolbar>
+    <ion-title>Messages</ion-title>
+    <div class="header-subtitle">Your active chats and updates</div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="messages-content">
+  <div class="center-box" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <div class="messages-list" *ngIf="!isLoading && conversations.length">
+    <button
+      class="message-card"
+      *ngFor="let convo of conversations"
+      [disabled]="!convo.otherUserId"
+      [routerLink]="convo.otherUserId ? ['/chat', convo.offerId, convo.otherUserId] : null"
+      type="button"
+    >
+      <div class="avatar">
+        {{ getInitials(convo.offerTitle || 'Conversation') }}
+      </div>
+      <div class="message-body">
+        <div class="message-title">
+          <h3>{{ convo.offerTitle || 'Conversation' }}</h3>
+          <span class="time" *ngIf="convo.lastMessage?.createdAt">{{ convo.lastMessage.createdAt | date:'MMM d' }}</span>
+        </div>
+        <p>{{ getLastPreview(convo) }}</p>
+      </div>
+      <div class="message-meta">
+        <ion-badge color="primary" *ngIf="convo.unreadCount">{{ convo.unreadCount }}</ion-badge>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+    </button>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && conversations.length === 0">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <p>No conversations yet</p>
+    <span>Start chatting once offers are in progress.</span>
+  </div>
+</ion-content>
+
+<app-toolbar activeTab="messages"></app-toolbar>

@@ -1,0 +1,43 @@
+<ion-header class="feedback-header">
+  <ion-toolbar class="feedback-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Feedback</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="feedback-content" [fullscreen]="true" [forceOverscroll]="false">
+  <div class="feedback-shell">
+    <h1>Share your remarks</h1>
+    <p>Your message will be sent directly to the admin team.</p>
+
+    <ion-item class="field-item">
+      <ion-label position="stacked">Subject</ion-label>
+      <ion-input
+        [(ngModel)]="subject"
+        name="subject"
+        maxlength="80"
+        placeholder="Example: Issue on home page"
+      ></ion-input>
+    </ion-item>
+
+
+
+    <ion-item class="field-item">
+      <ion-label position="stacked">Message</ion-label>
+      <ion-textarea
+        [(ngModel)]="message"
+        name="message"
+        autoGrow="true"
+        rows="5"
+        maxlength="1000"
+        placeholder="Write your feedback here"
+      ></ion-textarea>
+    </ion-item>
+
+    <ion-button expand="block" class="send-btn" (click)="submitFeedback()">
+      Send to admin
+    </ion-button>
+  </div>
+</ion-content>

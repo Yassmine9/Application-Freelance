@@ -1,0 +1,211 @@
+<ion-header class="admin-header ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="header-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="header-title">Manage Reviews</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button class="header-btn" (click)="loadReviews()">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content" [fullscreen]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="admin-container">
+
+    <!-- HERO -->
+    <div class="welcome-section">
+      <div class="admin-avatar">
+        <ion-icon name="star-outline"></ion-icon>
+      </div>
+
+      <div class="welcome-text">
+        <p class="welcome-label">Administration</p>
+        <h1 class="welcome-title">Reviews</h1>
+        <p class="hero-sub">{{ reviews.length }} total reviews</p>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="section-card">
+      <p class="section-label">Search</p>
+
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Search by client, comment or status..."
+          [(ngModel)]="search"
+          (input)="onSearch()"
+        />
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="loading" class="skeleton-list">
+      <div class="product-card skeleton-card" *ngFor="let s of [1,2,3]">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line w60"></div>
+          <div class="skeleton-line w40"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMPTY -->
+    <div class="activity-empty" *ngIf="!loading && filteredReviews.length === 0">
+      <ion-icon name="star-outline"></ion-icon>
+      <span>No reviews found</span>
+    </div>
+
+    <!-- LIST -->
+    <div *ngIf="!loading && filteredReviews.length > 0" class="products-list">
+
+      <div class="product-card"
+        *ngFor="let r of filteredReviews"
+        [class.expanded]="openedReview === r._id">
+
+        <!-- HEADER -->
+        <div class="product-card-header" (click)="toggleReview(r._id)">
+
+          <div class="product-icon">
+            <ion-icon name="star"></ion-icon>
+          </div>
+
+          <div class="product-info">
+
+            <h3>
+              {{ r.client_name }} • ⭐ {{ r.rating }}/5
+            </h3>
+
+            <p class="product-category">
+              {{ r.comment | slice:0:70 }}
+            </p>
+
+            <div class="meta-row">
+
+              <span class="meta-chip">
+                <ion-icon name="person-outline"></ion-icon>
+                {{ r.client_id }}
+              </span>
+
+              <span class="meta-chip status-chip">
+                <ion-icon name="eye-outline"></ion-icon>
+                {{ r.status }}
+              </span>
+
+            </div>
+
+          </div>
+
+          <ion-icon
+            class="chev"
+            [name]="openedReview === r._id ? 'chevron-up-outline' : 'chevron-down-outline'">
+          </ion-icon>
+
+        </div>
+
+        <!-- EXPANDED -->
+        <div class="expanded-content" *ngIf="openedReview === r._id">
+<!-- COMMENT CARD -->
+<div class="section-card comment-card">
+
+  <div class="detail-label">
+    <ion-icon name="chatbubble-outline"></ion-icon>
+    <small>Comment</small>
+  </div>
+
+  <p class="comment-text" [class.expanded]="r._expandedComment">
+    {{ r.comment }}
+  </p>
+
+  <button class="toggle-comment"
+          *ngIf="r.comment?.length > 120"
+          (click)="toggleComment(r); $event.stopPropagation()">
+
+    {{ r._expandedComment ? 'Show less' : 'Read more' }}
+
+    <ion-icon
+      [name]="r._expandedComment ? 'chevron-up-outline' : 'chevron-down-outline'">
+    </ion-icon>
+
+  </button>
+
+</div>
+          <div class="details-grid">
+              
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="cube-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Gig ID</small>
+                <strong>{{ r.gig_id }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="bag-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Order ID</small>
+                <strong>{{ r.order_id }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="calendar-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Date</small>
+                <strong>{{ r.created_at | date:'medium' }}</strong>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- REPLY -->
+          <div class="file-info" *ngIf="r.freelancer_reply">
+            <ion-icon name="return-down-forward-outline"></ion-icon>
+            <span>{{ r.freelancer_reply }}</span>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="action-buttons">
+
+            <button
+              class="action-btn delete-btn"
+              (click)="hideReview(r); $event.stopPropagation()"
+              [disabled]="r._hiding">
+
+              <ion-spinner *ngIf="r._hiding" name="crescent"></ion-spinner>
+
+              <ng-container *ngIf="!r._hiding">
+                <ion-icon name="eye-off-outline"></ion-icon>
+                Hide
+              </ng-container>
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>

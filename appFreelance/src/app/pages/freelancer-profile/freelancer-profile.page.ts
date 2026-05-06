@@ -1,0 +1,312 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonicModule, IonContent,AlertController } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FreelancerProfileService } from '../../services/freelancer-profile.service';
+import { ReviewService } from '../../services/review.service'
+import { Router } from '@angular/router';
+
+export interface Project {
+  title: string;
+  description: string;
+  link: string;
+}
+export interface Gig {
+  title :string;
+}
+
+export type ProfileStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'blocked';
+
+@Component({
+  selector: 'app-freelancer-profile',
+  templateUrl: './freelancer-profile.page.html',
+  styleUrls: ['./freelancer-profile.page.scss'],
+  standalone: true,
+  imports: [IonicModule, CommonModule, FormsModule],
+})
+export class FreelancerProfilePage implements OnInit {
+
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
+
+  // ---- Profile fields ----
+  id : string ='';
+  name: string = '';
+  email: string = '';
+  phone: string = '';
+  title: string = '';
+  bio: string = '';
+  skills: string = '';
+  skillList: string[] = [];
+  hourlyRate: number = 0;
+  experienceYears: number = 0;
+  projectsCompleted: number = 0;
+  clientRating: number = 0;
+  successRate: number = 0;
+  cvName: string = '';
+  cvFile: File | null = null;
+  avatarFile: File | null = null;
+  avatarUrl: string = 'assets/avatar.png';
+  projects: Project[] = [];
+  profileStatus: ProfileStatus = 'draft';
+  gigs : Gig[] = [];
+  // ---- UI state ----
+  editMode = false;
+  activeTab: string = 'bio';
+  isLoading = true;
+  original_cv_name: string ="" ;
+
+    // [REVIEWS] Reviews properties
+  reviews: any[] = [];
+  averageRating: number = 0;
+  totalReviews: number = 0;
+  freelancer_reply :string = "";
+
+  get isTopRated(): boolean {
+    return this.successRate >= 90;
+  }
+
+  get statusLabel(): string {
+    const labels: Record<ProfileStatus, string> = {
+      draft: 'Draft',
+      pending: '⏳ Pending',
+      approved: '✅ Approved',
+      rejected: '❌ Rejected',
+      blocked: '🚫 Blocked'
+    };
+    return labels[this.profileStatus];
+  }
+
+  constructor(private profileService: FreelancerProfileService,private reviewService: ReviewService,
+    private alertCtrl: AlertController,private router:Router) {}
+   
+  ngOnInit() {
+    console.log('PAGE LOADED - name is:', this.name);
+    
+    this.loadProfile();
+  }
+
+  // ---- Load from API ----
+  loadProfile() {
+  this.isLoading = true;
+  console.log("inside the load profile");
+  this.profileService.getProfile().subscribe({
+    next: (data) => {
+      console.log('DATA FROM API:', data);
+      
+      this.id = data.user.id
+      this.name              = data.user.name;
+      this.email             = data.user.email || '';
+      this.phone             = data.user.phone || '';
+      this.title             = data.user.title || '';
+      this.bio               = data.user.bio || '';
+      this.skillList         = data.user.skills || [];
+      this.skills            = (data.user.skills || []).join(', ');
+      this.hourlyRate        = data.user.hourly_rate || 0;
+      this.experienceYears   = data.user.experience_years || 0;
+      this.projectsCompleted = data.user.projects_completed || 0;
+      this.clientRating      = data.user.client_rating || 0;
+      this.successRate       = data.user.success_rate || 0;
+      this.cvName            = data.user.cv_filename || '';
+      this.projects          = data.user.portfolio || [];
+      this.original_cv_name = this.name.concat("_cv")
+      this.gigs = (data.user.gigs || [])
+        .filter((g: Gig[] | null): g is Gig[] => g != null)
+        .flat();
+      this.profileStatus     = data.user.status || 'draft';
+      
+      if (data.user.avatar_filename) {
+        this.avatarUrl = `http://127.0.0.1:5000/api/uploads/avatars/${data.user.avatar_filename}`;
+      }
+      else {
+      this.avatarUrl = 'appFreelance/src/assets/avatar.png';
+       }
+      this.isLoading = false;
+      // [REVIEWS] Load reviews after profile is loaded
+        this.loadReviews();
+      
+    },
+    error: (err) => {
+      console.error('Failed to load profile', err);
+      this.isLoading = false;
+    }
+  });
+}
+
+  // [REVIEWS] Load reviews for this freelancer
+  loadReviews() {
+    if (!this.id) return;
+    this.reviewService.getFreelancerReviews(this.id).subscribe({
+      next: (data: any) => {
+        this.reviews = data;
+        this.averageRating = data.averageRating || 0;
+        this.totalReviews = data.totalReviews || 0;
+        
+      },
+      error: (err) => console.error('Failed to load reviews', err)
+    });
+  }
+
+  // [REVIEWS] Open alert to reply to a review
+  async replyToReview(reviewId: string, currentReply: string | null) {
+    const alert = await this.alertCtrl.create({
+      header: 'Reply to review',
+      inputs: [
+        {
+          name: 'reply',
+          type: 'textarea',
+          placeholder: 'Write your reply...',
+          value: currentReply || ''
+        }
+      ],
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Submit',
+          handler: (data) => {
+            if (data.reply && data.reply.trim()) {
+              this.submitReply(reviewId, data.reply.trim());
+            }
+            return true;
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  // [REVIEWS] Send reply to backend and update local array
+  submitReply(reviewId: string, replyText: string) {
+    this.reviewService.replyToReview(reviewId, replyText).subscribe({
+      next: () => {
+        const review = this.reviews.find(r => r._id === reviewId);
+        if (review) {
+          review.reply = replyText;
+          review.replied_at = new Date().toISOString(); // approximate, backend will set actual
+        }
+      },
+      error: (err) => console.error('Failed to submit reply', err)
+    });
+  }
+
+
+  // ---- Tab navigation ----
+  async setTab(tab: string) {
+    this.activeTab = tab;
+    const scrollEl = await this.content.getScrollElement();
+    const target = document.getElementById(tab);
+    if (target) {
+      scrollEl.scrollTo({ top: target.offsetTop - 60, behavior: 'smooth' });
+    }
+  }
+
+  // ---- Edit mode ----
+  toggleEdit() {
+    //this.editMode = !this.editMode;
+     this.router.navigate(['/freelancer-edit']);
+  }
+
+  // ---- CV ----
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.cvFile = file;
+      this.cvName = file.name;
+    }
+  }
+
+  removeCV() {
+    this.cvFile = null;
+    this.cvName = '';
+  }
+
+  // ---- Avatar ----
+  onAvatarSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.avatarFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.avatarUrl = e.target.result;
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // ---- Portfolio ----
+  addProject() {
+    this.projects.push({ title: '', description: '', link: '' });
+  }
+
+
+
+  removeProject(index: number) {
+    this.projects.splice(index, 1);
+  }
+getmygigs() {
+  this.router.navigate(['/my-gigs']);
+}
+downloadCv()
+{
+  this.profileService.downloadCv().subscribe({
+    next: (blob: Blob) => {
+      console.log('Blob received', blob); // you already see this
+
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a hidden anchor element
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = this.original_cv_name || 'cv.pdf'; // force filename
+      document.body.appendChild(a); // needed for Firefox
+      a.click();
+      
+      // Clean up
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('Download error', err);
+    }
+  });
+}
+  // ---- Save ----
+  saveProfile() {
+    this.skillList = this.skills.split(',').map(s => s.trim()).filter(s => s);
+    this.projects  = this.projects.filter(p => p.title.trim() !== '');
+
+    const payload = {
+      title:              this.title,
+      bio:                this.bio,
+      skills:             this.skillList,
+      hourly_rate:        this.hourlyRate,
+      phone:              this.phone,
+      experience_years:   this.experienceYears,
+      projects_completed: this.projectsCompleted,
+      portfolio:          this.projects
+    };
+
+    this.profileService.updateProfile(payload).subscribe({
+      next: (res) => {
+        this.profileStatus = res.status;
+        this.editMode = false;
+        console.log('Profile saved');
+      },
+      error: (err) => console.error('Failed to save profile', err)
+    });
+
+    // upload CV if new file selected
+    if (this.cvFile) {
+      this.profileService.uploadCV(this.cvFile).subscribe({
+        next: (res) => this.cvName = res.cv_filename,
+        error: (err) => console.error('CV upload failed', err)
+      });
+    }
+
+    // upload avatar if new file selected
+    if (this.avatarFile) {
+      this.profileService.uploadAvatar(this.avatarFile).subscribe({
+        next: (res) => console.log('Avatar uploaded', res),
+        error: (err) => console.error('Avatar upload failed', err)
+      });
+    }
+  }
+}

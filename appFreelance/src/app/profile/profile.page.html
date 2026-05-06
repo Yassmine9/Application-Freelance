@@ -1,0 +1,183 @@
+<ion-header class="profile-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ role === 'client' ? 'Client' : 'freelancers' }} Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-content">
+  <div class="center-box" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <div class="profile-container" *ngIf="!isLoading && profile">
+    <div class="profile-hero">
+      <div class="hero-bg"></div>
+      <div class="avatar-circle">
+        <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile" />
+        <span *ngIf="!avatarUrl">{{ getInitials(displayName) }}</span>
+      </div>
+      <div class="hero-copy">
+        <h1 class="profile-name">{{ displayName }}</h1>
+        <span class="role-badge">{{ profile.role || role | titlecase }}</span>
+        <p class="profile-bio">{{ profile.bio || headline }}</p>
+      </div>
+      <div class="hero-metrics">
+        <div>
+          <strong>{{ totalProjects }}</strong>
+          <span>projects</span>
+        </div>
+        <div>
+          <strong>{{ ratingValue || 0 }}</strong>
+          <span>rating</span>
+        </div>
+        <div>
+          <strong>{{ clientOffers.length }}</strong>
+          <span>offers</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card" *ngIf="profile.email || profile.location || profile.phone">
+      <div class="info-row" *ngIf="profile.email">
+        <ion-icon name="mail-outline"></ion-icon>
+        <span>{{ profile.email }}</span>
+      </div>
+      <div class="info-row" *ngIf="profile.phone">
+        <ion-icon name="call-outline"></ion-icon>
+        <span>{{ profile.phone }}</span>
+      </div>
+      <div class="info-row" *ngIf="profile.location">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>{{ profile.location }}</span>
+      </div>
+    </div>
+
+    <div class="skills-card" *ngIf="profile.skills?.length">
+      <h3>Skills</h3>
+      <div class="skills-wrap">
+        <span class="skill-pill" *ngFor="let s of profile.skills">{{ s }}</span>
+      </div>
+    </div>
+
+    <div class="client-actions-card" *ngIf="isOwnerClient">
+      <div class="action-header">
+        <h3>Post a New Offer</h3>
+        <span>Keep your pipeline full</span>
+      </div>
+      <ion-button expand="block" (click)="openOfferModal()">Create Offer</ion-button>
+    </div>
+
+    <div class="client-offers-card" *ngIf="role === 'client'">
+      <h3>Recent Offers</h3>
+      <div class="offers-loading" *ngIf="clientOffersLoading">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+      <div class="offers-list" *ngIf="!clientOffersLoading && clientOffers.length">
+        <div class="offer-item" *ngFor="let offer of clientOffers">
+          <div class="offer-header">
+            <div class="offer-title">{{ offer.title || 'Untitled offer' }}</div>
+            <span class="status-chip">{{ offer.status | titlecase }}</span>
+          </div>
+          <div class="offer-meta">
+            <span class="budget">${{ offer.budget | number }}</span>
+            <span class="date" *ngIf="offer.createdAt">Posted {{ offer.createdAt | date:'MMM d, y' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="empty-offers" *ngIf="!clientOffersLoading && clientOffers.length === 0">
+        No offers yet
+      </div>
+    </div>
+
+    <div class="offers-card" *ngIf="role === 'freelancer'">
+      <h3>Offers Applied</h3>
+
+      <div class="offer-filters">
+        <ion-button size="small" [fill]="proposalFilter === 'all' ? 'solid' : 'outline'" (click)="setProposalFilter('all')">All</ion-button>
+        <ion-button size="small" [fill]="proposalFilter === 'pending' ? 'solid' : 'outline'" (click)="setProposalFilter('pending')">Pending</ion-button>
+        <ion-button size="small" [fill]="proposalFilter === 'accepted' ? 'solid' : 'outline'" (click)="setProposalFilter('accepted')">Accepted</ion-button>
+        <ion-button size="small" [fill]="proposalFilter === 'rejected' ? 'solid' : 'outline'" (click)="setProposalFilter('rejected')">Rejected</ion-button>
+      </div>
+
+      <div class="offers-loading" *ngIf="offersLoading">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+      </div>
+
+      <div class="offers-list" *ngIf="!offersLoading && freelancerOffers?.length">
+        <div class="offer-item" *ngFor="let offer of freelancerOffers">
+          <div class="offer-header">
+            <div class="offer-title">{{ offer.title || 'Untitled offer' }}</div>
+            <span class="status-chip" [ngClass]="statusClass(offer.status)">{{ offer.status === 'in_progress' ? 'In Progress' : (offer.status | titlecase) }}</span>
+          </div>
+          <div class="offer-meta">
+            <span class="budget">${{ offer.budget | number }}</span>
+            <span class="date" *ngIf="offer.createdAt">Posted {{ offer.createdAt | date:'MMM d, y' }}</span>
+          </div>
+          <div class="proposal-meta" *ngIf="offer.proposal">
+            <span class="proposal-chip" [ngClass]="offer.proposal.status">{{ offer.proposal.status | titlecase }}</span>
+            <span class="proposal-amount" *ngIf="offer.proposal.amount">Bid ${{ offer.proposal.amount | number }}</span>
+          </div>
+          <div class="file-row" *ngIf="offer.cahierChargeUrl">
+            <a class="file-link" [href]="apiUrl + offer.cahierChargeUrl" target="_blank" rel="noopener">
+              Cahier des charges
+            </a>
+          </div>
+          <ion-button size="small" fill="clear" [routerLink]="['/proposals', offer._id]">View Offer</ion-button>
+        </div>
+      </div>
+
+      <div class="empty-offers" *ngIf="!offersLoading && (!freelancerOffers || freelancerOffers.length === 0)">
+        No offers yet
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<app-toolbar activeTab="profile"></app-toolbar>
+
+<!-- ===== Create Offer Modal ===== -->
+<ion-modal [isOpen]="showOfferModal" (didDismiss)="closeOfferModal()" [breakpoints]="[0, 1]" [initialBreakpoint]="1">
+  <ng-template>
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-title>Post a Job</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeOfferModal()">
+            <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="modal-content">
+      <div class="modal-form">
+        <ion-item lines="none">
+          <ion-label position="stacked">Title <span class="required">*</span></ion-label>
+          <ion-input [(ngModel)]="newOffer.title" name="title" placeholder="e.g. Build a landing page"></ion-input>
+        </ion-item>
+
+        <div class="form-group">
+          <label class="form-label">Cahier des charges <span class="required">*</span></label>
+          <input
+            type="file"
+            class="file-input"
+            accept=".pdf,.doc,.docx"
+            (change)="onCahierChargeSelected($event)" />
+        </div>
+
+        <ion-item lines="none">
+          <ion-label position="stacked">Budget (USD) <span class="required">*</span></ion-label>
+          <ion-input [(ngModel)]="newOffer.budget" name="budget" type="number" placeholder="e.g. 500"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" class="submit-btn" [disabled]="isSubmittingOffer" (click)="createOffer()">
+          <ion-spinner *ngIf="isSubmittingOffer" name="crescent" slot="start"></ion-spinner>
+          {{ isSubmittingOffer ? 'Posting...' : 'Post Job' }}
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

@@ -1,0 +1,70 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Checkout</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div class="product-box">
+    <h2>{{ product?.title }}</h2>
+    <p>{{ product?.price }} T.D</p>
+  </div>
+
+  <ion-item>
+    <ion-input
+      label="Card holder"
+      labelPlacement="stacked"
+      [(ngModel)]="payment.cardName">
+    </ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input
+      label="Card number"
+      labelPlacement="stacked"
+      maxlength="16"
+      [(ngModel)]="payment.cardNumber">
+    </ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input
+      label="Expiry (MM/YY)"
+      labelPlacement="stacked"
+      maxlength="5"
+      [(ngModel)]="payment.expiry">
+    </ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-input
+      label="CVV"
+      labelPlacement="stacked"
+      maxlength="3"
+      [(ngModel)]="payment.cvv">
+    </ion-input>
+  </ion-item>
+
+  <ion-button
+    expand="block"
+    size="large"
+    style="margin-top:30px"
+    [disabled]="isProcessing"
+    (click)="pay()">
+
+    <ion-spinner *ngIf="isProcessing"></ion-spinner>
+
+    <span *ngIf="!isProcessing">
+      Pay {{ product?.price }} T.D
+    </span>
+
+  </ion-button>
+
+</ion-content>

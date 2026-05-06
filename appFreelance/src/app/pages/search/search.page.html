@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar class="search-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button class="back-btn"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="search-title">Search</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="search-content" [fullscreen]="true" [forceOverscroll]="false">
+  <div class="search-shell">
+    <!-- SEARCH BAR -->
+    <div class="search-bar-wrapper">
+      <div class="search-bar-container">
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search gigs, freelancers, categories..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchInput($event)"
+          (keyup.enter)="performSearch(searchQuery)"
+        />
+        <button
+          *ngIf="searchQuery"
+          class="clear-btn"
+          (click)="clearSearch()"
+          aria-label="Clear search"
+        >
+          <ion-icon name="close-circle-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB FILTER -->
+    <div *ngIf="hasSearched" class="search-tabs">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'all'"
+        (click)="setTab('all')"
+      >
+        All
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'gigs'"
+        (click)="setTab('gigs')"
+      >
+        Gigs
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'freelancers'"
+        (click)="setTab('freelancers')"
+      >
+        freelancers
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'categories'"
+        (click)="setTab('categories')"
+      >
+        Categories
+      </button>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div *ngIf="isLoading" class="loading-state">
+      <ion-spinner name="crescent" class="spinner"></ion-spinner>
+      <p>Searching...</p>
+    </div>
+
+    <!-- INITIAL STATE (no search yet) -->
+    <div *ngIf="!hasSearched && !isLoading" class="initial-state">
+      <ion-icon name="search-outline" class="empty-icon"></ion-icon>
+      <h2>Start searching</h2>
+      <p>Find gigs, freelancers, and services across the platform</p>
+    </div>
+
+    <!-- RESULTS STATE -->
+    <div *ngIf="hasSearched && !isLoading" class="results-section">
+      <!-- EMPTY RESULTS -->
+      <div *ngIf="getFilteredResults().length === 0" class="empty-results">
+        <ion-icon name="close-circle-outline" class="empty-icon"></ion-icon>
+        <h3>No results found</h3>
+        <p>Try searching with different keywords</p>
+      </div>
+
+      <!-- RESULTS GRID -->
+      <div *ngIf="getFilteredResults().length > 0" class="results-grid">
+        <article
+          *ngFor="let result of getFilteredResults(); trackBy: trackByIndex"
+          class="result-card"
+          [class.category-result]="result.type === 'category'"
+          (click)="navigateToResult(result)"
+        >
+          <!-- CATEGORY CARD -->
+          <div *ngIf="result.type === 'category'" class="category-card">
+            <div class="category-icon">
+              <ion-icon [name]="result.icon"></ion-icon>
+            </div>
+            <h3 class="result-title">{{ result.title }}</h3>
+          </div>
+
+          <!-- GIG / freelancers CARD -->
+          <div *ngIf="result.type !== 'category'" class="item-card">
+            <div class="item-header">
+              <div class="item-info">
+                <h3 class="result-title">{{ result.title }}</h3>
+                <p class="result-subtitle" *ngIf="result.subtitle">{{ result.subtitle }}</p>
+              </div>
+              <div class="result-type-badge" [ngClass]="result.type">
+                <span>{{ result.type }}</span>
+              </div>
+            </div>
+
+            <p class="result-description" *ngIf="result.description">
+              {{ result.description }}
+            </p>
+
+            <div *ngIf="result.rating" class="result-rating">
+              <ion-icon name="star"></ion-icon>
+              <span>{{ result.rating | number: '1.1-1' }}</span>
+            </div>
+
+            <div class="item-action">
+              <span class="view-more">View details</span>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- RESULTS SUMMARY -->
+      <div *ngIf="getFilteredResults().length > 0" class="results-summary">
+        <p>Found {{ getFilteredResults().length }} result(s)</p>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<app-toolbar activeTab="search"></app-toolbar>

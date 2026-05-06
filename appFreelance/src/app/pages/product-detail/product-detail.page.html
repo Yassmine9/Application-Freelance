@@ -1,0 +1,177 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="detail-toolbar">
+    <div class="toolbar-content">
+
+      <ion-button fill="clear" class="icon-btn" (click)="goBack()">
+        <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+
+      <div class="header-center">
+        <p class="subtitle">Product</p>
+        <h1 class="page-title">Details</h1>
+      </div>
+
+      <ion-button fill="clear" class="icon-btn" (click)="shareProduct()">
+        <ion-icon name="share-social-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="detail-content">
+
+  <!-- Loading -->
+  <div class="loading-wrapper" *ngIf="isLoading">
+    <div class="hero-skeleton"></div>
+
+    <div class="section-skeleton">
+      <ion-skeleton-text animated style="width:60%; height:28px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width:35%; height:14px; margin-top:10px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width:100%; height:14px; margin-top:25px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width:85%; height:14px; margin-top:10px;"></ion-skeleton-text>
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="!isLoading && !product">
+    <ion-icon name="cube-outline"></ion-icon>
+    <h3>Product not found</h3>
+    <p>This product may no longer exist</p>
+    <button class="back-home-btn" (click)="goBack()">Go Back</button>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && product">
+
+    <!-- hero -->
+    <div class="hero-card">
+      <div class="shape big"></div>
+      <div class="shape small"></div>
+
+      <div class="license-chip">
+        {{ product.license }}
+      </div>
+
+      <div class="price-pill">
+        {{ product.price }} T.D
+      </div>
+    </div>
+
+    <!-- title -->
+    <div class="title-section">
+      <h1>{{ product.title }}</h1>
+      <p>Version {{ product.version }}</p>
+    </div>
+
+    <!-- stats -->
+    <div class="stats-row">
+      <div class="stat-pill">
+        <ion-icon name="download-outline"></ion-icon>
+        <span>{{ product.downloadCount }} downloads</span>
+      </div>
+
+      <div class="stat-pill">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>{{ product.createdAt | date:'MMM y' }}</span>
+      </div>
+
+      <div class="stat-pill">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        <span>{{ product.license }}</span>
+      </div>
+    </div>
+
+    <!-- description -->
+    <div class="section-card">
+      <div class="section-header">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <h2>Description</h2>
+      </div>
+
+      <p class="section-text">
+        {{ product.description }}
+      </p>
+    </div>
+
+    <!-- details -->
+    <div class="section-card">
+      <div class="section-header">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <h2>Details</h2>
+      </div>
+
+      <div class="detail-row">
+        <span>Version</span>
+        <strong>{{ product.version }}</strong>
+      </div>
+
+      <div class="detail-row">
+        <span>License</span>
+        <strong>{{ product.license }}</strong>
+      </div>
+
+      <div class="detail-row">
+        <span>Creator</span>
+        <strong>{{ product.creatorId }}</strong>
+      </div>
+
+      <div class="detail-row no-border">
+        <span>Published</span>
+        <strong>{{ product.createdAt | date:'mediumDate' }}</strong>
+      </div>
+    </div>
+
+    <!-- download -->
+    <div class="section-card" *ngIf="downloadLink">
+      <div class="section-header">
+        <ion-icon name="cloud-download-outline"></ion-icon>
+        <h2>Your Download</h2>
+      </div>
+
+      <div class="download-box">
+        {{ downloadLink }}
+      </div>
+
+      <button class="download-btn" (click)="openDownload()">
+        <ion-icon name="download-outline"></ion-icon>
+        Download File
+      </button>
+    </div>
+
+    <div style="height:120px"></div>
+
+  </div>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+</ion-content>
+
+<!-- footer -->
+<div class="sticky-footer" *ngIf="!isLoading && product">
+  <div class="footer-inner">
+
+    <div class="footer-price">
+      <small>Total</small>
+      <strong>{{ product.price }} T.D</strong>
+    </div>
+
+    <button
+      class="buy-btn"
+      [class.bought]="isPurchased"
+      [disabled]="isPurchasing || isPurchased"
+      (click)="purchase()">
+
+      <ion-spinner *ngIf="isPurchasing" name="crescent"></ion-spinner>
+
+      <ng-container *ngIf="!isPurchasing">
+        <ion-icon [name]="isPurchased ? 'checkmark-outline' : 'bag-add-outline'"></ion-icon>
+        <span>{{ isPurchased ? 'Purchased' : 'Buy Now' }}</span>
+      </ng-container>
+
+    </button>
+
+  </div>
+</div>

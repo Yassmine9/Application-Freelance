@@ -1,0 +1,201 @@
+<!-- manage-users.page.html -->
+<ion-header class="admin-header ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="header-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="header-title">Manage Users</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button class="header-btn" (click)="loadUsers()">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content" [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="admin-container">
+
+    <!-- Hero -->
+    <div class="welcome-section">
+      <div class="admin-avatar">
+        <ion-icon name="people-outline"></ion-icon>
+      </div>
+      <div class="welcome-text">
+        <p class="welcome-label">Administration</p>
+        <h1 class="welcome-title">Users</h1>
+        <p class="hero-sub">{{ users.length }} total users</p>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="section-card">
+      <p class="section-label">Search</p>
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Search users..."
+          [(ngModel)]="search"
+          (input)="applyFilters()"
+        />
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="section-card">
+      <p class="section-label">Filter</p>
+      <div class="filter-row">
+        <button class="chip"
+          [class.active]="filter === 'all'"
+          (click)="setFilter('all')">
+          All
+        </button>
+
+        <button class="chip"
+          [class.active]="filter === 'clients'"
+          (click)="setFilter('clients')">
+          Clients
+        </button>
+
+        <button class="chip"
+          [class.active]="filter === 'freelancers'"
+          (click)="setFilter('freelancers')">
+          Freelancers
+        </button>
+
+        <button class="chip"
+          [class.active]="filter === 'pending'"
+          (click)="setFilter('pending')">
+          Pending
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="skeleton-list">
+      <div class="product-card skeleton-card" *ngFor="let s of [1,2,3]">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line w60"></div>
+          <div class="skeleton-line w40"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div class="activity-empty" *ngIf="!loading && filteredUsers.length === 0">
+      <ion-icon name="people-outline"></ion-icon>
+      <span>No users found</span>
+    </div>
+
+    <!-- Users List -->
+    <div *ngIf="!loading && filteredUsers.length > 0" class="products-list">
+
+      <div class="product-card"
+        *ngFor="let u of filteredUsers"
+        [class.expanded]="openedUser === u._id">
+
+        <!-- Header -->
+        <div class="product-card-header" (click)="toggleUser(u._id)">
+          <div class="left-section">
+            <div class="product-icon">
+              <ion-icon [name]="u.role === 'freelancer' ? 'briefcase-outline' : 'person-outline'"></ion-icon>
+            </div>
+
+            <p class="product-category">
+              {{ u.name }}
+            </p>
+          </div>
+
+          <div class="meta-row">
+            <span class="meta-chip status-chip" *ngIf="u.status">
+              {{ u.status }}
+            </span>
+
+            <span class="meta-chip" *ngIf="u.is_blocked">
+              blocked
+            </span>
+          </div>
+
+          <ion-icon class="chev"
+            [name]="openedUser === u._id ? 'chevron-up-outline' : 'chevron-down-outline'">
+          </ion-icon>
+        </div>
+
+        <!-- Expanded -->
+        <div class="expanded-content" *ngIf="openedUser === u._id">
+
+          <div class="details-grid">
+
+            <div class="detail-item">
+    <div class="detail-icon">
+      <ion-icon name="mail-outline"></ion-icon>
+    </div>
+    <div class="detail-info">
+      <small>Email</small>
+      <strong>{{ u.email || '-' }}</strong>
+    </div>
+  </div>
+
+  <div class="detail-item">
+    <div class="detail-icon">
+      <ion-icon name="business-outline"></ion-icon>
+    </div>
+    <div class="detail-info">
+      <small>Company</small>
+      <strong>{{ u.company_name || '-' }}</strong>
+    </div>
+  </div>
+
+  <div class="detail-item">
+    <div class="detail-icon">
+      <ion-icon name="call-outline"></ion-icon>
+    </div>
+    <div class="detail-info">
+      <small>Phone</small>
+      <strong>{{ u.phone || '-' }}</strong>
+    </div>
+  </div>
+
+
+</div>
+
+          <!-- Actions -->
+          <div class="action-buttons">
+
+            <button class="action-btn edit-btn"
+              (click)="approveUser(u); $event.stopPropagation()"
+              [disabled]="u._loading">
+
+              <ion-spinner *ngIf="u._loading" name="crescent"></ion-spinner>
+              <ng-container *ngIf="!u._loading">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                Approve
+              </ng-container>
+            </button>
+
+            <button class="action-btn delete-btn"
+              (click)="rejectUser(u); $event.stopPropagation()"
+              [disabled]="u._loading">
+
+              <ion-icon name="close-outline"></ion-icon>
+              Reject
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

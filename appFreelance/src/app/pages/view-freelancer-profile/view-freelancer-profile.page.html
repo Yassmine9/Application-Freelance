@@ -1,0 +1,325 @@
+<ion-header class="header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-btn"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">{{ name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="action-btn" (click)="openActionMenu()">
+        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-content" #content>
+  <div *ngIf="isLoading" style="display: flex; justify-content: center; padding-top: 40px">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <!-- HERO SECTION -->
+    <div class="hero-section">
+      <div class="hero-bg"></div>
+      <div class="hero-inner">
+        <div class="avatar-wrapper">
+          <img [src]="avatarUrl" class="avatar-img" />
+        </div>
+        <div class="hero-info">
+          <h1 class="hero-name">{{ name }}</h1>
+          <p class="hero-role"><span class="code-tag">&lt;/&gt;</span>{{ title }}</p>
+        </div>
+      </div>
+
+  
+      <!-- QUICK STATS -->
+      <div class="quick-stats">
+        <div class="stat">
+          <strong>{{ hourlyRate }}</strong>
+          <span>/hr</span>
+        </div>
+        <div class="stat">
+          <strong>{{ clientRating | number: '1.1-1' }}</strong>
+          <span>rating</span>
+        </div>
+        <div class="stat">
+          <strong>{{ projectsCompleted }}</strong>
+          <span>projects</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-buttons-section">
+      <ion-button expand="block" class="message-btn" fill="outline">
+        <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+        Send Message
+      </ion-button>
+    </div>
+
+    <!-- TAB BUTTONS -->
+    <div class="tab-bar-wrapper">
+      <div class="tab-bar">
+        <button class="tab-btn" [class.active]="activeTab === 'bio'" (click)="setTab('bio')">Bio</button>
+        <button class="tab-btn" [class.active]="activeTab === 'portfolio'" (click)="setTab('portfolio')">
+          Portfolio
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="setTab('reviews')">Reviews</button>
+        <button class="tab-btn" [class.active]="activeTab === 'stats'" (click)="setTab('stats')">Stats</button>
+      </div>
+    </div>
+
+    <!-- ==================== BIO ==================== -->
+    <div id="bio" class="section">
+      <div class="section-header bio-header">
+        <div class="section-accent"></div>
+        <h2 class="section-title">Bio</h2>
+      </div>
+      <p class="bio-text">{{ bio || 'No biography available.' }}</p>
+    </div>
+
+    <!-- ==================== SKILLS ==================== -->
+    <div id="competences" class="section">
+      <div class="skills-header">
+        <h2 class="section-title">Skills</h2>
+      </div>
+      <div class="skills-chips">
+        <ion-chip *ngFor="let skill of skillList; trackBy: trackByIndex" class="skill-chip">
+          <span class="chip-dot"></span>{{ skill }}
+        </ion-chip>
+        <p *ngIf="skillList.length === 0" class="empty-text">No skills listed.</p>
+      </div>
+    </div>
+    <!-- ==================== cv ==================== -->
+      
+  <div id="cv" class="section">
+    <div class="section-header bio-header">
+      <div class="section-accent"></div>
+      <h2 class="section-title">CV</h2>
+    </div>
+
+   
+    <div>
+      <div *ngIf="cvName" class="cv-display">
+  <div class="cv-file-card">
+    <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
+<div class="cv-info">
+  <!-- Download button instead of link -->
+  <a 
+    fill="clear" 
+    size="small" 
+    (click)="downloadCv()" 
+    class="cv-filename-link"
+    >
+    <ion-icon name="download-outline" slot="start"></ion-icon>
+    {{ original_cv_name || 'No CV uploaded' }}
+</a>
+  <span class="cv-type">PDF Document</span>
+</div>
+  </div>
+</div>
+    </div></div>
+    <!-- ==================== PORTFOLIO ==================== -->
+    <div id="portfolio" class="section">
+      <div class="portfolio-header">
+        <h2 class="section-title">Portfolio</h2>
+      </div>
+
+      <div *ngIf="projects.length === 0" class="empty-text">No projects added</div>
+      <div *ngFor="let project of projects; trackBy: trackByIndex" class="project-card">
+        <div class="project-top">
+          <div class="project-icon-wrap">
+            <ion-icon name="globe-outline"></ion-icon>
+          </div>
+          <div class="project-info">
+            <h4>{{ project.title }}</h4>
+            <p>{{ project.description }}</p>
+          </div>
+        </div>
+        <a *ngIf="project.link" [href]="project.link" class="project-link" target="_blank">
+          <ion-icon name="link-outline"></ion-icon>
+          View Project
+        </a>
+      </div>
+    </div>
+
+    <!-- ==================== PROFILE INSIGHTS ==================== -->
+    <div id="stats" class="section">
+      <h2 class="section-title">Profile Insights</h2>
+      <div class="insights-scroll">
+        <div class="insight-card">
+          <ion-icon name="briefcase-outline" class="insight-icon blue"></ion-icon>
+          <p class="insight-label">PROJECTS</p>
+          <h3 class="insight-value">{{ projectsCompleted }}</h3>
+        </div>
+        <div class="insight-card">
+          <ion-icon name="star-outline" class="insight-icon purple"></ion-icon>
+          <p class="insight-label">CLIENT RATING</p>
+          <h3 class="insight-value">{{ clientRating | number: '1.1-1' }}</h3>
+        </div>
+        <div class="insight-card">
+          <ion-icon name="ribbon-outline" class="insight-icon blue"></ion-icon>
+          <p class="insight-label">EXPERIENCE</p>
+          <h3 class="insight-value">{{ experienceYears }}y</h3>
+        </div>
+        <div class="insight-card">
+          <ion-icon name="trending-up-outline" class="insight-icon pink"></ion-icon>
+          <p class="insight-label">SUCCESS RATE</p>
+          <h3 class="insight-value">{{ successRate }}%</h3>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ==================== GIGS ==================== -->
+    <div id="services" class="section">
+      <div class="portfolio-header">
+        <h2 class="section-title">Services</h2>
+        <span class="view-stack-link" (click)="getfreelancersgigs()">VIEW ALL</span>
+      </div>
+      <div *ngIf="gigs.length === 0" class="empty-text">No services added</div>
+      <div *ngFor="let gig of gigs; trackBy: trackByIndex" class="project-card">
+        <div class="project-top">
+          <div class="project-icon-wrap">
+            <ion-icon name="layers-outline"></ion-icon>
+          </div>
+          <div class="project-info">
+            <h4>{{ gig.title }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- ==================== CLIENT REVIEWS ==================== -->
+<div id="reviews" class="section">
+
+  <!-- Header -->
+  <div class="reviews-header">
+    <h2 class="section-title">Client Reviews</h2>
+    <span class="reviews-badge">
+      ⭐ {{ clientRating | number: '1.1-1' }} ({{ reviews.length }} reviews)
+    </span>
+  </div>
+
+  <!-- ── Write a Review (only if canReview = true) ────────── -->
+  <div class="review-form" *ngIf="canReview">
+    <h3 class="review-form-title"style="color:#1a1a2e;">Leave a Review</h3>
+
+    <!-- Stars -->
+    <div class="stars-container">
+      <ion-icon
+        *ngFor="let star of stars"
+        [name]="star <= rating ? 'star' : 'star-outline'"
+        color="warning"
+        class="star-icon"
+        (click)="setRating(star)">
+      </ion-icon>
+    </div>
+
+    <!-- Star label -->
+    <p class="star-label" *ngIf="rating > 0"style="color:#1a1a2e;">
+      {{ starLabels[rating] }}
+    </p>
+    <p class="star-label muted" *ngIf="rating === 0"style="color:#1a1a2e;">
+      Tap a star to rate
+    </p>
+
+    <!-- Rating validation -->
+    <p class="validation-error" *ngIf="submitted && rating === 0"style="color:#1a1a2e;">
+      Please select a star rating
+    </p>
+
+    <!-- Comment -->
+    <ion-textarea
+      [(ngModel)]="comment"
+      placeholder="Share your experience working with this freelancer... (min 20 characters)"
+      [rows]="5"
+      maxlength="500"
+      class="review-textarea"
+      [class.invalid]="submitted && !isCommentValid" style="color:#1a1a2e;">
+    </ion-textarea>
+
+    <!-- Character counter -->
+    <p class="char-counter" [class.warn]="comment.length > 450">
+      {{ comment.length }} / 500
+    </p>
+
+    <!-- Comment validation -->
+    <p class="validation-error" *ngIf="submitted && comment.trim().length < 20" style="color:#1a1a2e;">
+      Please write at least 20 characters
+    </p>
+
+    <!-- Submit button -->
+    <ion-button
+      expand="block"
+      color="warning"
+      class="submit-review-btn"
+      [disabled]="isSubmitting"
+      (click)="submitReview()">
+      <ion-icon name="star-outline" slot="start"></ion-icon>
+      {{ isSubmitting ? 'Submitting...' : 'Submit Review' }}
+    </ion-button>
+  </div>
+
+  <!-- ── Cannot review — show reason ──────────────────────── -->
+  <div class="cannot-review" *ngIf="!canReview && cannotReason">
+    <ion-icon name="information-circle-outline" color="medium"></ion-icon>
+    <p style="color:#1a1a2e;">{{ cannotReason }}</p>
+  </div>
+
+  <!-- ── Loading reviews ───────────────────────────────────── -->
+  <div *ngIf="isLoadingReviews" style="text-align:center; padding: 20px">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- ── No reviews yet ────────────────────────────────────── -->
+  <div *ngIf="!isLoadingReviews && reviews.length === 0" class="empty-text">
+    No reviews yet
+  </div>
+
+  <!-- ── Review cards ──────────────────────────────────────── -->
+  <div
+    *ngFor="let review of reviews; trackBy: trackByIndex"
+    class="review-card">
+
+    <!-- Top row: name + stars -->
+    <div class="review-top">
+      <img src="assets/avatar.png" class="reviewer-avatar" />
+      <div class="reviewer-info">
+        <h4>{{ review.client_name }}</h4>
+        <p>{{ review.created_at | date:'mediumDate' }}</p>
+      </div>
+      <div class="review-stars">
+        <ion-icon
+          *ngFor="let star of stars"
+          [name]="star <= review.rating ? 'star' : 'star-outline'"
+          color="warning"
+          class="small-star">
+        </ion-icon>
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <p class="review-text">{{ review.comment }}</p>
+
+    <!-- Freelancer reply -->
+    <div class="freelancer-reply" *ngIf="review.freelancer_reply">
+      <ion-icon name="chatbubble-outline" color="primary"></ion-icon>
+      <div>
+        <strong>Response from freelancer:</strong>
+        <p>{{ review.freelancer_reply }}</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<div>
+      <ion-button expand="block" class="testimonials-btn" (click)="openActionMenu()">
+        View All Testimonials
+      </ion-button>
+    </div>
+
+    <!-- SPACER -->
+    <div style="height: 100px"></div>
+  </ng-container>
+</ion-content>

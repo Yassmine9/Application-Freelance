@@ -1,0 +1,318 @@
+:host {
+  display: block;
+  --text-primary: #1a1f36;
+  --text-secondary: #6b7a99;
+  --primary: #1e2a78;
+  --accent: #4e5bd4;
+}
+
+// ── Content background ────────────────────────────────────────
+.page-content {
+  --background: #f4f6fb;
+}
+
+// ── Toolbar ───────────────────────────────────────────────────
+.page-toolbar {
+  --background: #ffffff;
+  --color: var(--text-primary);
+  --border-color: #e3e7f2;
+}
+
+.back-button {
+  --color: #1e2a78;
+  --border-radius: 10px;
+  --padding-start: 8px;
+  --padding-end: 8px;
+
+  ion-icon { font-size: 22px; }
+}
+
+.toolbar-link {
+  --color: #1e2a78;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+// ── Page shell ────────────────────────────────────────────────
+.page-shell {
+  padding: 16px 16px calc(68px + env(safe-area-inset-bottom) + 16px);
+}
+
+// ── Hero card ─────────────────────────────────────────────────
+.hero-card {
+  padding: 24px 22px 20px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #1e2a78 0%, #0f1c4d 100%);
+  color: #fff;
+  box-shadow: 0 12px 32px rgba(30, 42, 120, 0.22);
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+
+  // Decorative blobs
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    pointer-events: none;
+  }
+
+  &::before {
+    width: 160px;
+    height: 160px;
+    top: -60px;
+    right: -40px;
+  }
+
+  &::after {
+    width: 100px;
+    height: 100px;
+    bottom: -30px;
+    left: -20px;
+  }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 12px;
+}
+
+.hero-card h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  max-width: 22ch;
+}
+
+.hero-card p {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  max-width: 36ch;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hero-stats div {
+  padding: 12px 8px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  text-align: center;
+}
+
+.hero-stats strong {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.hero-stats span {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+// ── Section heading ───────────────────────────────────────────
+.results-section {
+  margin-top: 4px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+
+.section-kicker {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4e5bd4;
+  margin-bottom: 4px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+// ── Freelancer grid ───────────────────────────────────────────
+.freelancer-grid {
+  display: grid;
+  gap: 10px;
+}
+
+// ── Freelancer card ───────────────────────────────────────────
+.freelancer-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 16px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e3e7f2;
+  box-shadow: 0 2px 10px rgba(30, 42, 120, 0.06);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 4px rgba(30, 42, 120, 0.08);
+  }
+}
+
+// ── Avatar ────────────────────────────────────────────────────
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+// ── Card copy ─────────────────────────────────────────────────
+.copy-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  h3 {
+    margin: 0 0 2px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+  }
+
+  ion-icon {
+    font-size: 1.1rem;
+    color: #4e5bd4;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+}
+
+// ── Skills ────────────────────────────────────────────────────
+.skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.skill-chip {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(30, 42, 120, 0.07);
+  color: #1e2a78;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(30, 42, 120, 0.1);
+}
+
+// ── Meta row ─────────────────────────────────────────────────
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f2f8;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.rating {
+  color: #1e2a78;
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+// ── Empty / loading state ─────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  text-align: center;
+  gap: 10px;
+  color: #6b7a99;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+// ── Avatar accent classes ─────────────────────────────────────
+.accent-1 { background: linear-gradient(135deg, #1e2a78, #4e5bd4); }
+.accent-2 { background: linear-gradient(135deg, #0f1c4d, #1e2a78); }
+.accent-3 { background: linear-gradient(135deg, #4e5bd4, #06b6d4); }
+.accent-4 { background: linear-gradient(135deg, #1e2a78, #06b6d4); }
+.accent-5 { background: linear-gradient(135deg, #0f1c4d, #4e5bd4); }
+.accent-6 { background: linear-gradient(135deg, #1a1f36, #1e2a78); }
+
+// ── Responsive ───────────────────────────────────────────────
+@media (min-width: 600px) {
+  .freelancer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .page-shell {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .freelancer-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

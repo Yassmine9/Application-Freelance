@@ -1,0 +1,328 @@
+
+<ion-header class="header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button class="back-btn"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">YOUR PROFILE</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="edit-btn" (click)="toggleEdit()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-content" #content>
+
+  <div *ngIf="isLoading" style="display:flex; justify-content:center; padding-top:40px;">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+
+   
+  <!-- HERO SECTION -->
+  <div class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="avatar-wrapper">
+        <img [src]="avatarUrl" class="avatar-img" />
+        
+      </div>
+      <div class="hero-info">
+        <h1 class="hero-name">{{name}}</h1>
+        <p class="hero-role"><span class="code-tag">&lt;/&gt;</span>{{ title}}</p>
+      </div>
+    </div>
+
+    <!-- STATUS BADGE -->
+    <div class="status-row">
+      <div class="status-badge" [ngClass]="'status-' + profileStatus">
+        <span class="status-dot"></span>
+        <span class="status-label">{{ statusLabel }}</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB BUTTONS -->
+  <div class="tab-bar-wrapper">
+    <div class="tab-bar">
+      <button class="tab-btn" [class.active]="activeTab === 'bio'" (click)="setTab('bio')">Bio</button>
+      <button class="tab-btn" [class.active]="activeTab === 'portfolio'" (click)="setTab('portfolio')">Portfolio</button>
+      <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="setTab('reviews')">Reviews</button>
+      <button class="tab-btn" [class.active]="activeTab === 'stats'" (click)="setTab('stats')">Stats</button>
+    </div>
+  </div>
+
+  <!-- ==================== BIO ==================== -->
+  <div id="bio" class="section">
+    <div class="section-header bio-header">
+      <div class="section-accent"></div>
+      <h2 class="section-title">Bio</h2>
+    </div>
+    <div *ngIf="!editMode" class="bio-text">
+      {{ bio || 'No biography was added.' }}
+    </div>
+    <ion-textarea
+      *ngIf="editMode"
+      [(ngModel)]="bio"
+      class="bio-textarea"
+      [autoGrow]="true"
+      placeholder="About you...">
+    </ion-textarea>
+  </div>
+
+  <!-- ==================== Skills ==================== -->
+  <div id="competences" class="section">
+    <div class="skills-header">
+      <h2 class="section-title">Skills</h2>
+    </div>
+    <div *ngIf="!editMode" class="skills-chips">
+      <ion-chip *ngFor="let skill of skillList" class="skill-chip">
+        <span class="chip-dot"></span>{{ skill }}
+      </ion-chip>
+      <p *ngIf="skillList.length === 0" class="empty-text">Aucune compétence ajoutée.</p>
+    </div>
+    <div *ngIf="editMode" class="skills-edit">
+      <ion-input
+        [(ngModel)]="skills"
+        placeholder="Angular, Ionic, Node.js"
+        class="skills-input">
+      </ion-input>
+      <p class="input-hint">Séparez les compétences par des virgules</p>
+    </div>
+  </div>
+
+  <!-- ==================== CV ==================== -->
+  <div id="cv" class="section">
+    <div class="section-header bio-header">
+      <div class="section-accent"></div>
+      <h2 class="section-title">CV</h2>
+    </div>
+
+    <!-- View mode -->
+    <div *ngIf="!editMode">
+      <div *ngIf="cvName" class="cv-display">
+  <div class="cv-file-card">
+    <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
+<div class="cv-info">
+  <!-- Download button instead of link -->
+  <a 
+    fill="clear" 
+    size="small" 
+    (click)="downloadCv()" 
+    class="cv-filename-link"
+    >
+    <ion-icon name="download-outline" slot="start"></ion-icon>
+    {{ original_cv_name || 'No CV uploaded' }}
+</a>
+  <span class="cv-type">PDF Document</span>
+</div>
+  </div>
+</div>
+    </div>
+
+    <!-- Edit mode -->
+    <div *ngIf="editMode" class="cv-edit">
+      <label class="file-label">
+        <ion-icon name="cloud-upload-outline"></ion-icon>
+        <div>
+          <span>Upload your cv</span>
+          <small>PDF, DOC, DOCX</small>
+        </div>
+        <input type="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" hidden />
+      </label>
+      <div *ngIf="cvName" class="cv-file-card">
+        <ion-icon name="document-text-outline" class="cv-icon"></ion-icon>
+        <div class="cv-info">
+          <span class="cv-filename">{{ cvName }}</span>
+          <span class="cv-type">PDF Document</span>
+        </div>
+        <ion-icon name="close-circle-outline" class="cv-remove" (click)="removeCV()"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PORTFOLIO (past projects) ==================== -->
+  <div id="portfolio" class="section">
+    <div class="portfolio-header">
+      <h2 class="section-title">Portfolio</h2>
+      <ion-button *ngIf="editMode" fill="clear" class="add-project-btn" (click)="addProject()">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        Add
+      </ion-button>
+    </div>
+
+
+    <!-- View mode -->
+    <div *ngIf="!editMode">
+      <div *ngIf="projects.length === 0" class="empty-text">No projects added</div>
+      <div *ngFor="let project of projects" class="project-card">
+        <div class="project-top">
+          <div class="project-icon-wrap">
+            <ion-icon name="globe-outline"></ion-icon>
+          </div>
+          <div class="project-info">
+            <h4>{{ project.title }}</h4>
+            <p>{{ project.description }}</p>
+          </div>
+        </div>
+        <a *ngIf="project.link" [href]="project.link" class="project-link" target="_blank">
+          <ion-icon name="link-outline"></ion-icon> {{ project.link }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Edit mode -->
+    <div *ngIf="editMode">
+      <div *ngFor="let project of projects; let i = index" class="project-card edit">
+        <div class="project-edit-header">
+          <span class="project-num">Projet {{ i + 1 }}</span>
+          <ion-icon name="trash-outline" class="remove-project" (click)="removeProject(i)"></ion-icon>
+        </div>
+        <ion-input
+          [(ngModel)]="project.title"
+          placeholder="Titre du projet"
+          class="project-input">
+        </ion-input>
+        <ion-textarea
+          [(ngModel)]="project.description"
+          placeholder="Description courte..."
+          class="project-textarea"
+          [autoGrow]="true">
+        </ion-textarea>
+        <ion-input
+          [(ngModel)]="project.link"
+          placeholder="https://..."
+          class="project-input">
+        </ion-input>
+      </div>
+      <div *ngIf="projects.length === 0" class="empty-text">
+        click on add to share a project
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== PROFILE INSIGHTS (Stats) ==================== -->
+  <div id="stats" class="section">
+    <h2 class="section-title">Profile Insights</h2>
+    <div class="insights-scroll">
+      <div class="insight-card">
+        <ion-icon name="briefcase-outline" class="insight-icon blue"></ion-icon>
+        <p class="insight-label">PROJECTS</p>
+        <h3 class="insight-value">{{projectsCompleted}}</h3>
+      </div>
+      <div class="insight-card">
+        <ion-icon name="star-outline" class="insight-icon purple"></ion-icon>
+        <p class="insight-label">CLIENT RATING</p>
+        <h3 class="insight-value">{{clientRating}}</h3>
+      </div>
+      <div class="insight-card">
+        <ion-icon name="ribbon-outline" class="insight-icon blue"></ion-icon>
+        <p class="insight-label">EXPERIENCE</p>
+        <h3 class="insight-value">{{experienceYears}}</h3>
+      </div>
+      <div class="insight-card">
+        <ion-icon name="trending-up-outline" class="insight-icon pink"></ion-icon>
+        <p class="insight-label">SUCCESS RATE</p>
+        <h3 class="insight-value">{{successRate}}%</h3>
+      </div>
+    </div>
+  </div>
+  <!-- ==================== GIGS (services) ================== -->
+    <div id="portfolio" class="section">
+    <div class="portfolio-header">
+      <h2 class="section-title">Gigs</h2>
+            <span class="view-stack-link" style="color: #b388ff;"(click)="getmygigs()">View Gigs</span>
+    </div>
+    <!-- View mode -->
+    <div *ngIf="!editMode">
+      <div *ngIf="gigs.length === 0" class="empty-text">No gigs added</div>
+      <div *ngFor="let gig of gigs" class="project-card">
+        <div class="project-top">
+          <div class="project-icon-wrap">
+            <ion-icon name="globe-outline"></ion-icon>
+          </div>
+          <div class="project-info">
+            <h4>{{ gig?.title }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+<!-- ==================== CLIENT REVIEWS ==================== -->
+<div id="reviews" class="section">
+  <div class="reviews-header">
+    <h2 class="section-title">Client reviews</h2>
+    <span class="reviews-badge">
+      ⭐ {{ clientRating | number:'1.1-1' }} ({{ reviews.length }} avis)
+    </span>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="reviews.length === 0" class="no-reviews">
+    <p style="color:#1a1a2e;">No reviews yet.</p>
+  </div>
+
+  <!-- Review cards -->
+  <div *ngFor="let review of reviews" class="review-card">
+    <div class="review-top">
+      <img [src]="review.client_avatar || 'assets/avatar.png'" class="reviewer-avatar" />
+      <div class="reviewer-info">
+        <small class="review-date" style="color:#1a1a2e;">{{ review.created_at | date:'mediumDate' }}</small>
+        <h4>{{ review.client_name || 'Anonymous' }}</h4>
+        <p *ngIf="review.client_title">{{ review.client_title }}</p>
+      </div>
+      <span class="review-score">⭐ {{ review.rating }}</span>
+    </div>
+    <p class="review-text">"{{ review.comment }}"</p>
+    
+<!--
+     Freelancer's reply if exists 
+    <div *ngIf="review.freelancer_reply" class="freelancer-reply">
+      <strong style="color:#1a1a2e;">Your reply:</strong>
+      <p style="color:#1a1a2e;">{{ review.freelancer_reply }}</p>
+    </div>
+
+     Reply button (edit if already replied) 
+    <ion-button
+      size="small"
+      [fill]="review.freelancer_reply ? 'clear' : 'outline'"
+      (click)="replyToReview(review._id, review.freelancer_reply || null)">
+      <ion-icon [name]="review.freelancer_reply ? 'create-outline' : 'chatbubble-outline'" slot="start"></ion-icon>
+      {{ review.freelancer_reply ? 'Edit reply' : 'Reply' }}
+    </ion-button>-->
+  </div>
+</div>
+
+ <div>
+    <div class="section" style="padding: 0;">
+      <ion-button expand="block" class="testimonials-btn">
+        View All Testimonials
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- SAVE BUTTON -->
+  <div class="section" *ngIf="editMode">
+    <ion-button expand="block" class="save-btn" (click)="saveProfile()">
+      <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+      Save profile
+    </ion-button>
+  </div>
+
+  <div style="height: 100px;"></div>
+
+
+    <!-- TAB BUTTONS -->
+    ...
+
+    <!-- ALL OTHER SECTIONS -->
+    ...
+
+  </ng-container>
+
+</ion-content>

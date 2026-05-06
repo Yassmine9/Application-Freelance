@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/my-gigs"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Edit gig</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner></ion-spinner>
+    <p>Loading...</p>
+  </div>
+
+  <form *ngIf="!isLoading" (ngSubmit)="onSubmit()">
+
+    <!-- Title -->
+    <ion-item>
+      <ion-label position="stacked">Gig title</ion-label>
+      <ion-input
+        [(ngModel)]="gig.title"
+        name="title"
+        placeholder="Ex: Développement d'un site web"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <!-- Category -->
+    <ion-item>
+      <ion-label position="stacked">Tags</ion-label>
+      <ion-select
+        [(ngModel)]="gig.tags"
+        name="tags"
+        placeholder="Select Tags"
+        required
+        multiple
+      >
+        <ion-select-option *ngFor="let cat of categories" [value]="cat">
+          {{ cat }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Description -->
+    <ion-item>
+      <ion-label position="stacked">Description</ion-label>
+      <ion-textarea
+        [(ngModel)]="gig.description"
+        name="description"
+        placeholder="Décrivez votre annonce en détail..."
+        rows="4"
+        required
+      ></ion-textarea>
+    </ion-item>
+
+    <!-- Price -->
+    <ion-item>
+      <ion-label position="stacked">Price (dt)</ion-label>
+      <ion-input
+        [(ngModel)]="gig.price"
+        name="price"
+        type="number"
+        placeholder="Ex: 50"
+        required
+      ></ion-input>
+    </ion-item>
+        <!-- estimated duration -->
+    <ion-item>
+      <ion-label position="stacked">Duration</ion-label>
+      <ion-textarea
+        [(ngModel)]="gig.duration"
+        name="duration"
+        type="number"
+        placeholder="Ex: 2 jours"
+        required
+      ></ion-textarea>
+    </ion-item>
+
+
+    
+
+    <!-- Submit Button -->
+    <ion-button expand="block" type="submit" class="ion-margin-top">
+      Update Gig
+    </ion-button>
+
+    <!-- Cancel Button -->
+    <ion-button expand="block" fill="clear" (click)="goBack()">
+      Cancel 
+    </ion-button>
+  </form>
+</ion-content>

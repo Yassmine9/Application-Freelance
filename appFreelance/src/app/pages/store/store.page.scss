@@ -1,0 +1,263 @@
+.store-toolbar {
+  --background: var(--ion-background-color);
+  --border-width: 0;
+}
+
+.toolbar-content {
+  padding: 18px 20px 10px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.icon-btn {
+  --color: var(--ion-color-dark);
+  --background: rgba(var(--ion-color-light-rgb), 0.9);
+  --border-radius: 16px;
+  width: 48px;
+  height: 48px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.header-center {
+  flex: 1;
+  padding: 0 14px;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  letter-spacing: .5px;
+}
+
+.store-title {
+  margin: 2px 0 0;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--ion-color-dark);
+}
+
+.search-wrapper {
+  margin-bottom: 14px;
+}
+
+.store-searchbar {
+  --background: rgba(var(--ion-color-light-rgb), .9);
+  --border-radius: 18px;
+  --box-shadow: none;
+  --placeholder-color: var(--ion-color-medium);
+  padding: 0;
+}
+
+.categories-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+ion-chip {
+  --background: white;
+  --color: var(--ion-color-medium);
+  padding: 8px 6px;
+  border-radius: 18px;
+  font-weight: 600;
+  transition: .25s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.active-chip {
+  --background: var(--ion-color-primary);
+  --color: white;
+  transform: translateY(-2px);
+}
+
+.store-content {
+  --background: #f6f7fb;
+}
+
+.products-list {
+  padding: 12px 18px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.product-card {
+  border-radius: 30px;
+  overflow: hidden;
+  background: white;
+  cursor: pointer;
+  position: relative;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.06),
+    0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: .25s;
+
+  &:active {
+    transform: scale(.98);
+  }
+}
+
+.card-top {
+  height: 95px;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--ion-color-primary-tint),
+    var(--ion-color-primary)
+  );
+  overflow: hidden;
+}
+
+.alt-card .card-top {
+  background: linear-gradient(
+    135deg,
+    #7d8dff,
+    #5a67ff
+  );
+}
+
+.shape {
+  width: 180px;
+  height: 180px;
+  position: absolute;
+  right: -45px;
+  top: -80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .18);
+}
+
+.license-chip {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  padding: 7px 14px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, .18);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.price-pill {
+  position: absolute;
+  right: 18px;
+  bottom: 14px; /* inside header */
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(10px);
+  color: var(--ion-color-primary);
+  font-weight: 800;
+  font-size: 15px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, .12);
+  z-index: 3;
+}
+
+.card-content {
+  padding: 20px ;
+}
+
+.card-content h2 {
+  margin: 0 0 10px;
+  font-size: 21px;
+  font-weight: 800;
+  color: var(--ion-color-dark);
+  line-height: 1.2;
+}
+
+.card-content p {
+  margin: 0;
+  color: var(--ion-color-medium);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.card-bottom {
+  margin-top: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.downloads {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ion-color-medium);
+  font-size: 13px;
+}
+
+.view-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  background: rgba(var(--ion-color-primary-rgb), .12);
+  color: var(--ion-color-primary);
+}
+
+.empty-state {
+  padding: 90px 30px;
+  text-align: center;
+  color: var(--ion-color-medium);
+
+  ion-icon {
+    font-size: 72px;
+    opacity: .4;
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    margin: 0 0 6px;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.skeleton-card {
+  padding: 22px;
+  border-radius: 28px;
+}
+
+.skeleton-line {
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.large {
+  height: 28px;
+  width: 70%;
+}
+
+.medium {
+  height: 16px;
+  width: 100%;
+}
+
+.small {
+  height: 16px;
+  width: 55%;
+  margin-bottom: 0;
+}

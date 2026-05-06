@@ -1,0 +1,149 @@
+<ion-header class="register-header">
+  <ion-toolbar class="register-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" class="back-btn"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="header-title">Create Account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="register-content" [fullscreen]="true">
+  <div class="register-container">
+    <!-- Header Section -->
+    <div class="register-header-section">
+      <div class="logo-container">
+        <ion-icon name="business" class="logo-icon"></ion-icon>
+      </div>
+      <h1 class="register-title">Client Account</h1>
+      <p class="register-subtitle">Find the perfect freelancers for your projects</p>
+    </div>
+
+    <!-- Registration Form -->
+    <form class="register-form">
+      <!-- Personal Info -->
+      <div class="form-section">
+        <ion-item class="form-item">
+          <ion-icon name="business-outline" slot="start" class="form-icon"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Company Name"
+            class="form-input"
+            [(ngModel)]="companyName"
+            name="companyName">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-icon name="person-outline" slot="start" class="form-icon"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Contact Person"
+            class="form-input"
+            [(ngModel)]="contactName"
+            name="contactName">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-icon name="mail-outline" slot="start" class="form-icon"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="Email Address"
+            class="form-input"
+            [(ngModel)]="email"
+            name="email">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-icon name="call-outline" slot="start" class="form-icon"></ion-icon>
+          <ion-input
+            type="tel"
+            placeholder="Phone Number"
+            class="form-input"
+            [(ngModel)]="phoneNumber"
+            name="phoneNumber">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-icon name="lock-closed-outline" slot="start" class="form-icon"></ion-icon>
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Password"
+            class="form-input"
+            [(ngModel)]="password"
+            name="password">
+          </ion-input>
+          <ion-icon
+            [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+            (click)="togglePassword()"
+            slot="end"
+            class="password-toggle">
+          </ion-icon>
+        </ion-item>
+
+        <ion-item class="form-item">
+          <ion-icon name="briefcase-outline" slot="start" class="form-icon"></ion-icon>
+          <ion-select
+            placeholder="Select your industry"
+            [(ngModel)]="industry"
+            name="industry"
+            interface="action-sheet"
+            class="form-select">
+            <ion-select-option value="technology">Technology</ion-select-option>
+            <ion-select-option value="marketing">Marketing</ion-select-option>
+            <ion-select-option value="finance">Finance</ion-select-option>
+            <ion-select-option value="healthcare">Healthcare</ion-select-option>
+            <ion-select-option value="education">Education</ion-select-option>
+            <ion-select-option value="other">Other</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="form-item other-field" *ngIf="industry === 'other'">
+          <ion-icon name="document-text-outline" slot="start" class="form-icon"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Describe your industry"
+            class="form-input"
+            [(ngModel)]="otherIndustry"
+            name="otherIndustry">
+          </ion-input>
+        </ion-item>
+      </div>
+
+      <ion-item lines="none" class="checkbox-item">
+        <ion-checkbox
+          slot="start"
+          [(ngModel)]="accepted"
+          name="accepted"
+          class="form-checkbox">
+        </ion-checkbox>
+        <ion-label class="terms-label">
+          I agree to the <span class="terms-link">Terms</span> & <span class="terms-link">Privacy Policy</span>
+        </ion-label>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        [disabled]="!accepted || isLoading"
+        (click)="onRegister()"
+        class="submit-button">
+        <ion-spinner *ngIf="isLoading" name="crescent" class="button-spinner"></ion-spinner>
+        <span *ngIf="!isLoading">Create Client Account</span>
+        <span *ngIf="isLoading">Processing...</span>
+      </ion-button>
+      <div class="login-link-container">
+        <span class="login-text">Already have an account?</span>
+        <a href="/login" class="login-link">Sign In</a>
+      </div>
+
+      <div class="switch-type-container">
+        <span class="switch-text">Looking to offer services?</span>
+        <a href="/register-freelancers" class="switch-link">Register as freelancers</a>
+      </div>
+
+
+    </form>
+  </div>
+</ion-content>

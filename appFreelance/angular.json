@@ -44,8 +44,14 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "8kb",
+                  "maximumError": "12kb"
+                },
+                {
+                  "type": "bundle",
+                  "name": "register-selection-register-selection-page",
+                  "maximumWarning": "12kb",
+                  "maximumError": "16kb"
                 }
               ],
               "fileReplacements": [
@@ -136,7 +142,8 @@
   "cli": {
     "schematicCollections": [
       "@ionic/angular-toolkit"
-    ]
+    ],
+    "analytics": "cca9f25e-8f0f-4899-838f-67d5660ac044"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {

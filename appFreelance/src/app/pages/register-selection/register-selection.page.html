@@ -1,0 +1,86 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="transparent-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" class="back-button"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="page-title">Choose Your Role</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="main-content" [fullscreen]="true">
+  <div class="content-wrapper">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="brand-logo">
+        <ion-icon name="people-circle" class="brand-icon"></ion-icon>
+      </div>
+      <h1 class="hero-title">Welcome to Our Platform</h1>
+      <p class="hero-subtitle">Select your account type to get started</p>
+    </div>
+
+    <!-- Selection Cards -->
+    <div class="cards-grid">
+      <!-- freelancers Card -->
+      <div class="role-card freelancers" (click)="selectfreelancers()" tabindex="0" role="button" aria-label="Register as freelancers">
+        <div class="card-background">
+          <div class="card-gradient freelancers-gradient"></div>
+        </div>
+
+        <div class="card-content">
+          <div class="card-icon-wrapper">
+            <div class="card-icon freelancers-icon">
+              <ion-icon name="code-working" class="icon-main"></ion-icon>
+            </div>
+          </div>
+
+          <div class="card-info">
+            <h2 class="card-title">freelancers</h2>
+            <p class="card-description">Offer your skills and services</p>
+          </div>
+
+          <div class="card-action">
+            <span class="action-text">Get Started</span>
+            <ion-icon name="arrow-forward" class="action-arrow"></ion-icon>
+          </div>
+        </div>
+
+        <div class="card-hover-effect"></div>
+      </div>
+
+      <!-- Client Card -->
+      <div class="role-card client" (click)="selectClient()" tabindex="0" role="button" aria-label="Register as Client">
+        <div class="card-background">
+          <div class="card-gradient client-gradient"></div>
+        </div>
+
+        <div class="card-content">
+          <div class="card-icon-wrapper">
+            <div class="card-icon client-icon">
+              <ion-icon name="briefcase" class="icon-main"></ion-icon>
+            </div>
+          </div>
+
+          <div class="card-info">
+            <h2 class="card-title">Client</h2>
+            <p class="card-description">Find and hire talent</p>
+          </div>
+
+          <div class="card-action">
+            <span class="action-text">Find Talent</span>
+            <ion-icon name="arrow-forward" class="action-arrow"></ion-icon>
+          </div>
+        </div>
+
+        <div class="card-hover-effect"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-section">
+      <p class="footer-text">
+        Already have an account?
+        <a href="/login" class="login-link">Sign In</a>
+      </p>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,197 @@
+<!-- admin-offers.page.html -->
+<ion-header class="admin-header ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="header-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="header-title">Manage Offers</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button class="header-btn" (click)="loadOffers()">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content" [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="admin-container">
+
+    <!-- Hero -->
+    <div class="welcome-section">
+      <div class="admin-avatar">
+        <ion-icon name="briefcase-outline"></ion-icon>
+      </div>
+
+      <div class="welcome-text">
+        <p class="welcome-label">Administration</p>
+        <h1 class="welcome-title">Offers</h1>
+        <p class="hero-sub">{{ offers.length }} total offers</p>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="section-card">
+      <p class="section-label">Search</p>
+
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Search offers..."
+          [(ngModel)]="search"
+          (input)="onSearch()"
+        />
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="skeleton-list">
+      <div class="product-card skeleton-card" *ngFor="let s of [1,2,3]">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line w60"></div>
+          <div class="skeleton-line w40"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div class="activity-empty" *ngIf="!loading && filteredOffers.length === 0">
+      <ion-icon name="briefcase-outline"></ion-icon>
+      <span>No offers found</span>
+    </div>
+
+    <!-- List -->
+    <div *ngIf="!loading && filteredOffers.length > 0" class="products-list">
+
+      <div class="product-card"
+        *ngFor="let o of filteredOffers"
+        [class.expanded]="openedOffer === o._id">
+
+        <!-- Header -->
+        <div class="product-card-header" (click)="toggleOffer(o._id)">
+
+          <div class="product-icon">
+            <ion-icon name="briefcase-outline"></ion-icon>
+          </div>
+
+          <div class="product-info">
+            <h3>{{ o.title }}</h3>
+
+            <p class="product-category">
+              {{ o.category }}
+            </p>
+
+            <div class="meta-row">
+              <span class="meta-chip">
+                <ion-icon name="cash-outline"></ion-icon>
+                ${{ o.budget }}
+              </span>
+
+              <span class="meta-chip">
+                <ion-icon name="time-outline"></ion-icon>
+                {{ o.deadline | date:'shortDate' }}
+              </span>
+
+              <span class="meta-chip status-chip">
+                <ion-icon name="pulse-outline"></ion-icon>
+                {{ o.status }}
+              </span>
+            </div>
+          </div>
+
+          <ion-icon
+            class="chev"
+            [name]="openedOffer === o._id ? 'chevron-up-outline' : 'chevron-down-outline'">
+          </ion-icon>
+
+        </div>
+
+        <!-- Expanded -->
+        <div class="expanded-content" *ngIf="openedOffer === o._id">
+
+          <div class="details-grid">
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="document-text-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Title</small>
+                <strong>{{ o.title }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="pricetag-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Budget</small>
+                <strong>${{ o.budget }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="folder-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Category</small>
+                <strong>{{ o.category }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-icon">
+                <ion-icon name="calendar-outline"></ion-icon>
+              </div>
+              <div class="detail-info">
+                <small>Deadline</small>
+                <strong>{{ o.deadline | date:'mediumDate' }}</strong>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="file-info" *ngIf="o.cahierChargeName">
+            <ion-icon name="document-attach-outline"></ion-icon>
+            <span>{{ o.cahierChargeName }}</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="action-buttons">
+
+            <button
+              class="action-btn edit-btn"
+              (click)="approveOffer(o); $event.stopPropagation()">
+
+              <ion-icon name="checkmark-outline"></ion-icon>
+              Approve
+            </button>
+
+            <button
+              class="action-btn delete-btn"
+              (click)="rejectOffer(o); $event.stopPropagation()">
+
+              <ion-icon name="close-outline"></ion-icon>
+              Reject
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>

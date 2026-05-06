@@ -1,0 +1,503 @@
+:host {
+  display: block;
+  --text-primary: #1a1f36;
+  --text-secondary: #6b7a99;
+  --card-border: #e3e7f2;
+}
+
+// =============================================
+// CONTENT
+// =============================================
+ion-content {
+  --background: #f4f6fb;
+}
+
+ion-content::part(scroll) {
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
+}
+
+// =============================================
+// HEADER
+// =============================================
+ion-header {
+  ion-toolbar {
+    --background: #ffffff;
+    --color: var(--text-primary);
+    --border-width: 0;
+    border-bottom: 1px solid var(--card-border);
+
+    ion-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+    }
+
+    ion-back-button {
+      --color: #1e2a78;
+      --padding-start: 10px;
+      --padding-end: 10px;
+    }
+
+    ion-button {
+      --color: #1e2a78;
+    }
+  }
+}
+
+// =============================================
+// SECTIONS
+// =============================================
+.section {
+  padding: 16px 16px 0;
+}
+
+.app-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
+  margin-bottom: 16px;
+}
+
+// =============================================
+// JOB CARD
+// =============================================
+.job-card {
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    &.open {
+      background: rgba(34, 197, 94, 0.12);
+      color: #15803d;
+    }
+
+    &.in-progress {
+      background: #fff3d9;
+      color: #9a6b00;
+    }
+
+    &.closed {
+      background: #f0f2f8;
+      color: var(--text-secondary);
+    }
+  }
+
+  .post-date {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .job-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 10px 0 14px;
+    line-height: 1.3;
+  }
+
+  .job-meta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 14px;
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+
+      .label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 2px;
+      }
+
+      .value {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #1e2a78;
+      }
+    }
+  }
+
+  .file-row {
+    margin-top: 8px;
+  }
+
+  .file-link {
+    color: #1e2a78;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
+}
+
+// =============================================
+// SUBMIT PROPOSAL CARD
+// =============================================
+.submit-card {
+  .card-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    ion-input,
+    ion-textarea {
+      --background: #ffffff;
+      --color: var(--text-primary);
+      --placeholder-color: #8e8e93;
+      --border-radius: 14px;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      font-size: 0.92rem;
+      min-height: 48px;
+    }
+
+    .file-input {
+      width: 100%;
+      border: 1.5px dashed var(--card-border);
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+  }
+
+  ion-button {
+    --background: #1e2a78;
+    --background-hover: #0f1c4d;
+    --border-radius: 14px;
+    --box-shadow: 0 2px 8px rgba(30, 42, 120, 0.15);
+    --color: #ffffff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    height: 50px;
+    margin: 0;
+  }
+}
+
+// =============================================
+// ALREADY SUBMITTED NOTICE
+// =============================================
+.notice-submitted {
+  margin: 0 16px 16px;
+  padding: 14px 16px;
+  background: rgba(34, 197, 94, 0.08);
+  border-radius: 14px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #15803d;
+
+  ion-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    color: #22c55e;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// =============================================
+// SECTION TITLE
+// =============================================
+.section-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4e5bd4;
+  margin: 20px 16px 10px;
+}
+
+// =============================================
+// LOADING / EMPTY
+// =============================================
+.center-box {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 20px;
+  gap: 8px;
+  color: var(--text-secondary);
+  text-align: center;
+
+  ion-icon {
+    font-size: 2.5rem;
+    color: #d0d5e8;
+  }
+
+  p {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+}
+
+// =============================================
+// PROPOSAL CARDS
+// =============================================
+.proposals-list {
+  padding: 0 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.proposal-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(30, 42, 120, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.accepted {
+    background: #f1fff6;
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  &.rejected {
+    opacity: 0.5;
+  }
+
+  .proposal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+
+  .freelancers-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 4px 6px 4px 0;
+    transition: background 0.15s;
+    flex: 1;
+    min-width: 0;
+
+    &:active {
+      background: #f4f6fb;
+    }
+
+    .chevron-fwd {
+      color: #b0b8d0;
+      font-size: 1rem;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .freelancers-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #1e2a78 0%, #0f1c4d 100%);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .freelancers-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .proposal-date {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 2px;
+    }
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+
+    &.pending {
+      background: #fff3d9;
+      color: #9a6b00;
+    }
+
+    &.accepted {
+      background: rgba(34, 197, 94, 0.12);
+      color: #15803d;
+    }
+
+    &.rejected {
+      background: #f0f2f8;
+      color: var(--text-secondary);
+    }
+  }
+
+  .proposal-bid {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e2a78;
+    margin-bottom: 10px;
+
+    span {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+  }
+
+  .proposal-message {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0 0 14px;
+  }
+
+  .proposal-file {
+    margin: 0 0 14px;
+  }
+
+  .file-link {
+    color: #1e2a78;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+
+    ion-button {
+      flex: 1;
+      --border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      height: 40px;
+      margin: 0;
+
+      &[color='success'] {
+        --background: #15803d;
+        --background-hover: #166534;
+        --box-shadow: 0 2px 8px rgba(21, 128, 61, 0.2);
+        --color: #ffffff;
+      }
+
+      &[color='danger'] {
+        --border-color: #ef4444;
+        --color: #ef4444;
+        --background: transparent;
+        --background-hover: rgba(239, 68, 68, 0.05);
+      }
+
+      &[color='primary'] {
+        --background: #1e2a78;
+        --background-hover: #0f1c4d;
+        --box-shadow: 0 2px 8px rgba(30, 42, 120, 0.15);
+        --color: #ffffff;
+      }
+    }
+  }
+}
+
+// =============================================
+// SKELETON
+// =============================================
+@keyframes shimmer {
+  0% {
+    background-position: -800px 0;
+  }
+  100% {
+    background-position: 800px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  height: 11px;
+  background: linear-gradient(90deg, #e8ecf4 25%, #f4f6fb 50%, #e8ecf4 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 4px;
+  margin-top: 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
